@@ -1,13 +1,14 @@
 import { Phone, Mail } from "lucide-react";
+import { Link } from "react-router-dom";
 import logo from "@/assets/logo.jpeg";
 
 const Footer = () => {
   const quickLinks = [
-    { name: "What We Fund", href: "#services" },
-    { name: "How It Works", href: "#how-it-works" },
-    { name: "For Attorneys", href: "#attorneys" },
-    { name: "For Brokers", href: "#brokers" },
-    { name: "Apply Now", href: "#apply" },
+    { name: "What We Fund", href: "/what-we-fund", isPage: true },
+    { name: "How It Works", href: "#how-it-works", isPage: false },
+    { name: "For Attorneys", href: "#attorneys", isPage: false },
+    { name: "For Brokers", href: "#brokers", isPage: false },
+    { name: "Apply Now", href: "#apply", isPage: false },
   ];
 
   const caseTypes = [
@@ -47,12 +48,21 @@ const Footer = () => {
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-secondary-foreground/70 hover:text-primary transition-colors text-sm"
-                  >
-                    {link.name}
-                  </a>
+                  {link.isPage ? (
+                    <Link
+                      to={link.href}
+                      className="text-secondary-foreground/70 hover:text-primary transition-colors text-sm"
+                    >
+                      {link.name}
+                    </Link>
+                  ) : (
+                    <a
+                      href={link.href}
+                      className="text-secondary-foreground/70 hover:text-primary transition-colors text-sm"
+                    >
+                      {link.name}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>
@@ -64,12 +74,12 @@ const Footer = () => {
             <ul className="space-y-3">
               {caseTypes.map((caseType) => (
                 <li key={caseType}>
-                  <a
-                    href="#services"
+                  <Link
+                    to="/what-we-fund"
                     className="text-secondary-foreground/70 hover:text-primary transition-colors text-sm"
                   >
                     {caseType}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Menu, X, Phone } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.jpeg";
 
@@ -7,10 +8,10 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLinks = [
-    { name: "What We Fund", href: "#services" },
-    { name: "How It Works", href: "#how-it-works" },
-    { name: "For Attorneys", href: "#attorneys" },
-    { name: "For Brokers", href: "#brokers" },
+    { name: "What We Fund", href: "/what-we-fund", isPage: true },
+    { name: "How It Works", href: "#how-it-works", isPage: false },
+    { name: "For Attorneys", href: "#attorneys", isPage: false },
+    { name: "For Brokers", href: "#brokers", isPage: false },
   ];
 
   return (
@@ -18,20 +19,30 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-3">
+          <Link to="/" className="flex items-center gap-3">
             <img src={logo} alt="National Claims Assoc" className="h-14 w-auto bg-white rounded-lg p-1" />
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                className="text-secondary-foreground/80 hover:text-primary font-medium transition-colors text-sm"
-              >
-                {link.name}
-              </a>
+              link.isPage ? (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  className="text-secondary-foreground/80 hover:text-primary font-medium transition-colors text-sm"
+                >
+                  {link.name}
+                </Link>
+              ) : (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  className="text-secondary-foreground/80 hover:text-primary font-medium transition-colors text-sm"
+                >
+                  {link.name}
+                </a>
+              )
             ))}
           </nav>
 
@@ -70,14 +81,25 @@ const Header = () => {
           <div className="lg:hidden py-5 border-t border-secondary-foreground/10 animate-fade-in">
             <nav className="flex flex-col gap-4">
               {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  className="text-secondary-foreground/80 hover:text-primary font-medium py-2"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {link.name}
-                </a>
+                link.isPage ? (
+                  <Link
+                    key={link.name}
+                    to={link.href}
+                    className="text-secondary-foreground/80 hover:text-primary font-medium py-2"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {link.name}
+                  </Link>
+                ) : (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    className="text-secondary-foreground/80 hover:text-primary font-medium py-2"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {link.name}
+                  </a>
+                )
               ))}
               <a
                 href="tel:718-587-9965"
