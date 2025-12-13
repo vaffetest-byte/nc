@@ -10,7 +10,7 @@
     --card-foreground: 215 25% 15%;
     --popover: 0 0% 100%;
     --popover-foreground: 215 25% 15%;
-    --primary: 0 55% 38%;
+    --primary: 349 71% 36%;
     --primary-foreground: 0 0% 100%;
     --secondary: 215 45% 18%;
     --secondary-foreground: 0 0% 100%;
@@ -22,7 +22,7 @@
     --destructive-foreground: 0 0% 98%;
     --border: 215 20% 88%;
     --input: 215 20% 88%;
-    --ring: 0 55% 45%;
+    --ring: 349 71% 40%;
     --radius: 0.5rem;
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -41,7 +41,7 @@
     --card-foreground: 0 0% 98%;
     --popover: 215 30% 12%;
     --popover-foreground: 0 0% 98%;
-    --primary: 0 55% 42%;
+    --primary: 349 71% 40%;
     --primary-foreground: 0 0% 100%;
     --secondary: 215 50% 25%;
     --secondary-foreground: 0 0% 100%;
@@ -53,7 +53,7 @@
     --destructive-foreground: 0 0% 98%;
     --border: 215 25% 25%;
     --input: 215 25% 25%;
-    --ring: 0 55% 50%;
+    --ring: 349 71% 45%;
   }
 
   * {
@@ -88,7 +88,7 @@
 }
 
 .patriotic-gradient {
-  background: linear-gradient(155deg, hsl(0 65% 35%) 0%, hsl(0 70% 28%) 100%);
+  background: linear-gradient(155deg, hsl(349 71% 36%) 0%, hsl(349 71% 28%) 100%);
 }
 
 .card-shadow {
@@ -96,7 +96,7 @@
 }
 
 .glow-effect {
-  box-shadow: 0 0 50px hsl(0 65% 35% / 0.2);
+  box-shadow: 0 0 50px hsl(349 71% 36% / 0.2);
 }
 
 .glass-card {
