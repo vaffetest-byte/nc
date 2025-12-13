@@ -206,8 +206,8 @@ const HowItWorksPage = () => {
                         <div className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center">
                           <step.icon className="w-10 h-10 text-primary" />
                         </div>
-                        <div className="absolute -top-3 -right-3 w-10 h-10 bg-secondary rounded-xl flex items-center justify-center shadow-md">
-                          <span className="text-sm font-bold text-secondary-foreground">{step.number}</span>
+                        <div className="absolute -top-3 -right-3 w-12 h-12 bg-primary rounded-xl flex items-center justify-center shadow-md border-2 border-primary-foreground">
+                          <span className="text-base font-bold text-primary-foreground">{step.number}</span>
                         </div>
                       </div>
                     </div>
