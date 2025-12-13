@@ -14,12 +14,12 @@ const Header = () => {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/98 backdrop-blur-lg border-b border-border shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-secondary shadow-lg">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <a href="/" className="flex items-center gap-3">
-            <img src={logo} alt="National Claims Assoc" className="h-14 w-auto" />
+            <img src={logo} alt="National Claims Assoc" className="h-14 w-auto bg-white rounded-lg p-1" />
           </a>
 
           {/* Desktop Navigation */}
@@ -28,7 +28,7 @@ const Header = () => {
               <a
                 key={link.name}
                 href={link.href}
-                className="text-foreground/70 hover:text-primary font-medium transition-colors text-sm"
+                className="text-secondary-foreground/80 hover:text-primary font-medium transition-colors text-sm"
               >
                 {link.name}
               </a>
@@ -39,9 +39,11 @@ const Header = () => {
           <div className="hidden lg:flex items-center gap-5">
             <a
               href="tel:718-587-9965"
-              className="flex items-center gap-2 text-secondary font-semibold text-sm hover:text-primary transition-colors"
+              className="flex items-center gap-2 text-secondary-foreground font-semibold text-sm hover:text-primary transition-colors"
             >
-              <Phone className="w-4 h-4" />
+              <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
+                <Phone className="w-4 h-4 text-primary" />
+              </div>
               <span>(718) 587-9965</span>
             </a>
             <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 shadow-lg glow-effect">
@@ -56,22 +58,22 @@ const Header = () => {
             aria-label="Toggle menu"
           >
             {isMenuOpen ? (
-              <X className="w-6 h-6 text-foreground" />
+              <X className="w-6 h-6 text-secondary-foreground" />
             ) : (
-              <Menu className="w-6 h-6 text-foreground" />
+              <Menu className="w-6 h-6 text-secondary-foreground" />
             )}
           </button>
         </div>
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="lg:hidden py-5 border-t border-border animate-fade-in">
+          <div className="lg:hidden py-5 border-t border-secondary-foreground/10 animate-fade-in">
             <nav className="flex flex-col gap-4">
               {navLinks.map((link) => (
                 <a
                   key={link.name}
                   href={link.href}
-                  className="text-foreground/70 hover:text-primary font-medium py-2"
+                  className="text-secondary-foreground/80 hover:text-primary font-medium py-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {link.name}
@@ -79,9 +81,9 @@ const Header = () => {
               ))}
               <a
                 href="tel:718-587-9965"
-                className="flex items-center gap-2 text-secondary font-semibold py-2"
+                className="flex items-center gap-2 text-secondary-foreground font-semibold py-2"
               >
-                <Phone className="w-5 h-5" />
+                <Phone className="w-5 h-5 text-primary" />
                 <span>(718) 587-9965</span>
               </a>
               <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold w-full mt-2 shadow-lg">
