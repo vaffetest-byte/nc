@@ -1,11 +1,12 @@
+import { forwardRef } from "react";
 import { Phone, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/logo.jpeg";
 
-const Footer = () => {
+const Footer = forwardRef<HTMLElement>((_, ref) => {
   const quickLinks = [
     { name: "What We Fund", href: "/what-we-fund", isPage: true },
-    { name: "How It Works", href: "#how-it-works", isPage: false },
+    { name: "How It Works", href: "/how-it-works", isPage: true },
     { name: "For Attorneys", href: "#attorneys", isPage: false },
     { name: "For Brokers", href: "#brokers", isPage: false },
     { name: "Apply Now", href: "#apply", isPage: false },
@@ -21,7 +22,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-secondary text-secondary-foreground">
+    <footer ref={ref} className="bg-secondary text-secondary-foreground">
       <div className="container mx-auto px-4 py-16">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Company Info */}
@@ -125,6 +126,8 @@ const Footer = () => {
       </div>
     </footer>
   );
-};
+});
+
+Footer.displayName = "Footer";
 
 export default Footer;
