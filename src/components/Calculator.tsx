@@ -12,14 +12,14 @@ const Calculator = () => {
   const savings = competitorCost - ncaCost;
 
   return (
-    <section className="py-20 bg-background">
+    <section className="py-24 bg-white">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <span className="text-primary font-semibold text-sm uppercase tracking-wider">
+            <span className="text-primary font-semibold text-sm uppercase tracking-widest">
               Calculate Your Savings
             </span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mt-2 mb-4 font-serif">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mt-3 mb-4">
               See How Much You Could Save
             </h2>
             <p className="text-lg text-muted-foreground">
@@ -27,7 +27,7 @@ const Calculator = () => {
             </p>
           </div>
 
-          <div className="bg-muted rounded-2xl p-8 card-shadow">
+          <div className="bg-muted/50 rounded-2xl p-8 card-shadow border border-border/50">
             {/* Slider */}
             <div className="mb-8">
               <label className="block text-sm font-semibold text-foreground mb-4">
@@ -42,16 +42,16 @@ const Calculator = () => {
                 className="mb-4"
               />
               <div className="flex items-center justify-center gap-2 text-3xl font-bold text-primary">
-                <DollarSign className="w-8 h-8" />
+                <DollarSign className="w-7 h-7" />
                 <span>{fundingAmount.toLocaleString()}</span>
               </div>
             </div>
 
             {/* Comparison */}
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-3 gap-4">
               {/* Funding Amount */}
-              <div className="bg-background rounded-xl p-6 text-center">
-                <p className="text-sm text-muted-foreground mb-2">
+              <div className="bg-white rounded-xl p-5 text-center border border-border/50">
+                <p className="text-xs text-muted-foreground mb-2 uppercase tracking-wide">
                   Funding Amount
                 </p>
                 <p className="text-2xl font-bold text-foreground">
@@ -60,9 +60,9 @@ const Calculator = () => {
               </div>
 
               {/* Competitor */}
-              <div className="bg-background rounded-xl p-6 text-center border-2 border-destructive/20">
-                <p className="text-sm text-muted-foreground mb-2">
-                  Typical Competitor Cost
+              <div className="bg-white rounded-xl p-5 text-center border-2 border-destructive/30">
+                <p className="text-xs text-muted-foreground mb-2 uppercase tracking-wide">
+                  Typical Competitor
                 </p>
                 <p className="text-2xl font-bold text-destructive">
                   ${competitorCost.toLocaleString()}
@@ -73,26 +73,26 @@ const Calculator = () => {
               </div>
 
               {/* NCA */}
-              <div className="bg-secondary rounded-xl p-6 text-center">
-                <p className="text-sm text-secondary-foreground/80 mb-2">
-                  With National Claims Assoc
+              <div className="bg-secondary rounded-xl p-5 text-center">
+                <p className="text-xs text-secondary-foreground/70 mb-2 uppercase tracking-wide">
+                  With NCA
                 </p>
                 <p className="text-2xl font-bold text-secondary-foreground">
                   ${ncaCost.toLocaleString()}
                 </p>
-                <p className="text-xs text-secondary-foreground/70 mt-1">
+                <p className="text-xs text-secondary-foreground/60 mt-1">
                   ~25% rate
                 </p>
               </div>
             </div>
 
             {/* Savings */}
-            <div className="mt-8 bg-green-50 border border-green-200 rounded-xl p-6 text-center">
-              <div className="flex items-center justify-center gap-2 text-green-700 mb-2">
-                <TrendingUp className="w-6 h-6" />
-                <span className="font-semibold">Your Potential Savings</span>
+            <div className="mt-6 bg-emerald-50 border border-emerald-200 rounded-xl p-5 text-center">
+              <div className="flex items-center justify-center gap-2 text-emerald-700 mb-1">
+                <TrendingUp className="w-5 h-5" />
+                <span className="font-semibold text-sm">Your Potential Savings</span>
               </div>
-              <p className="text-4xl font-bold text-green-700">
+              <p className="text-3xl font-bold text-emerald-700">
                 ${savings.toLocaleString()}
               </p>
             </div>
@@ -100,7 +100,7 @@ const Calculator = () => {
             <div className="mt-8 text-center">
               <Button 
                 size="lg" 
-                className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-8"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 shadow-md shadow-primary/20"
               >
                 Get Your Free Quote
               </Button>

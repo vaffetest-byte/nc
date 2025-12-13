@@ -23,13 +23,13 @@ const HowItWorks = () => {
   ];
 
   return (
-    <section id="how-it-works" className="py-20 bg-muted">
+    <section id="how-it-works" className="py-24 bg-muted/50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <span className="text-primary font-semibold text-sm uppercase tracking-wider">
+          <span className="text-primary font-semibold text-sm uppercase tracking-widest">
             Simple Process
           </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mt-2 mb-4 font-serif">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mt-3 mb-4">
             How It Works
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -37,26 +37,26 @@ const HowItWorks = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {steps.map((step, index) => (
             <div
               key={step.title}
-              className="relative bg-background rounded-2xl p-8 card-shadow hover:shadow-2xl transition-shadow duration-300 animate-fade-in"
+              className="relative bg-white rounded-2xl p-8 card-shadow hover:shadow-xl transition-all duration-300 animate-fade-in border border-border/50"
               style={{ animationDelay: `${index * 0.15}s` }}
             >
               {/* Step Number */}
-              <div className="absolute -top-4 -right-4 w-16 h-16 bg-secondary rounded-full flex items-center justify-center">
-                <span className="text-2xl font-bold text-secondary-foreground">
+              <div className="absolute -top-4 -right-4 w-14 h-14 bg-secondary rounded-xl flex items-center justify-center shadow-lg">
+                <span className="text-xl font-bold text-secondary-foreground">
                   {step.step}
                 </span>
               </div>
 
               {/* Icon */}
-              <div className="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
-                <step.icon className="w-8 h-8 text-primary" />
+              <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
+                <step.icon className="w-7 h-7 text-primary" />
               </div>
 
-              <h3 className="text-xl font-bold text-foreground mb-3 font-serif">
+              <h3 className="text-xl font-bold text-foreground mb-3">
                 {step.title}
               </h3>
               <p className="text-muted-foreground leading-relaxed">
@@ -64,13 +64,6 @@ const HowItWorks = () => {
               </p>
             </div>
           ))}
-        </div>
-
-        {/* Connector Line (Desktop) */}
-        <div className="hidden md:block relative mt-[-180px] mb-[100px] mx-auto max-w-4xl">
-          <div className="absolute top-1/2 left-[15%] right-[15%] h-1 bg-border -z-10">
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/50 via-secondary/50 to-primary/50" />
-          </div>
         </div>
       </div>
     </section>

@@ -30,26 +30,26 @@ const Attorneys = () => {
   ];
 
   return (
-    <section id="attorneys" className="py-20 bg-secondary">
+    <section id="attorneys" className="py-24 bg-secondary">
       <div className="container mx-auto px-4">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center max-w-6xl mx-auto">
           {/* Left Content */}
           <div className="text-secondary-foreground">
-            <span className="text-primary font-semibold text-sm uppercase tracking-wider">
+            <span className="text-primary font-semibold text-sm uppercase tracking-widest">
               For Legal Professionals
             </span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mt-2 mb-6 font-serif">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mt-3 mb-6">
               Partner With National Claims Assoc
             </h2>
-            <p className="text-lg text-secondary-foreground/80 mb-8">
+            <p className="text-base text-secondary-foreground/75 mb-8 leading-relaxed">
               We understand the challenges your clients face during litigation. Our litigation funding solutions help your clients meet financial obligations while you focus on winning their case.
             </p>
 
-            <div className="grid sm:grid-cols-2 gap-4 mb-8">
+            <div className="grid sm:grid-cols-2 gap-3 mb-8">
               {features.map((feature) => (
                 <div key={feature} className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-primary shrink-0" />
-                  <span className="text-secondary-foreground/90">{feature}</span>
+                  <CheckCircle className="w-4 h-4 text-primary shrink-0" />
+                  <span className="text-secondary-foreground/85 text-sm">{feature}</span>
                 </div>
               ))}
             </div>
@@ -57,14 +57,14 @@ const Attorneys = () => {
             <div className="flex flex-wrap gap-4">
               <Button 
                 size="lg" 
-                className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-lg shadow-primary/25"
               >
                 Become a Partner
               </Button>
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="border-secondary-foreground/30 text-secondary-foreground hover:bg-secondary-foreground/10"
+                className="border-white/30 bg-white/5 text-secondary-foreground hover:bg-white/10"
               >
                 Attorney Portal
               </Button>
@@ -72,21 +72,21 @@ const Attorneys = () => {
           </div>
 
           {/* Right Cards */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             {benefits.map((benefit, index) => (
               <div
                 key={benefit.title}
-                className="bg-background rounded-xl p-6 card-shadow flex items-start gap-4 animate-slide-in"
+                className="bg-white rounded-xl p-5 card-shadow flex items-start gap-4 animate-slide-in border border-border/50"
                 style={{ animationDelay: `${index * 0.15}s` }}
               >
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
-                  <benefit.icon className="w-6 h-6 text-primary" />
+                <div className="w-11 h-11 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
+                  <benefit.icon className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-foreground mb-2">
+                  <h3 className="text-base font-bold text-foreground mb-1">
                     {benefit.title}
                   </h3>
-                  <p className="text-muted-foreground">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     {benefit.description}
                   </p>
                 </div>

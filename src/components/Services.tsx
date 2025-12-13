@@ -62,40 +62,40 @@ const Services = () => {
   ];
 
   return (
-    <section id="services" className="py-20 bg-background">
+    <section id="services" className="py-24 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <span className="text-primary font-semibold text-sm uppercase tracking-wider">
+          <span className="text-primary font-semibold text-sm uppercase tracking-widest">
             Cases We Fund
           </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mt-2 mb-4 font-serif">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mt-3 mb-4">
             What We Fund
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            National Claims Assoc funds a wide variety of personal injury and civil litigation cases. Here are some of the case types we support.
+            National Claims Assoc funds a wide variety of personal injury and civil litigation cases.
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-6xl mx-auto">
           {services.map((service, index) => (
             <div
               key={service.title}
-              className="group bg-muted hover:bg-secondary rounded-xl p-6 transition-all duration-300 cursor-pointer animate-fade-in"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              className="group bg-muted/50 hover:bg-secondary rounded-xl p-5 transition-all duration-300 cursor-pointer animate-fade-in border border-transparent hover:border-secondary"
+              style={{ animationDelay: `${index * 0.05}s` }}
             >
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-primary/10 group-hover:bg-primary rounded-lg flex items-center justify-center shrink-0 transition-colors">
-                  <service.icon className="w-6 h-6 text-primary group-hover:text-primary-foreground transition-colors" />
+                <div className="w-11 h-11 bg-primary/10 group-hover:bg-primary rounded-lg flex items-center justify-center shrink-0 transition-colors">
+                  <service.icon className="w-5 h-5 text-primary group-hover:text-primary-foreground transition-colors" />
                 </div>
-                <div className="flex-1">
-                  <h3 className="text-lg font-bold text-foreground group-hover:text-secondary-foreground mb-2 transition-colors">
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-base font-bold text-foreground group-hover:text-secondary-foreground mb-1 transition-colors">
                     {service.title}
                   </h3>
-                  <p className="text-sm text-muted-foreground group-hover:text-secondary-foreground/80 transition-colors">
+                  <p className="text-sm text-muted-foreground group-hover:text-secondary-foreground/80 transition-colors leading-relaxed">
                     {service.description}
                   </p>
                 </div>
-                <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-secondary-foreground opacity-0 group-hover:opacity-100 transition-all transform translate-x-0 group-hover:translate-x-2" />
+                <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-secondary-foreground opacity-0 group-hover:opacity-100 transition-all transform translate-x-0 group-hover:translate-x-1 shrink-0 mt-1" />
               </div>
             </div>
           ))}
@@ -104,7 +104,7 @@ const Services = () => {
         <div className="text-center mt-12">
           <Button 
             size="lg" 
-            className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-8"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 shadow-md shadow-primary/20"
           >
             View All Case Types
           </Button>

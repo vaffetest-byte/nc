@@ -31,13 +31,13 @@ const Testimonials = () => {
   };
 
   return (
-    <section className="py-20 bg-muted">
+    <section className="py-24 bg-muted/50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <span className="text-primary font-semibold text-sm uppercase tracking-wider">
+          <span className="text-primary font-semibold text-sm uppercase tracking-widest">
             Client Testimonials
           </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mt-2 mb-4 font-serif">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mt-3 mb-4">
             What Our Clients Say
           </h2>
           
@@ -45,7 +45,7 @@ const Testimonials = () => {
           <div className="flex items-center justify-center gap-4 mt-6">
             <div className="flex items-center gap-1">
               {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-6 h-6 fill-yellow-400 text-yellow-400" />
+                <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
               ))}
             </div>
             <span className="text-2xl font-bold text-foreground">{stats.rating}</span>
@@ -53,41 +53,41 @@ const Testimonials = () => {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {testimonials.map((testimonial, index) => (
             <div
               key={testimonial.name}
-              className="bg-background rounded-2xl p-8 card-shadow relative animate-fade-in"
+              className="bg-white rounded-2xl p-7 card-shadow relative animate-fade-in border border-border/50"
               style={{ animationDelay: `${index * 0.15}s` }}
             >
               {/* Quote Icon */}
-              <Quote className="absolute top-6 right-6 w-10 h-10 text-primary/20" />
+              <Quote className="absolute top-6 right-6 w-8 h-8 text-primary/10" />
 
               {/* Rating */}
               <div className="flex items-center gap-1 mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                  <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
                 ))}
               </div>
 
               {/* Text */}
-              <p className="text-foreground/80 mb-6 leading-relaxed">
+              <p className="text-foreground/80 mb-6 leading-relaxed text-sm">
                 "{testimonial.text}"
               </p>
 
               {/* Author */}
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center">
-                  <span className="text-secondary-foreground font-bold text-lg">
+                <div className="w-10 h-10 bg-secondary rounded-full flex items-center justify-center">
+                  <span className="text-secondary-foreground font-bold text-sm">
                     {testimonial.name.charAt(0)}
                   </span>
                 </div>
                 <div>
-                  <p className="font-semibold text-foreground">{testimonial.name}</p>
-                  <p className="text-sm text-muted-foreground">{testimonial.location}</p>
+                  <p className="font-semibold text-foreground text-sm">{testimonial.name}</p>
+                  <p className="text-xs text-muted-foreground">{testimonial.location}</p>
                 </div>
                 {testimonial.verified && (
-                  <span className="ml-auto text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-medium">
+                  <span className="ml-auto text-xs bg-green-50 text-green-700 px-2 py-1 rounded-full font-medium border border-green-100">
                     Verified
                   </span>
                 )}
