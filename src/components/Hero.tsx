@@ -102,23 +102,34 @@ const Hero = () => {
           {/* Left Content */}
           <div className="text-white animate-fade-in">
             {/* Company Branding */}
-            <div className="mb-8">
-              <span className="text-sm font-semibold tracking-[0.3em] uppercase text-primary">
-                National Claims Assoc
-              </span>
-              <div className="w-16 h-1 bg-primary mt-3 rounded-full" />
+            <div className="mb-10">
+              <div className="flex items-center gap-4 mb-3">
+                <div className="w-12 h-[2px] bg-gradient-to-r from-primary to-primary/50" />
+                <span className="text-xs font-bold tracking-[0.4em] uppercase text-white/60">
+                  Trusted Legal Funding
+                </span>
+              </div>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
+                <span className="text-white">National</span>{" "}
+                <span className="text-primary">Claims</span>{" "}
+                <span className="text-white">Assoc</span>
+              </h2>
+              <div className="flex items-center gap-3 mt-4">
+                <div className="w-20 h-1 bg-primary rounded-full" />
+                <div className="w-3 h-3 bg-primary rounded-full animate-pulse" />
+              </div>
             </div>
 
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-5 py-2.5 mb-8 border border-white/10">
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-5 py-2.5 mb-6 border border-white/10">
               <Shield className="w-4 h-4 text-primary" />
               <span className="text-sm font-medium text-white/90">Get Funded in as Little as 24 Hours</span>
             </div>
             
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-6 tracking-tight">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-[1.15] mb-6 tracking-tight">
               <span className="text-primary">Financial Relief</span> While You Pursue Justice.
             </h1>
             <p className="text-lg text-white/75 mb-10 max-w-xl leading-relaxed">
-              Get the financial support you need while your case is pending. <span className="text-white font-semibold">National Claims Assoc</span> provides fast, reliable litigation funding with no risk to you.
+              Get the financial support you need while your case is pending. Fast, reliable litigation funding with no risk to you.
             </p>
 
             {/* Benefits */}
