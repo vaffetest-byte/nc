@@ -1,12 +1,11 @@
-import { forwardRef } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import { ArrowRight, ArrowLeft, Phone, CheckCircle, Shield, Clock, DollarSign, FileText, Users } from "lucide-react";
+import { ArrowRight, ArrowLeft, Phone, CheckCircle, Shield, Clock, DollarSign, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-const WhatWeFund = forwardRef<HTMLDivElement>((_, ref) => {
+const WhatWeFund = () => {
   const caseTypes = [
     { title: "Animal Bite", description: "Funding for dog bites and animal attack injury claims." },
     { title: "Appeals", description: "Support during the appeals process for your case." },
@@ -324,8 +323,6 @@ const WhatWeFund = forwardRef<HTMLDivElement>((_, ref) => {
       <Footer />
     </>
   );
-});
-
-WhatWeFund.displayName = "WhatWeFund";
+};
 
 export default WhatWeFund;

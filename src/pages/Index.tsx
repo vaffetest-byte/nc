@@ -1,4 +1,3 @@
-import { forwardRef } from "react";
 import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
@@ -9,9 +8,9 @@ import Calculator from "@/components/Calculator";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 
-const Index = forwardRef<HTMLDivElement>((_, ref) => {
+const Index = () => {
   return (
-    <div ref={ref}>
+    <>
       <Helmet>
         <title>National Claims Assoc | Litigation Funding Made Simple</title>
         <meta
@@ -34,10 +33,8 @@ const Index = forwardRef<HTMLDivElement>((_, ref) => {
         </main>
         <Footer />
       </div>
-    </div>
+    </>
   );
-});
-
-Index.displayName = "Index";
+};
 
 export default Index;
