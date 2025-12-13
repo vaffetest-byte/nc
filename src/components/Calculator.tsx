@@ -14,6 +14,13 @@ const Calculator = () => {
   const [attorneyFeePercent, setAttorneyFeePercent] = useState(40);
   const [advanceAmount, setAdvanceAmount] = useState(10000);
 
+  const MIN_SETTLEMENT = 1000;
+
+  const handleSettlementChange = (value: string) => {
+    const numValue = Number(value.replace(/[^0-9]/g, ''));
+    setSettlementAmount(Math.max(numValue, MIN_SETTLEMENT));
+  };
+
   // ===== ATTORNEY FEES =====
   const attorneyFees = settlementAmount * (attorneyFeePercent / 100);
 
@@ -135,12 +142,12 @@ const Calculator = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div>
                 <label className="text-xs text-muted-foreground block mb-2">
-                  Settlement Amount
+                  Settlement Amount (min $1,000)
                 </label>
                 <Input
                   type="text"
                   value={formatCurrency(settlementAmount)}
-                  onChange={(e) => setSettlementAmount(Number(e.target.value.replace(/[^0-9]/g, '')))}
+                  onChange={(e) => handleSettlementChange(e.target.value)}
                   className="bg-background border-0 shadow-sm h-11"
                 />
               </div>
