@@ -14,7 +14,7 @@ const Header = () => {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-border/50 shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
@@ -28,7 +28,7 @@ const Header = () => {
               <a
                 key={link.name}
                 href={link.href}
-                className="text-foreground/80 hover:text-primary font-medium transition-colors"
+                className="text-foreground/70 hover:text-primary font-medium transition-colors text-sm"
               >
                 {link.name}
               </a>
@@ -39,12 +39,12 @@ const Header = () => {
           <div className="hidden lg:flex items-center gap-4">
             <a
               href="tel:718-587-9965"
-              className="flex items-center gap-2 text-secondary font-semibold"
+              className="flex items-center gap-2 text-secondary font-semibold text-sm"
             >
-              <Phone className="w-5 h-5" />
+              <Phone className="w-4 h-4" />
               <span>(718) 587-9965</span>
             </a>
-            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6">
+            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 shadow-md shadow-primary/20">
               GET STARTED
             </Button>
           </div>
@@ -71,7 +71,7 @@ const Header = () => {
                 <a
                   key={link.name}
                   href={link.href}
-                  className="text-foreground/80 hover:text-primary font-medium py-2"
+                  className="text-foreground/70 hover:text-primary font-medium py-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {link.name}

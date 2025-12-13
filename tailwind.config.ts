@@ -59,8 +59,8 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Montserrat', 'sans-serif'],
-        serif: ['Playfair Display', 'serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        serif: ['Merriweather', 'Georgia', 'serif'],
       },
       borderRadius: {
         lg: "var(--radius)",
