@@ -1,10 +1,89 @@
+import { useState } from "react";
 import { Phone, CheckCircle, Shield, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { toast } from "@/hooks/use-toast";
 
 const Hero = () => {
   const benefits = ["No Credit Check", "24-Hour Approval*", "100% Risk-Free"];
+  const [role, setRole] = useState<"plaintiff" | "attorney">("plaintiff");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Plaintiff form state
+  const [plaintiffForm, setPlaintiffForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    amountNeeded: "",
+    attorneyName: "",
+    attorneyPhone: "",
+    attorneyEmail: "",
+  });
+
+  // Attorney form state
+  const [attorneyForm, setAttorneyForm] = useState({
+    contactName: "",
+    contactEmail: "",
+    contactPhone: "",
+    amountNeeded: "",
+    fundingFor: "plaintiff-initial",
+    dateOfAccident: "",
+    plaintiffName: "",
+  });
+
+  const handlePlaintiffChange = (field: string, value: string) => {
+    setPlaintiffForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleAttorneyChange = (field: string, value: string) => {
+    setAttorneyForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    // Simulate submission
+    setTimeout(() => {
+      setIsSubmitting(false);
+      toast({
+        title: "Request Submitted!",
+        description: "Your funding request has been submitted successfully.",
+      });
+      
+      // Reset forms
+      if (role === "plaintiff") {
+        setPlaintiffForm({
+          name: "",
+          email: "",
+          phone: "",
+          amountNeeded: "",
+          attorneyName: "",
+          attorneyPhone: "",
+          attorneyEmail: "",
+        });
+      } else {
+        setAttorneyForm({
+          contactName: "",
+          contactEmail: "",
+          contactPhone: "",
+          amountNeeded: "",
+          fundingFor: "plaintiff-initial",
+          dateOfAccident: "",
+          plaintiffName: "",
+        });
+      }
+    }, 1000);
+  };
 
   return (
     <section className="relative pt-20 min-h-screen">
@@ -79,16 +158,211 @@ const Hero = () => {
                 </div>
               </div>
 
-              <form className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <Input placeholder="First Name" className="bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-primary focus:ring-primary/20 h-12" />
-                  <Input placeholder="Last Name" className="bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-primary focus:ring-primary/20 h-12" />
+              <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Role Selection */}
+                <div className="space-y-3">
+                  <Label className="text-white text-sm font-semibold">I am a (select one):</Label>
+                  <RadioGroup
+                    value={role}
+                    onValueChange={(value) => setRole(value as "plaintiff" | "attorney")}
+                    className="flex gap-4"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="plaintiff" id="plaintiff" className="border-white/40 text-primary" />
+                      <Label htmlFor="plaintiff" className="text-white/90 cursor-pointer">Plaintiff</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="attorney" id="attorney" className="border-white/40 text-primary" />
+                      <Label htmlFor="attorney" className="text-white/90 cursor-pointer">Attorney / Paralegal</Label>
+                    </div>
+                  </RadioGroup>
                 </div>
-                <Input type="email" placeholder="Email Address" className="bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-primary focus:ring-primary/20 h-12" />
-                <Input type="tel" placeholder="Phone Number" className="bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-primary focus:ring-primary/20 h-12" />
-                <Textarea placeholder="Tell us about your case..." className="bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-primary focus:ring-primary/20 min-h-[100px] resize-none" />
-                <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base py-6 shadow-lg glow-effect">
-                  Submit Request
+
+                {/* Plaintiff Form */}
+                <div className={`space-y-4 transition-all duration-300 ${role === "plaintiff" ? "opacity-100 max-h-[1000px]" : "opacity-0 max-h-0 overflow-hidden"}`}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-white/80 text-sm">Your Name *</Label>
+                      <Input
+                        placeholder="Full Name"
+                        value={plaintiffForm.name}
+                        onChange={(e) => handlePlaintiffChange("name", e.target.value)}
+                        required={role === "plaintiff"}
+                        className="bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-primary focus:ring-primary/20 h-12"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-white/80 text-sm">Your Email *</Label>
+                      <Input
+                        type="email"
+                        placeholder="Email Address"
+                        value={plaintiffForm.email}
+                        onChange={(e) => handlePlaintiffChange("email", e.target.value)}
+                        required={role === "plaintiff"}
+                        className="bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-primary focus:ring-primary/20 h-12"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-white/80 text-sm">Phone Number *</Label>
+                      <Input
+                        type="tel"
+                        placeholder="(555) 555-5555"
+                        value={plaintiffForm.phone}
+                        onChange={(e) => handlePlaintiffChange("phone", e.target.value)}
+                        required={role === "plaintiff"}
+                        className="bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-primary focus:ring-primary/20 h-12"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-white/80 text-sm">How Much Do You Need? *</Label>
+                      <Input
+                        type="text"
+                        placeholder="$1,000,000 Maximum"
+                        value={plaintiffForm.amountNeeded}
+                        onChange={(e) => handlePlaintiffChange("amountNeeded", e.target.value)}
+                        required={role === "plaintiff"}
+                        className="bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-primary focus:ring-primary/20 h-12"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-white/10">
+                    <p className="text-white/50 text-xs mb-3">Attorney Information (Optional)</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label className="text-white/80 text-sm">Attorney's Name</Label>
+                        <Input
+                          placeholder="Attorney Name"
+                          value={plaintiffForm.attorneyName}
+                          onChange={(e) => handlePlaintiffChange("attorneyName", e.target.value)}
+                          className="bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-primary focus:ring-primary/20 h-12"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-white/80 text-sm">Attorney's Phone</Label>
+                        <Input
+                          type="tel"
+                          placeholder="(555) 555-5555"
+                          value={plaintiffForm.attorneyPhone}
+                          onChange={(e) => handlePlaintiffChange("attorneyPhone", e.target.value)}
+                          className="bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-primary focus:ring-primary/20 h-12"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2 mt-4">
+                      <Label className="text-white/80 text-sm">Attorney's Email</Label>
+                      <Input
+                        type="email"
+                        placeholder="attorney@lawfirm.com"
+                        value={plaintiffForm.attorneyEmail}
+                        onChange={(e) => handlePlaintiffChange("attorneyEmail", e.target.value)}
+                        className="bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-primary focus:ring-primary/20 h-12"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Attorney Form */}
+                <div className={`space-y-4 transition-all duration-300 ${role === "attorney" ? "opacity-100 max-h-[1000px]" : "opacity-0 max-h-0 overflow-hidden"}`}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-white/80 text-sm">Law Firm Contact – Name *</Label>
+                      <Input
+                        placeholder="Contact Name"
+                        value={attorneyForm.contactName}
+                        onChange={(e) => handleAttorneyChange("contactName", e.target.value)}
+                        required={role === "attorney"}
+                        className="bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-primary focus:ring-primary/20 h-12"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-white/80 text-sm">Law Firm Contact – Email *</Label>
+                      <Input
+                        type="email"
+                        placeholder="contact@lawfirm.com"
+                        value={attorneyForm.contactEmail}
+                        onChange={(e) => handleAttorneyChange("contactEmail", e.target.value)}
+                        required={role === "attorney"}
+                        className="bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-primary focus:ring-primary/20 h-12"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-white/80 text-sm">Law Firm Contact – Phone *</Label>
+                      <Input
+                        type="tel"
+                        placeholder="(555) 555-5555"
+                        value={attorneyForm.contactPhone}
+                        onChange={(e) => handleAttorneyChange("contactPhone", e.target.value)}
+                        required={role === "attorney"}
+                        className="bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-primary focus:ring-primary/20 h-12"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-white/80 text-sm">Amount Needed *</Label>
+                      <Input
+                        type="text"
+                        placeholder="$0.00"
+                        value={attorneyForm.amountNeeded}
+                        onChange={(e) => handleAttorneyChange("amountNeeded", e.target.value)}
+                        required={role === "attorney"}
+                        className="bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-primary focus:ring-primary/20 h-12"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-white/80 text-sm">Who's the funding for? *</Label>
+                      <Select
+                        value={attorneyForm.fundingFor}
+                        onValueChange={(value) => handleAttorneyChange("fundingFor", value)}
+                      >
+                        <SelectTrigger className="bg-white/5 border-white/15 text-white h-12">
+                          <SelectValue placeholder="Select option" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-secondary border-white/20">
+                          <SelectItem value="plaintiff-initial" className="text-white hover:bg-white/10">Plaintiff – Initial Funding</SelectItem>
+                          <SelectItem value="plaintiff-additional" className="text-white hover:bg-white/10">Plaintiff – Additional Funding</SelectItem>
+                          <SelectItem value="law-firm" className="text-white hover:bg-white/10">Law Firm Funding</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-white/80 text-sm">Date of Accident *</Label>
+                      <Input
+                        type="date"
+                        value={attorneyForm.dateOfAccident}
+                        onChange={(e) => handleAttorneyChange("dateOfAccident", e.target.value)}
+                        required={role === "attorney"}
+                        className="bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-primary focus:ring-primary/20 h-12"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-white/80 text-sm">Plaintiff Name *</Label>
+                    <Input
+                      placeholder="Plaintiff Full Name"
+                      value={attorneyForm.plaintiffName}
+                      onChange={(e) => handleAttorneyChange("plaintiffName", e.target.value)}
+                      required={role === "attorney"}
+                      className="bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-primary focus:ring-primary/20 h-12"
+                    />
+                  </div>
+                </div>
+
+                <Button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base py-6 shadow-lg glow-effect mt-4"
+                >
+                  {isSubmitting ? "Submitting..." : "SUBMIT"}
                 </Button>
               </form>
 
