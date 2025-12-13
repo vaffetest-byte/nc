@@ -23,7 +23,7 @@ const HowItWorks = () => {
   ];
 
   return (
-    <section id="how-it-works" className="py-24 bg-muted/50">
+    <section id="how-it-works" className="py-24 section-gradient">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <span className="text-primary font-semibold text-sm uppercase tracking-widest">
@@ -41,22 +41,22 @@ const HowItWorks = () => {
           {steps.map((step, index) => (
             <div
               key={step.title}
-              className="relative bg-white rounded-2xl p-8 card-shadow hover:shadow-xl transition-all duration-300 animate-fade-in border border-border/50"
+              className="relative bg-card rounded-2xl p-8 card-shadow hover:shadow-xl transition-all duration-300 animate-fade-in border border-border group hover:-translate-y-1"
               style={{ animationDelay: `${index * 0.15}s` }}
             >
               {/* Step Number */}
-              <div className="absolute -top-4 -right-4 w-14 h-14 bg-secondary rounded-xl flex items-center justify-center shadow-lg">
+              <div className="absolute -top-4 -right-4 w-14 h-14 bg-secondary rounded-xl flex items-center justify-center shadow-lg group-hover:bg-primary transition-colors">
                 <span className="text-xl font-bold text-secondary-foreground">
                   {step.step}
                 </span>
               </div>
 
               {/* Icon */}
-              <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6">
+              <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
                 <step.icon className="w-7 h-7 text-primary" />
               </div>
 
-              <h3 className="text-xl font-bold text-foreground mb-3">
+              <h3 className="text-xl font-bold text-foreground mb-3 font-serif">
                 {step.title}
               </h3>
               <p className="text-muted-foreground leading-relaxed">

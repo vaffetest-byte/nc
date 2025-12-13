@@ -14,7 +14,7 @@ const Header = () => {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-border/50 shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/98 backdrop-blur-lg border-b border-border shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
@@ -36,15 +36,15 @@ const Header = () => {
           </nav>
 
           {/* CTA Buttons */}
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-5">
             <a
               href="tel:718-587-9965"
-              className="flex items-center gap-2 text-secondary font-semibold text-sm"
+              className="flex items-center gap-2 text-secondary font-semibold text-sm hover:text-primary transition-colors"
             >
               <Phone className="w-4 h-4" />
               <span>(718) 587-9965</span>
             </a>
-            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 shadow-md shadow-primary/20">
+            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 shadow-lg glow-effect">
               GET STARTED
             </Button>
           </div>
@@ -65,7 +65,7 @@ const Header = () => {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-border animate-fade-in">
+          <div className="lg:hidden py-5 border-t border-border animate-fade-in">
             <nav className="flex flex-col gap-4">
               {navLinks.map((link) => (
                 <a
@@ -84,7 +84,7 @@ const Header = () => {
                 <Phone className="w-5 h-5" />
                 <span>(718) 587-9965</span>
               </a>
-              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold w-full mt-2">
+              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold w-full mt-2 shadow-lg">
                 GET STARTED
               </Button>
             </nav>

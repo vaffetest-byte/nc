@@ -62,7 +62,7 @@ const Services = () => {
   ];
 
   return (
-    <section id="services" className="py-24 bg-white">
+    <section id="services" className="py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <span className="text-primary font-semibold text-sm uppercase tracking-widest">
@@ -80,15 +80,15 @@ const Services = () => {
           {services.map((service, index) => (
             <div
               key={service.title}
-              className="group bg-muted/50 hover:bg-secondary rounded-xl p-5 transition-all duration-300 cursor-pointer animate-fade-in border border-transparent hover:border-secondary"
+              className="group bg-muted/60 hover:bg-secondary rounded-xl p-5 transition-all duration-300 cursor-pointer animate-fade-in border border-border/50 hover:border-secondary hover:shadow-lg"
               style={{ animationDelay: `${index * 0.05}s` }}
             >
               <div className="flex items-start gap-4">
-                <div className="w-11 h-11 bg-primary/10 group-hover:bg-primary rounded-lg flex items-center justify-center shrink-0 transition-colors">
+                <div className="w-12 h-12 bg-primary/10 group-hover:bg-primary rounded-lg flex items-center justify-center shrink-0 transition-all duration-300">
                   <service.icon className="w-5 h-5 text-primary group-hover:text-primary-foreground transition-colors" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-base font-bold text-foreground group-hover:text-secondary-foreground mb-1 transition-colors">
+                  <h3 className="text-base font-bold text-foreground group-hover:text-secondary-foreground mb-1 transition-colors font-serif">
                     {service.title}
                   </h3>
                   <p className="text-sm text-muted-foreground group-hover:text-secondary-foreground/80 transition-colors leading-relaxed">
@@ -104,7 +104,7 @@ const Services = () => {
         <div className="text-center mt-12">
           <Button 
             size="lg" 
-            className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 shadow-md shadow-primary/20"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 shadow-lg glow-effect"
           >
             View All Case Types
           </Button>
