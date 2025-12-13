@@ -28,8 +28,7 @@ const Hero = () => {
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-6 tracking-tight">
-              It's Not a Lawsuit Loan.{" "}
-              <span className="text-primary">It's Litigation Funding Simplified.</span>
+              <span className="text-primary">Financial Relief</span> While You Pursue Justice.
             </h1>
             <p className="text-lg text-white/75 mb-10 max-w-xl leading-relaxed">
               Get the financial support you need while your case is pending. National Claims Assoc provides fast, reliable litigation funding with no risk to you.
