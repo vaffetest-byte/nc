@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { TrendingUp, Minus } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 
 // ============ CONFIGURABLE RATES ============
 const NCA_MONTHLY_RATE = 0.03; // 3% per month
@@ -15,27 +15,19 @@ const Calculator = () => {
   const [advanceAmount, setAdvanceAmount] = useState(10000);
 
   // ===== ATTORNEY FEES =====
-  // Attorney Fee = Settlement Amount × Attorney Fee %
   const attorneyFees = settlementAmount * (attorneyFeePercent / 100);
 
   // ===== IF SETTLED TODAY =====
-  // No advance cost
-  // Net Amount = Settlement – Attorney Fees
   const netSettleToday = settlementAmount - attorneyFees;
 
   // ===== WITH OUR COMPANY (NCA) ADVANCE =====
-  // Advance Cost = Advance Amount × Monthly Rate × Months
-  // Cap: Never more than 2× advance amount
   const ncaAdvanceCostRaw = advanceAmount * NCA_MONTHLY_RATE * months;
   const ncaMaxCap = advanceAmount * NCA_MAX_CAP_MULTIPLIER;
   const ncaAdvanceCost = Math.min(ncaAdvanceCostRaw, ncaMaxCap);
-  // Net Amount = Settlement – Attorney Fees – Our Advance Cost
   const netWithNCA = settlementAmount - attorneyFees - ncaAdvanceCost;
 
   // ===== WITH COMPETITOR ADVANCE =====
-  // Higher monthly rate, no hard cap
   const competitorAdvanceCost = advanceAmount * COMPETITOR_MONTHLY_RATE * months;
-  // Net Amount = Settlement – Attorney Fees – Competitor Advance Cost
   const netWithCompetitor = settlementAmount - attorneyFees - competitorAdvanceCost;
 
   // Savings comparison
@@ -50,195 +42,187 @@ const Calculator = () => {
     }).format(value);
   };
 
-  return (
-    <section className="py-24 bg-muted/30">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 font-heading">
-            Calculate Your Savings
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Enter your case details to compare how National Claims Assoc can help you keep more of your settlement.
+  const ResultCard = ({ 
+    title, 
+    settlement, 
+    advanceCost, 
+    attorneyFee, 
+    netAmount, 
+    highlighted = false,
+    advanceCostLabel = "Advance Cost"
+  }: { 
+    title: string;
+    settlement: number;
+    advanceCost: number | null;
+    attorneyFee: number;
+    netAmount: number;
+    highlighted?: boolean;
+    advanceCostLabel?: string;
+  }) => (
+    <div className={`rounded-2xl p-6 transition-all duration-300 ${
+      highlighted 
+        ? "bg-gradient-to-b from-primary/10 to-primary/5 ring-1 ring-primary/20" 
+        : "bg-card hover:bg-muted/30"
+    }`}>
+      {highlighted && (
+        <div className="text-center mb-4">
+          <span className="text-[10px] font-semibold uppercase tracking-widest text-primary bg-primary/10 px-3 py-1 rounded-full">
+            Recommended
+          </span>
+        </div>
+      )}
+      <h4 className={`text-sm font-medium text-center mb-6 ${highlighted ? "text-primary" : "text-muted-foreground"}`}>
+        {title}
+      </h4>
+      
+      <div className="space-y-4">
+        <div className="text-center pb-4 border-b border-border/50">
+          <p className="text-[11px] uppercase tracking-wide text-muted-foreground mb-1">Settlement</p>
+          <p className={`text-xl font-semibold ${highlighted ? "text-primary" : "text-foreground"}`}>
+            {formatCurrency(settlement)}
           </p>
         </div>
 
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            
-            {/* Input Card */}
-            <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
-              <h3 className="font-semibold text-foreground text-lg mb-6 pb-3 border-b border-border">
-                Your Case Details
-              </h3>
-              
-              <div className="space-y-5">
-                <div>
-                  <label className="text-sm text-muted-foreground block mb-2">
-                    Settlement Amount
-                  </label>
-                  <Input
-                    type="text"
-                    value={formatCurrency(settlementAmount)}
-                    onChange={(e) => setSettlementAmount(Number(e.target.value.replace(/[^0-9]/g, '')))}
-                    className="bg-muted/50 border-border"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-sm text-muted-foreground block mb-2">
-                    Expected Case Duration (Months)
-                  </label>
-                  <Input
-                    type="number"
-                    value={months}
-                    onChange={(e) => setMonths(Number(e.target.value))}
-                    className="bg-muted/50 border-border"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-sm text-muted-foreground block mb-2">
-                    Attorney Fee (%)
-                  </label>
-                  <Input
-                    type="number"
-                    value={attorneyFeePercent}
-                    onChange={(e) => setAttorneyFeePercent(Number(e.target.value))}
-                    className="bg-muted/50 border-border"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-sm text-muted-foreground block mb-2">
-                    Advance Amount Needed
-                  </label>
-                  <Input
-                    type="text"
-                    value={formatCurrency(advanceAmount)}
-                    onChange={(e) => setAdvanceAmount(Number(e.target.value.replace(/[^0-9]/g, '')))}
-                    className="bg-muted/50 border-border"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Settle Today Card */}
-            <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
-              <h3 className="font-semibold text-muted-foreground text-lg mb-6 pb-3 border-b border-border text-center">
-                Settle Today
-              </h3>
-              
-              <div className="space-y-6">
-                <div className="text-center p-4 bg-muted/30 rounded-lg">
-                  <p className="text-sm text-muted-foreground mb-1">Settlement Amount</p>
-                  <p className="text-2xl font-bold text-foreground">{formatCurrency(settlementAmount)}</p>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center py-3 border-b border-border">
-                    <span className="text-sm text-muted-foreground">Advance Cost</span>
-                    <span className="font-semibold text-foreground flex items-center gap-2">
-                      <Minus className="w-4 h-4 text-muted-foreground" />
-                      N/A
-                    </span>
-                  </div>
-                  
-                  <div className="flex justify-between items-center py-3 border-b border-border">
-                    <span className="text-sm text-muted-foreground">Attorney Fees</span>
-                    <span className="font-semibold text-foreground">{formatCurrency(attorneyFees)}</span>
-                  </div>
-                  
-                  <div className="pt-4">
-                    <p className="text-sm text-muted-foreground mb-2">You Receive</p>
-                    <p className="text-3xl font-bold text-foreground">{formatCurrency(netSettleToday)}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* National Claims Assoc Card (Highlighted) */}
-            <div className="bg-primary/5 rounded-xl border-2 border-primary p-6 shadow-lg relative">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full">
-                BEST VALUE
-              </div>
-              <h3 className="font-semibold text-primary text-lg mb-6 pb-3 border-b border-primary/30 text-center">
-                National Claims Assoc
-              </h3>
-              
-              <div className="space-y-6">
-                <div className="text-center p-4 bg-primary/10 rounded-lg">
-                  <p className="text-sm text-primary/80 mb-1">Settlement Amount</p>
-                  <p className="text-2xl font-bold text-primary">{formatCurrency(settlementAmount)}</p>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center py-3 border-b border-primary/20">
-                    <span className="text-sm text-muted-foreground">Advance Cost</span>
-                    <span className="font-semibold text-primary">{formatCurrency(ncaAdvanceCost)}</span>
-                  </div>
-                  
-                  <div className="flex justify-between items-center py-3 border-b border-primary/20">
-                    <span className="text-sm text-muted-foreground">Attorney Fees</span>
-                    <span className="font-semibold text-foreground">{formatCurrency(attorneyFees)}</span>
-                  </div>
-                  
-                  <div className="pt-4">
-                    <p className="text-sm text-primary/80 mb-2">You Receive</p>
-                    <p className="text-3xl font-bold text-primary">{formatCurrency(netWithNCA)}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Competitor Card */}
-            <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
-              <h3 className="font-semibold text-muted-foreground text-lg mb-6 pb-3 border-b border-border text-center">
-                Typical Competitor
-              </h3>
-              
-              <div className="space-y-6">
-                <div className="text-center p-4 bg-muted/30 rounded-lg">
-                  <p className="text-sm text-muted-foreground mb-1">Settlement Amount</p>
-                  <p className="text-2xl font-bold text-foreground">{formatCurrency(settlementAmount)}</p>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center py-3 border-b border-border">
-                    <span className="text-sm text-muted-foreground">Advance Cost</span>
-                    <span className="font-semibold text-destructive">{formatCurrency(competitorAdvanceCost)}</span>
-                  </div>
-                  
-                  <div className="flex justify-between items-center py-3 border-b border-border">
-                    <span className="text-sm text-muted-foreground">Attorney Fees</span>
-                    <span className="font-semibold text-foreground">{formatCurrency(attorneyFees)}</span>
-                  </div>
-                  
-                  <div className="pt-4">
-                    <p className="text-sm text-muted-foreground mb-2">You Receive</p>
-                    <p className="text-3xl font-bold text-foreground">{formatCurrency(netWithCompetitor)}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <div className="space-y-3 text-sm">
+          <div className="flex justify-between items-center">
+            <span className="text-muted-foreground">{advanceCostLabel}</span>
+            <span className={`font-medium ${
+              advanceCost === null 
+                ? "text-muted-foreground" 
+                : highlighted 
+                  ? "text-primary" 
+                  : "text-foreground"
+            }`}>
+              {advanceCost === null ? "—" : formatCurrency(advanceCost)}
+            </span>
           </div>
-
-          {/* Savings Banner */}
-          <div className="mt-8 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-xl p-6 text-center">
-            <div className="flex items-center justify-center gap-2 text-emerald-700 dark:text-emerald-400 mb-2">
-              <TrendingUp className="w-5 h-5" />
-              <span className="font-semibold">Your Savings with National Claims Assoc</span>
-            </div>
-            <p className="text-4xl font-bold text-emerald-700 dark:text-emerald-400">
-              {formatCurrency(savingsVsCompetitor)}
-            </p>
-            <p className="text-sm text-emerald-600 dark:text-emerald-500 mt-2">
-              compared to typical competitor rates (NCA capped at 2× advance amount)
-            </p>
+          
+          <div className="flex justify-between items-center">
+            <span className="text-muted-foreground">Attorney Fees</span>
+            <span className="font-medium text-foreground">{formatCurrency(attorneyFee)}</span>
           </div>
+        </div>
 
-          <p className="text-xs text-muted-foreground text-center mt-6">
-            *Rates are illustrative. Actual rates depend on case specifics and duration.
+        <div className={`pt-4 mt-4 border-t ${highlighted ? "border-primary/20" : "border-border/50"}`}>
+          <p className="text-[11px] uppercase tracking-wide text-muted-foreground mb-1 text-center">You Receive</p>
+          <p className={`text-2xl font-bold text-center ${highlighted ? "text-primary" : "text-foreground"}`}>
+            {formatCurrency(netAmount)}
           </p>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <section className="py-24 bg-background">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3 font-heading">
+            Calculate Your Savings
+          </h2>
+          <p className="text-muted-foreground max-w-xl mx-auto">
+            See how National Claims Assoc helps you keep more of your settlement.
+          </p>
+        </div>
+
+        <div className="max-w-5xl mx-auto">
+          {/* Input Section */}
+          <div className="bg-muted/30 rounded-2xl p-8 mb-8">
+            <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide mb-6">
+              Your Case Details
+            </h3>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div>
+                <label className="text-xs text-muted-foreground block mb-2">
+                  Settlement Amount
+                </label>
+                <Input
+                  type="text"
+                  value={formatCurrency(settlementAmount)}
+                  onChange={(e) => setSettlementAmount(Number(e.target.value.replace(/[^0-9]/g, '')))}
+                  className="bg-background border-0 shadow-sm h-11"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs text-muted-foreground block mb-2">
+                  Case Duration (Months)
+                </label>
+                <Input
+                  type="number"
+                  value={months}
+                  onChange={(e) => setMonths(Number(e.target.value))}
+                  className="bg-background border-0 shadow-sm h-11"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs text-muted-foreground block mb-2">
+                  Attorney Fee (%)
+                </label>
+                <Input
+                  type="number"
+                  value={attorneyFeePercent}
+                  onChange={(e) => setAttorneyFeePercent(Number(e.target.value))}
+                  className="bg-background border-0 shadow-sm h-11"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs text-muted-foreground block mb-2">
+                  Advance Needed
+                </label>
+                <Input
+                  type="text"
+                  value={formatCurrency(advanceAmount)}
+                  onChange={(e) => setAdvanceAmount(Number(e.target.value.replace(/[^0-9]/g, '')))}
+                  className="bg-background border-0 shadow-sm h-11"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Results Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <ResultCard
+              title="Settle Today"
+              settlement={settlementAmount}
+              advanceCost={null}
+              attorneyFee={attorneyFees}
+              netAmount={netSettleToday}
+            />
+            
+            <ResultCard
+              title="With National Claims Assoc"
+              settlement={settlementAmount}
+              advanceCost={ncaAdvanceCost}
+              attorneyFee={attorneyFees}
+              netAmount={netWithNCA}
+              highlighted
+            />
+            
+            <ResultCard
+              title="With Competitor"
+              settlement={settlementAmount}
+              advanceCost={competitorAdvanceCost}
+              attorneyFee={attorneyFees}
+              netAmount={netWithCompetitor}
+            />
+          </div>
+
+          {/* Savings Summary */}
+          <div className="mt-8 text-center">
+            <div className="inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 px-6 py-3 rounded-full">
+              <TrendingUp className="w-4 h-4" />
+              <span className="text-sm font-medium">
+                Save <span className="font-bold">{formatCurrency(savingsVsCompetitor)}</span> compared to competitors
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground mt-4">
+              *NCA advance cost capped at 2× advance amount. Rates are illustrative.
+            </p>
+          </div>
         </div>
       </div>
     </section>
