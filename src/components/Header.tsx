@@ -8,11 +8,11 @@ const Header = forwardRef<HTMLElement>((_, ref) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLinks = [
-    { name: "Get Started", href: "/", isPage: true },
-    { name: "What We Fund", href: "/what-we-fund", isPage: true },
-    { name: "How It Works", href: "/how-it-works", isPage: true },
-    { name: "For Attorneys", href: "#attorneys", isPage: false },
-    { name: "For Brokers", href: "#brokers", isPage: false },
+    { name: "Get Started", href: "/", isPage: true, disabled: false },
+    { name: "What We Fund", href: "/what-we-fund", isPage: true, disabled: true },
+    { name: "How It Works", href: "/how-it-works", isPage: true, disabled: true },
+    { name: "For Attorneys", href: "#attorneys", isPage: false, disabled: false },
+    { name: "For Brokers", href: "#brokers", isPage: false, disabled: false },
   ];
 
   return (
@@ -27,7 +27,14 @@ const Header = forwardRef<HTMLElement>((_, ref) => {
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => (
-              link.isPage ? (
+              link.disabled ? (
+                <span
+                  key={link.name}
+                  className="text-secondary-foreground/40 font-medium text-sm cursor-not-allowed"
+                >
+                  {link.name}
+                </span>
+              ) : link.isPage ? (
                 <Link
                   key={link.name}
                   to={link.href}
@@ -84,7 +91,14 @@ const Header = forwardRef<HTMLElement>((_, ref) => {
           <div className="lg:hidden py-5 border-t border-secondary-foreground/10 animate-fade-in">
             <nav className="flex flex-col gap-4">
               {navLinks.map((link) => (
-                link.isPage ? (
+                link.disabled ? (
+                  <span
+                    key={link.name}
+                    className="text-secondary-foreground/40 font-medium py-2 cursor-not-allowed"
+                  >
+                    {link.name}
+                  </span>
+                ) : link.isPage ? (
                   <Link
                     key={link.name}
                     to={link.href}
