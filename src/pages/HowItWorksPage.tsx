@@ -308,11 +308,12 @@ const HowItWorksPage = () => {
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
-                <a href="tel:+17185879965">
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto text-lg px-8 py-6 border-white text-white hover:bg-white hover:text-primary">
-                    <Phone className="mr-2 h-5 w-5" />
-                    (718) 587-9965
-                  </Button>
+                <a
+                  href="tel:+17185879965"
+                  className="flex items-center justify-center gap-2 w-full sm:w-auto text-lg px-8 py-4 rounded-md border-2 border-white text-white hover:bg-white hover:text-primary font-medium transition-all duration-300"
+                >
+                  <Phone className="h-5 w-5" />
+                  (718) 587-9965
                 </a>
               </div>
             </div>
