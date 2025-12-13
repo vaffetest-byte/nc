@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { TrendingUp } from "lucide-react";
 
 // ============ CONFIGURABLE RATES ============
 const NCA_MONTHLY_RATE = 0.03; // 3% per month
-const COMPETITOR_MONTHLY_RATE = 0.045; // 4.5% per month
-const NCA_MAX_CAP_MULTIPLIER = 2; // NCA cap: never more than 2x advance amount
+const COMPETITOR_MONTHLY_RATE = 0.0425; // 4.25% per month
+const NCA_CAP_MULTIPLIER = 2; // NCA cap: 2x advance amount
+const COMPETITOR_CAP_MULTIPLIER = 2.5; // Competitor cap: 2.5x advance amount
+const MAX_ADVANCE_PERCENT = 0.30; // Advance cannot exceed 30% of settlement
 // ============================================
 
 const Calculator = () => {
@@ -16,26 +18,47 @@ const Calculator = () => {
 
   const MIN_SETTLEMENT = 1000;
 
+  // Auto-adjust advance if it exceeds 30% of settlement
+  const maxAdvance = settlementAmount * MAX_ADVANCE_PERCENT;
+  const effectiveAdvance = Math.min(advanceAmount, maxAdvance);
+
+  // Auto-correct advance when settlement changes
+  useEffect(() => {
+    if (advanceAmount > maxAdvance) {
+      setAdvanceAmount(Math.floor(maxAdvance));
+    }
+  }, [settlementAmount, maxAdvance, advanceAmount]);
+
   const handleSettlementChange = (value: string) => {
     const numValue = Number(value.replace(/[^0-9]/g, ''));
     setSettlementAmount(Math.max(numValue, MIN_SETTLEMENT));
+  };
+
+  const handleAdvanceChange = (value: string) => {
+    const numValue = Number(value.replace(/[^0-9]/g, ''));
+    // Cap at 30% of settlement
+    setAdvanceAmount(Math.min(numValue, maxAdvance));
   };
 
   // ===== ATTORNEY FEES =====
   const attorneyFees = settlementAmount * (attorneyFeePercent / 100);
 
   // ===== IF SETTLED TODAY =====
-  const netSettleToday = settlementAmount - attorneyFees;
+  const netSettleToday = Math.max(settlementAmount - attorneyFees, 0);
 
   // ===== WITH OUR COMPANY (NCA) ADVANCE =====
-  const ncaAdvanceCostRaw = advanceAmount * NCA_MONTHLY_RATE * months;
-  const ncaMaxCap = advanceAmount * NCA_MAX_CAP_MULTIPLIER;
+  // cost = min(advance × monthlyRate × months, advance × capMultiplier)
+  const ncaAdvanceCostRaw = effectiveAdvance * NCA_MONTHLY_RATE * months;
+  const ncaMaxCap = effectiveAdvance * NCA_CAP_MULTIPLIER;
   const ncaAdvanceCost = Math.min(ncaAdvanceCostRaw, ncaMaxCap);
-  const netWithNCA = settlementAmount - attorneyFees - ncaAdvanceCost;
+  const netWithNCA = Math.max(settlementAmount - attorneyFees - ncaAdvanceCost, 0);
 
   // ===== WITH COMPETITOR ADVANCE =====
-  const competitorAdvanceCost = advanceAmount * COMPETITOR_MONTHLY_RATE * months;
-  const netWithCompetitor = settlementAmount - attorneyFees - competitorAdvanceCost;
+  // cost = min(advance × monthlyRate × months, advance × capMultiplier)
+  const competitorAdvanceCostRaw = effectiveAdvance * COMPETITOR_MONTHLY_RATE * months;
+  const competitorMaxCap = effectiveAdvance * COMPETITOR_CAP_MULTIPLIER;
+  const competitorAdvanceCost = Math.min(competitorAdvanceCostRaw, competitorMaxCap);
+  const netWithCompetitor = Math.max(settlementAmount - attorneyFees - competitorAdvanceCost, 0);
 
   // Savings comparison
   const savingsVsCompetitor = netWithNCA - netWithCompetitor;
@@ -48,6 +71,8 @@ const Calculator = () => {
       maximumFractionDigits: 0,
     }).format(value);
   };
+
+  const advanceExceedsLimit = advanceAmount > maxAdvance;
 
   return (
     <section className="py-24 bg-muted/50">
@@ -84,8 +109,9 @@ const Calculator = () => {
               <Input
                 type="number"
                 value={months}
-                onChange={(e) => setMonths(Number(e.target.value))}
+                onChange={(e) => setMonths(Math.max(1, Number(e.target.value)))}
                 className="bg-background border-border h-12 text-lg"
+                min={1}
               />
             </div>
 
@@ -96,21 +122,26 @@ const Calculator = () => {
               <Input
                 type="number"
                 value={attorneyFeePercent}
-                onChange={(e) => setAttorneyFeePercent(Number(e.target.value))}
+                onChange={(e) => setAttorneyFeePercent(Math.min(100, Math.max(0, Number(e.target.value))))}
                 className="bg-background border-border h-12 text-lg"
+                min={0}
+                max={100}
               />
             </div>
 
             <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
               <label className="text-sm text-muted-foreground block mb-2">
-                Advance Needed
+                Advance Needed (max 30%)
               </label>
               <Input
                 type="text"
                 value={formatCurrency(advanceAmount)}
-                onChange={(e) => setAdvanceAmount(Number(e.target.value.replace(/[^0-9]/g, '')))}
-                className="bg-background border-border h-12 text-lg"
+                onChange={(e) => handleAdvanceChange(e.target.value)}
+                className={`bg-background h-12 text-lg ${advanceExceedsLimit ? 'border-destructive' : 'border-border'}`}
               />
+              <p className="text-xs text-muted-foreground mt-1">
+                Max: {formatCurrency(maxAdvance)}
+              </p>
             </div>
           </div>
 
@@ -234,7 +265,7 @@ const Calculator = () => {
 
           {/* Footnote */}
           <p className="text-center text-sm text-muted-foreground">
-            *NCA advance cost capped at 2× advance amount. Rates are illustrative and depend on case specifics.
+            *NCA advance cost capped at 2× advance. Competitor capped at 2.5×. Advance limited to 30% of settlement. Rates are illustrative.
           </p>
         </div>
       </div>
