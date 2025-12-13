@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DollarSign, TrendingUp, CheckCircle } from "lucide-react";
+import { DollarSign, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 
@@ -12,7 +12,7 @@ const Calculator = () => {
   const savings = competitorCost - ncaCost;
 
   return (
-    <section className="py-24 bg-white">
+    <section className="py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
@@ -27,10 +27,10 @@ const Calculator = () => {
             </p>
           </div>
 
-          <div className="bg-muted/50 rounded-2xl p-8 card-shadow border border-border/50">
+          <div className="bg-muted/60 rounded-2xl p-8 card-shadow border border-border">
             {/* Slider */}
-            <div className="mb-8">
-              <label className="block text-sm font-semibold text-foreground mb-4">
+            <div className="mb-10">
+              <label className="block text-sm font-semibold text-foreground mb-5">
                 Funding Amount Needed
               </label>
               <Slider
@@ -39,19 +39,19 @@ const Calculator = () => {
                 max={50000}
                 min={1000}
                 step={1000}
-                className="mb-4"
+                className="mb-5"
               />
-              <div className="flex items-center justify-center gap-2 text-3xl font-bold text-primary">
-                <DollarSign className="w-7 h-7" />
+              <div className="flex items-center justify-center gap-2 text-4xl font-bold text-primary">
+                <DollarSign className="w-8 h-8" />
                 <span>{fundingAmount.toLocaleString()}</span>
               </div>
             </div>
 
             {/* Comparison */}
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid md:grid-cols-3 gap-5">
               {/* Funding Amount */}
-              <div className="bg-white rounded-xl p-5 text-center border border-border/50">
-                <p className="text-xs text-muted-foreground mb-2 uppercase tracking-wide">
+              <div className="bg-card rounded-xl p-6 text-center border border-border">
+                <p className="text-xs text-muted-foreground mb-2 uppercase tracking-wide font-semibold">
                   Funding Amount
                 </p>
                 <p className="text-2xl font-bold text-foreground">
@@ -60,8 +60,8 @@ const Calculator = () => {
               </div>
 
               {/* Competitor */}
-              <div className="bg-white rounded-xl p-5 text-center border-2 border-destructive/30">
-                <p className="text-xs text-muted-foreground mb-2 uppercase tracking-wide">
+              <div className="bg-card rounded-xl p-6 text-center border-2 border-destructive/40">
+                <p className="text-xs text-muted-foreground mb-2 uppercase tracking-wide font-semibold">
                   Typical Competitor
                 </p>
                 <p className="text-2xl font-bold text-destructive">
@@ -73,8 +73,8 @@ const Calculator = () => {
               </div>
 
               {/* NCA */}
-              <div className="bg-secondary rounded-xl p-5 text-center">
-                <p className="text-xs text-secondary-foreground/70 mb-2 uppercase tracking-wide">
+              <div className="bg-secondary rounded-xl p-6 text-center shadow-lg">
+                <p className="text-xs text-secondary-foreground/70 mb-2 uppercase tracking-wide font-semibold">
                   With NCA
                 </p>
                 <p className="text-2xl font-bold text-secondary-foreground">
@@ -87,12 +87,12 @@ const Calculator = () => {
             </div>
 
             {/* Savings */}
-            <div className="mt-6 bg-emerald-50 border border-emerald-200 rounded-xl p-5 text-center">
+            <div className="mt-6 bg-emerald-50 border border-emerald-200 rounded-xl p-6 text-center">
               <div className="flex items-center justify-center gap-2 text-emerald-700 mb-1">
                 <TrendingUp className="w-5 h-5" />
                 <span className="font-semibold text-sm">Your Potential Savings</span>
               </div>
-              <p className="text-3xl font-bold text-emerald-700">
+              <p className="text-4xl font-bold text-emerald-700">
                 ${savings.toLocaleString()}
               </p>
             </div>
@@ -100,13 +100,13 @@ const Calculator = () => {
             <div className="mt-8 text-center">
               <Button 
                 size="lg" 
-                className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 shadow-md shadow-primary/20"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 shadow-lg glow-effect"
               >
                 Get Your Free Quote
               </Button>
             </div>
 
-            <p className="text-xs text-muted-foreground text-center mt-4">
+            <p className="text-xs text-muted-foreground text-center mt-5">
               *Rates are illustrative. Actual rates depend on case specifics and duration.
             </p>
           </div>

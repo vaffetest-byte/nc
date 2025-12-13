@@ -31,7 +31,7 @@ const Testimonials = () => {
   };
 
   return (
-    <section className="py-24 bg-muted/50">
+    <section className="py-24 section-gradient">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <span className="text-primary font-semibold text-sm uppercase tracking-widest">
@@ -57,11 +57,11 @@ const Testimonials = () => {
           {testimonials.map((testimonial, index) => (
             <div
               key={testimonial.name}
-              className="bg-white rounded-2xl p-7 card-shadow relative animate-fade-in border border-border/50"
+              className="bg-card rounded-2xl p-7 card-shadow relative animate-fade-in border border-border group hover:-translate-y-1 transition-all duration-300"
               style={{ animationDelay: `${index * 0.15}s` }}
             >
               {/* Quote Icon */}
-              <Quote className="absolute top-6 right-6 w-8 h-8 text-primary/10" />
+              <Quote className="absolute top-6 right-6 w-10 h-10 text-primary/10 group-hover:text-primary/20 transition-colors" />
 
               {/* Rating */}
               <div className="flex items-center gap-1 mb-4">
@@ -77,7 +77,7 @@ const Testimonials = () => {
 
               {/* Author */}
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-secondary rounded-full flex items-center justify-center">
+                <div className="w-11 h-11 bg-secondary rounded-full flex items-center justify-center">
                   <span className="text-secondary-foreground font-bold text-sm">
                     {testimonial.name.charAt(0)}
                   </span>
@@ -87,7 +87,7 @@ const Testimonials = () => {
                   <p className="text-xs text-muted-foreground">{testimonial.location}</p>
                 </div>
                 {testimonial.verified && (
-                  <span className="ml-auto text-xs bg-green-50 text-green-700 px-2 py-1 rounded-full font-medium border border-green-100">
+                  <span className="ml-auto text-xs bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full font-medium border border-emerald-200">
                     Verified
                   </span>
                 )}
