@@ -379,9 +379,9 @@ const Hero = () => {
                 <Button 
                   type="submit" 
                   disabled={isSubmitting}
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base py-6 shadow-lg glow-effect mt-4"
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg py-5 h-14 shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 glow-effect mt-6 rounded-lg tracking-wide"
                 >
-                  {isSubmitting ? "Submitting..." : "SUBMIT"}
+                  {isSubmitting ? "Submitting..." : "Submit a Request for Funding"}
                 </Button>
               </form>
 
