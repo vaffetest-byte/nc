@@ -9,8 +9,6 @@ import PageTransition from "@/components/PageTransition";
 
 // Lazy load pages for better performance
 const Index = lazy(() => import("./pages/Index"));
-const WhatWeFund = lazy(() => import("./pages/WhatWeFund"));
-const HowItWorksPage = lazy(() => import("./pages/HowItWorksPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -36,8 +34,6 @@ const App = () => (
             <PageTransition>
               <Routes>
                 <Route path="/" element={<Index />} />
-                <Route path="/what-we-fund" element={<WhatWeFund />} />
-                <Route path="/how-it-works" element={<HowItWorksPage />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
