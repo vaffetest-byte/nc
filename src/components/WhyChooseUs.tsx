@@ -1,34 +1,34 @@
 const WhyChooseUs = () => {
   const benefits = [
     {
-      title: "Fast Funds",
+      title: "Rapid Funding",
       description:
-        "Get a cash advance from $500 to over $1,000,000 within 24 business-day hours.",
+        "Access financial support from $500 up to $1,000,000+, often delivered within 24 business hours after approval.",
     },
     {
-      title: "No Credit Checks",
+      title: "No Credit Evaluation",
       description:
-        "Your credit score is not a factor to qualify for funding, and it will not be impacted.",
+        "Your credit history is never reviewed, and your credit score remains completely unaffected.",
     },
     {
-      title: "100% Risk-Free",
+      title: "No Win, No Repayment",
       description:
-        "Unlike lawsuit loans, your advance is not debt; you only pay us back if your case is successfully settled.",
+        "This is not a loan. You only repay if your case results in a successful settlement or verdict.",
     },
     {
-      title: "2X Cap**",
+      title: "Repayment Cap Protection",
       description:
-        "Never owe more than twice the amount advanced—no matter how long your case lasts.",
+        "You'll never repay more than a set maximum, regardless of how long your case takes to resolve.",
     },
     {
-      title: "Non-Compounded Rates",
+      title: "Simple, Non-Compounding Pricing",
       description:
-        "Maximize the amount you keep from your settlement with low rates that never compound.",
+        "Keep more of your settlement with straightforward rates that never compound over time.",
     },
     {
-      title: "Reliable Experience",
+      title: "Proven Legal Funding Expertise",
       description:
-        "We've been helping personal injury clients and their attorneys for over 25 years.",
+        "We've supported personal injury plaintiffs and their attorneys nationwide with reliable funding solutions for decades.",
     },
   ];
 
