@@ -24,7 +24,7 @@ const Hero = () => {
           <div className="text-white animate-fade-in">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-5 py-2.5 mb-8 border border-white/10">
               <Shield className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium text-white/90">Fast Approvals • No Upfront Fees • Risk-Free Funding</span>
+              <span className="text-sm font-medium text-white/90">Get Funded in as Little as 24 Hours</span>
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-6 tracking-tight">
