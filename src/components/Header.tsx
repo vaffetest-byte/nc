@@ -9,7 +9,7 @@ const Header = () => {
 
   const navLinks = [
     { name: "What We Fund", href: "/what-we-fund", isPage: true },
-    { name: "How It Works", href: "#how-it-works", isPage: false },
+    { name: "How It Works", href: "/how-it-works", isPage: true },
     { name: "For Attorneys", href: "#attorneys", isPage: false },
     { name: "For Brokers", href: "#brokers", isPage: false },
   ];
