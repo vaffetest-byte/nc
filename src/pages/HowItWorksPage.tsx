@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
@@ -17,7 +18,7 @@ import {
   BadgeCheck
 } from "lucide-react";
 
-const HowItWorksPage = () => {
+const HowItWorksPage = forwardRef<HTMLDivElement>((_, ref) => {
   const steps = [
     {
       number: "01",
@@ -324,6 +325,8 @@ const HowItWorksPage = () => {
       <Footer />
     </>
   );
-};
+});
+
+HowItWorksPage.displayName = "HowItWorksPage";
 
 export default HowItWorksPage;
