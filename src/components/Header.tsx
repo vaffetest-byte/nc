@@ -60,7 +60,7 @@ const Header = () => {
             </a>
             <Link to="/">
               <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 shadow-lg glow-effect">
-                GET STARTED
+                APPLY NOW
               </Button>
             </Link>
           </div>
@@ -113,7 +113,7 @@ const Header = () => {
               </a>
               <Link to="/" onClick={() => setIsMenuOpen(false)}>
                 <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold w-full mt-2 shadow-lg">
-                  GET STARTED
+                  APPLY NOW
                 </Button>
               </Link>
             </nav>
