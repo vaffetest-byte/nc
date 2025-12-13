@@ -108,3 +108,23 @@
 .section-gradient {
   background: linear-gradient(180deg, hsl(var(--muted)) 0%, hsl(var(--background)) 100%);
 }
+
+/* Ensure animations work correctly on mobile - provide fallback visibility */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-fade-in-up,
+  .animate-slide-in-right,
+  .animate-scale-in {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+}
+
+/* Ensure content is visible even if animations fail */
+.animate-fade-in,
+.animate-fade-in-up,
+.animate-slide-in-right,
+.animate-scale-in {
+  animation-fill-mode: forwards;
+}
