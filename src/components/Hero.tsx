@@ -100,40 +100,40 @@ const Hero = () => {
       <div className="relative container mx-auto px-4 py-16 lg:py-24">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Left Content */}
-          <div className="text-white animate-fade-in">
+          <div className="text-white">
             {/* Company Branding */}
-            <div className="mb-10">
+            <div className="mb-10 opacity-0 animate-fade-in" style={{ animationDelay: "0.1s" }}>
               <div className="flex items-center gap-4 mb-3">
-                <div className="w-12 h-[2px] bg-gradient-to-r from-primary to-primary/50" />
+                <div className="w-12 h-[2px] bg-gradient-to-r from-primary to-primary/50 opacity-0 animate-line-grow" style={{ animationDelay: "0.3s" }} />
                 <span className="text-xs font-bold tracking-[0.4em] uppercase text-white/60">
                   Trusted Legal Funding
                 </span>
               </div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight opacity-0 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
                 <span className="text-white">National</span>{" "}
                 <span className="text-primary">Claims</span>{" "}
                 <span className="text-white">Assoc</span>
               </h2>
               <div className="flex items-center gap-3 mt-4">
-                <div className="w-20 h-1 bg-primary rounded-full" />
-                <div className="w-3 h-3 bg-primary rounded-full animate-pulse" />
+                <div className="w-20 h-1 bg-primary rounded-full opacity-0 animate-line-grow" style={{ animationDelay: "0.5s" }} />
+                <div className="w-3 h-3 bg-primary rounded-full animate-pulse" style={{ animationDelay: "0.7s" }} />
               </div>
             </div>
 
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-5 py-2.5 mb-6 border border-white/10">
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-5 py-2.5 mb-6 border border-white/10 opacity-0 animate-fade-in" style={{ animationDelay: "0.4s" }}>
               <Shield className="w-4 h-4 text-primary" />
               <span className="text-sm font-medium text-white/90">Get Funded in as Little as 24 Hours</span>
             </div>
             
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-[1.15] mb-6 tracking-tight">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-[1.15] mb-6 tracking-tight opacity-0 animate-fade-in-up" style={{ animationDelay: "0.5s" }}>
               <span className="text-primary">Financial Relief</span> While You Pursue Justice.
             </h1>
-            <p className="text-lg text-white/75 mb-10 max-w-xl leading-relaxed">
+            <p className="text-lg text-white/75 mb-10 max-w-xl leading-relaxed opacity-0 animate-fade-in" style={{ animationDelay: "0.6s" }}>
               Get the financial support you need while your case is pending. Fast, reliable litigation funding with no risk to you.
             </p>
 
             {/* Benefits */}
-            <div className="flex flex-wrap gap-8 mb-12">
+            <div className="flex flex-wrap gap-8 mb-12 opacity-0 animate-fade-in" style={{ animationDelay: "0.7s" }}>
               {benefits.map((benefit) => (
                 <div key={benefit} className="flex items-center gap-3">
                   <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
@@ -144,7 +144,7 @@ const Hero = () => {
               ))}
             </div>
 
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-4 opacity-0 animate-fade-in-up" style={{ animationDelay: "0.8s" }}>
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base px-8 py-6 shadow-lg glow-effect group">
                 Apply Now
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -156,7 +156,7 @@ const Hero = () => {
           </div>
 
           {/* Right Form */}
-          <div className="animate-slide-in" style={{ animationDelay: "0.2s" }}>
+          <div className="opacity-0 animate-slide-in-right" style={{ animationDelay: "0.4s" }}>
             <div className="glass-card rounded-2xl p-8 shadow-2xl">
               <h2 className="text-2xl font-bold text-white mb-2">
                 Submit a Request for Funding
