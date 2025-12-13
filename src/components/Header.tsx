@@ -58,9 +58,11 @@ const Header = () => {
               </div>
               <span>(718) 587-9965</span>
             </a>
-            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 shadow-lg glow-effect">
-              GET STARTED
-            </Button>
+            <Link to="/">
+              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 shadow-lg glow-effect">
+                GET STARTED
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -109,9 +111,11 @@ const Header = () => {
                 <Phone className="w-5 h-5 text-primary" />
                 <span>(718) 587-9965</span>
               </a>
-              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold w-full mt-2 shadow-lg">
-                GET STARTED
-              </Button>
+              <Link to="/" onClick={() => setIsMenuOpen(false)}>
+                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold w-full mt-2 shadow-lg">
+                  GET STARTED
+                </Button>
+              </Link>
             </nav>
           </div>
         )}
