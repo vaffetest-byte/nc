@@ -123,10 +123,9 @@ const ForBrokers = () => {
               {/* Stat 4 */}
               <div className="text-center px-8 md:px-12">
                 <div className="flex items-baseline justify-center gap-1">
-                  <span className="font-heading text-5xl md:text-6xl font-bold text-primary">10</span>
-                  <span className="font-heading text-xl md:text-2xl font-semibold text-secondary-foreground">+</span>
+                  <span className="font-heading text-5xl md:text-6xl font-bold text-primary">Best</span>
                 </div>
-                <p className="text-secondary-foreground/70 text-sm mt-2 font-body uppercase tracking-wide">Underwriters</p>
+                <p className="text-secondary-foreground/70 text-sm mt-2 font-body uppercase tracking-wide">Rates In Industry</p>
               </div>
             </div>
           </div>
