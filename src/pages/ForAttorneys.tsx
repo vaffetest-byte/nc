@@ -132,13 +132,8 @@ const ForAttorneys = () => {
           
           <div className="container mx-auto px-4 relative z-10">
             <div className="grid lg:grid-cols-2 gap-12 items-start">
-              {/* Left - Funding Form */}
-              <div className="order-2 lg:order-1">
-                <FundingForm variant="dark" />
-              </div>
-
-              {/* Right - Hero Content */}
-              <div className="order-1 lg:order-2 text-center lg:text-left">
+              {/* Left - Hero Content */}
+              <div className="text-center lg:text-left">
                 <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight">
                   ATTORNEYS — GET YOUR CLIENT LITIGATION FUNDING
                 </h1>
@@ -154,6 +149,11 @@ const ForAttorneys = () => {
                     Learn More <ArrowRight className="ml-2 h-5 w-5" />
                   </a>
                 </Button>
+              </div>
+
+              {/* Right - Funding Form */}
+              <div>
+                <FundingForm variant="dark" />
               </div>
             </div>
           </div>
