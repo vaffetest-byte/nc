@@ -17,6 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import FundingForm from "@/components/FundingForm";
 
 const ForAttorneys = () => {
   const advantages = [
@@ -129,27 +130,37 @@ const ForAttorneys = () => {
             <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_40%,rgba(255,255,255,0.1),transparent_50%)]" />
           </div>
           
-          <div className="container mx-auto px-4 relative z-10 text-center">
-            <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight">
-              ATTORNEYS — GET YOUR CLIENT<br />LITIGATION FUNDING
-            </h1>
-            <p className="text-xl md:text-2xl text-white/90 mb-8 font-body">
-              We Are Here To Help Your Clients
-            </p>
-            <Button 
-              size="lg" 
-              className="bg-primary hover:bg-primary/90 text-white text-lg px-8 py-6 h-auto"
-              asChild
-            >
-              <Link to="/#apply">
-                Apply Now <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="grid lg:grid-cols-2 gap-12 items-start">
+              {/* Left - Funding Form */}
+              <div className="order-2 lg:order-1">
+                <FundingForm variant="dark" />
+              </div>
+
+              {/* Right - Hero Content */}
+              <div className="order-1 lg:order-2 text-center lg:text-left">
+                <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight">
+                  ATTORNEYS — GET YOUR CLIENT LITIGATION FUNDING
+                </h1>
+                <p className="text-xl md:text-2xl text-white/90 mb-8 font-body">
+                  We Are Here To Help Your Clients
+                </p>
+                <Button 
+                  size="lg" 
+                  className="bg-primary hover:bg-primary/90 text-white text-lg px-8 py-6 h-auto"
+                  asChild
+                >
+                  <a href="#advantages">
+                    Learn More <ArrowRight className="ml-2 h-5 w-5" />
+                  </a>
+                </Button>
+              </div>
+            </div>
           </div>
         </section>
 
         {/* Main Value Proposition */}
-        <section className="py-20 bg-background">
+        <section id="advantages" className="py-20 bg-background">
           <div className="container mx-auto px-4">
             <div className="text-center max-w-4xl mx-auto mb-16">
             <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-6">
