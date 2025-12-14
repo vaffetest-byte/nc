@@ -144,7 +144,7 @@ const Footer = forwardRef<HTMLElement>((_, ref) => {
               </div>
             </div>
             <div className="text-center md:text-right">
-              <p className="font-heading text-2xl md:text-3xl lg:text-4xl font-bold text-primary italic tracking-tight">
+              <p className="font-heading text-2xl md:text-3xl lg:text-4xl font-bold text-primary tracking-tight">
                 Litigation Funding Made Simple<sup className="text-primary/60 text-lg">®</sup>
               </p>
             </div>
