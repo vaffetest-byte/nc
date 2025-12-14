@@ -48,7 +48,6 @@ const Footer = forwardRef<HTMLElement>((_, ref) => {
         { name: "Client Testimonials", href: "/#testimonials", isPage: false },
         { name: "Attorney Testimonials", href: "/for-attorneys", isPage: true },
         { name: "Contact Us", href: "/#contact", isPage: false },
-        { name: "Careers", href: "/#careers", isPage: false },
       ],
     },
   };
