@@ -12,7 +12,7 @@ const Header = forwardRef<HTMLElement>((_, ref) => {
     { name: "What We Fund", href: "/what-we-fund", isPage: true, disabled: true },
     { name: "How It Works", href: "/how-it-works", isPage: true, disabled: true },
     { name: "For Attorneys", href: "/for-attorneys", isPage: true, disabled: false },
-    { name: "For Brokers", href: "#brokers", isPage: false, disabled: true },
+    { name: "For Brokers", href: "/for-brokers", isPage: true, disabled: false },
   ];
 
   return (
