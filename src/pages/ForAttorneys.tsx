@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FundingForm from "@/components/FundingForm";
-import attorneysTeam from "@/assets/attorneys-team.png";
+
 import attorneyTestimonial from "@/assets/attorney-testimonial.jpg";
 import fundingSpecialist from "@/assets/funding-specialist.jpg";
 import thoughtLeadership1 from "@/assets/thought-leadership-1.png";
@@ -186,36 +186,24 @@ const ForAttorneys = () => {
               </p>
             </div>
 
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              {/* Left side - Image */}
-              <div className="flex justify-center">
-                <img 
-                  src={attorneysTeam} 
-                  alt="Professional Legal Team" 
-                  className="w-full max-w-lg h-auto object-contain"
-                />
+            <div className="max-w-4xl mx-auto">
+              <div className="border-l-4 border-primary pl-6 mb-8">
+                <p className="text-lg font-semibold text-foreground mb-2">National Claims Assoc — A Better Way to Support Your Clients</p>
+                <p className="text-primary font-bold text-xl">We make litigation funding simple, fast, and fair. Here's what sets us apart:</p>
               </div>
 
-              {/* Right side - Advantages */}
-              <div>
-                <div className="border-l-4 border-primary pl-6 mb-8">
-                  <p className="text-lg font-semibold text-foreground mb-2">National Claims Assoc — A Better Way to Support Your Clients</p>
-                  <p className="text-primary font-bold text-xl">We make litigation funding simple, fast, and fair. Here's what sets us apart:</p>
-                </div>
-
-                <div className="space-y-6">
-                  {advantages.map((advantage, index) => (
-                    <div key={index} className="flex gap-4">
-                      <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                        <advantage.icon className="w-6 h-6 text-primary" />
-                      </div>
-                      <div>
-                        <h3 className="font-heading text-lg font-bold text-foreground">{advantage.title}</h3>
-                        <p className="text-muted-foreground font-body text-sm">{advantage.description}</p>
-                      </div>
+              <div className="grid md:grid-cols-2 gap-6">
+                {advantages.map((advantage, index) => (
+                  <div key={index} className="flex gap-4">
+                    <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                      <advantage.icon className="w-6 h-6 text-primary" />
                     </div>
-                  ))}
-                </div>
+                    <div>
+                      <h3 className="font-heading text-lg font-bold text-foreground">{advantage.title}</h3>
+                      <p className="text-muted-foreground font-body text-sm">{advantage.description}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
