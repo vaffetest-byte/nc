@@ -152,9 +152,9 @@ const ForAttorneys = () => {
         <section className="py-20 bg-background">
           <div className="container mx-auto px-4">
             <div className="text-center max-w-4xl mx-auto mb-16">
-              <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-6">
-                National Claims Assoc can help your clients pay their bills with a cash advance on their pending lawsuit while you fight for a fair settlement.
-              </h2>
+            <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-6">
+              National Claims Assoc provides your clients with financial relief through a cash advance on their pending case, allowing them to cover essential expenses while you pursue justice.
+            </h2>
               <p className="text-lg text-muted-foreground font-body">
                 The claims process for personal injury cases can seemingly take forever, and the financial pressures your clients face can interfere with you getting the full measure of a just settlement.
               </p>
