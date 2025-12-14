@@ -1,5 +1,4 @@
-import { useState, useRef } from "react";
-import ReCAPTCHA from "react-google-recaptcha";
+import { useState } from "react";
 import { Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
+import ReCaptcha from "./ReCaptcha";
 
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || "";
 
@@ -26,7 +26,6 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [captchaError, setCaptchaError] = useState<string>("");
-  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   // Plaintiff form state
   const [plaintiffForm, setPlaintiffForm] = useState({
@@ -50,13 +49,6 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
     plaintiffName: "",
   });
 
-  const handleCaptchaChange = (token: string | null) => {
-    setCaptchaToken(token);
-    if (token) {
-      setCaptchaError("");
-    }
-  };
-
   const handlePlaintiffChange = (field: string, value: string) => {
     setPlaintiffForm((prev) => ({ ...prev, [field]: value }));
   };
@@ -65,10 +57,17 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
     setAttorneyForm((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handleCaptchaVerify = (token: string | null) => {
+    setCaptchaToken(token);
+    if (token) {
+      setCaptchaError("");
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!captchaToken) {
+    if (RECAPTCHA_SITE_KEY && !captchaToken) {
       setCaptchaError("Please complete the CAPTCHA verification");
       return;
     }
@@ -82,10 +81,6 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
         title: "Request Submitted!",
         description: "Your funding request has been submitted successfully.",
       });
-
-      // Reset captcha
-      recaptchaRef.current?.reset();
-      setCaptchaToken(null);
       
       // Reset forms
       if (role === "plaintiff") {
@@ -340,23 +335,22 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
         </div>
 
         {/* CAPTCHA */}
-        <div className="flex flex-col items-center space-y-2 mt-4">
-          {RECAPTCHA_SITE_KEY && (
-            <ReCAPTCHA
-              ref={recaptchaRef}
-              sitekey={RECAPTCHA_SITE_KEY}
-              onChange={handleCaptchaChange}
+        {RECAPTCHA_SITE_KEY && (
+          <div className="flex flex-col items-center space-y-2 mt-4">
+            <ReCaptcha
+              siteKey={RECAPTCHA_SITE_KEY}
+              onVerify={handleCaptchaVerify}
               theme={isDark ? "dark" : "light"}
             />
-          )}
-          {captchaError && (
-            <p className="text-destructive text-sm">{captchaError}</p>
-          )}
-        </div>
+            {captchaError && (
+              <p className="text-destructive text-sm">{captchaError}</p>
+            )}
+          </div>
+        )}
 
         <Button 
           type="submit" 
-          disabled={isSubmitting || !captchaToken}
+          disabled={isSubmitting || (RECAPTCHA_SITE_KEY && !captchaToken)}
           className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg py-5 h-14 shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 glow-effect mt-6 rounded-lg tracking-wide"
         >
           {isSubmitting ? "Submitting..." : "Submit a Request for Funding"}

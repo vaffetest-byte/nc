@@ -1,12 +1,13 @@
-import { useState, useRef } from "react";
-import ReCAPTCHA from "react-google-recaptcha";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { CheckCircle, Loader2 } from "lucide-react";
+import ReCaptcha from "./ReCaptcha";
 
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || "";
+
 interface BrokerFormData {
   fullName: string;
   companyName: string;
@@ -34,7 +35,6 @@ const BrokerSignupForm = ({ variant = "light", className = "" }: BrokerSignupFor
   const [errors, setErrors] = useState<Partial<BrokerFormData>>({});
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [captchaError, setCaptchaError] = useState<string>("");
-  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -92,7 +92,7 @@ const BrokerSignupForm = ({ variant = "light", className = "" }: BrokerSignupFor
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleCaptchaChange = (token: string | null) => {
+  const handleCaptchaVerify = (token: string | null) => {
     setCaptchaToken(token);
     if (token) {
       setCaptchaError("");
@@ -104,7 +104,7 @@ const BrokerSignupForm = ({ variant = "light", className = "" }: BrokerSignupFor
 
     if (!validate()) return;
 
-    if (!captchaToken) {
+    if (RECAPTCHA_SITE_KEY && !captchaToken) {
       setCaptchaError("Please complete the CAPTCHA verification");
       return;
     }
@@ -116,10 +116,6 @@ const BrokerSignupForm = ({ variant = "light", className = "" }: BrokerSignupFor
 
     setIsSubmitting(false);
     setIsSubmitted(true);
-
-    // Reset captcha
-    recaptchaRef.current?.reset();
-    setCaptchaToken(null);
 
     toast({
       title: "Application Received!",
@@ -251,23 +247,22 @@ const BrokerSignupForm = ({ variant = "light", className = "" }: BrokerSignupFor
         </div>
 
         {/* CAPTCHA */}
-        <div className="flex flex-col items-center space-y-2">
-          {RECAPTCHA_SITE_KEY && (
-            <ReCAPTCHA
-              ref={recaptchaRef}
-              sitekey={RECAPTCHA_SITE_KEY}
-              onChange={handleCaptchaChange}
+        {RECAPTCHA_SITE_KEY && (
+          <div className="flex flex-col items-center space-y-2">
+            <ReCaptcha
+              siteKey={RECAPTCHA_SITE_KEY}
+              onVerify={handleCaptchaVerify}
               theme={isDark ? "dark" : "light"}
             />
-          )}
-          {captchaError && (
-            <p className="text-destructive text-sm">{captchaError}</p>
-          )}
-        </div>
+            {captchaError && (
+              <p className="text-destructive text-sm">{captchaError}</p>
+            )}
+          </div>
+        )}
 
         <Button
           type="submit"
-          disabled={isSubmitting || !captchaToken}
+          disabled={isSubmitting || (RECAPTCHA_SITE_KEY && !captchaToken)}
           className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-6 text-lg mt-6"
         >
           {isSubmitting ? (
