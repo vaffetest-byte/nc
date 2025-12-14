@@ -131,17 +131,27 @@ const Footer = forwardRef<HTMLElement>((_, ref) => {
       </div>
 
       {/* Logo & Tagline Section */}
-      <div className="bg-secondary">
-        <div className="container mx-auto px-4 py-10">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <img 
-              src={logo} 
-              alt="National Claims Assoc" 
-              className="h-16 w-auto bg-white rounded-lg p-2 shadow-lg" 
-            />
-            <p className="font-heading text-2xl md:text-3xl font-bold italic text-primary">
-              Litigation Funding Made Simple®
-            </p>
+      <div className="bg-gradient-to-r from-secondary via-secondary to-secondary">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-primary/30 shadow-lg">
+                <img 
+                  src={logo} 
+                  alt="National Claims Assoc" 
+                  className="w-full h-full object-cover" 
+                />
+              </div>
+              <div className="hidden md:block">
+                <p className="text-secondary-foreground/80 text-sm font-medium">National Claims Assoc</p>
+                <p className="text-secondary-foreground/50 text-xs">NCACLAIM.COM</p>
+              </div>
+            </div>
+            <div className="text-center md:text-right">
+              <p className="font-heading text-xl md:text-2xl lg:text-3xl font-bold text-primary tracking-wide">
+                Litigation Funding Made Simple<span className="text-primary/70">®</span>
+              </p>
+            </div>
           </div>
         </div>
       </div>
