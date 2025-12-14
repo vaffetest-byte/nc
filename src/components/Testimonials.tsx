@@ -4,8 +4,6 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/carousel";
 import testimonialMichael from "@/assets/testimonial-michael.jpg";
@@ -73,7 +71,7 @@ const Testimonials = () => {
           </h2>
         </div>
 
-        <div className="max-w-6xl mx-auto relative px-12">
+        <div className="max-w-6xl mx-auto relative">
           <Carousel
             setApi={setApi}
             opts={{
@@ -115,8 +113,6 @@ const Testimonials = () => {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="left-0 bg-background/80 hover:bg-background border-border" />
-            <CarouselNext className="right-0 bg-background/80 hover:bg-background border-border" />
           </Carousel>
 
           {/* Dots indicator */}
