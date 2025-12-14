@@ -23,38 +23,38 @@ const ForAttorneys = () => {
   const advantages = [
     {
       icon: DollarSign,
-      title: "Ample Capital",
-      description: "We are financially stable, secure, and consistently recognized as a trusted funder in the USA."
+      title: "Strong Financial Backing",
+      description: "Secure, well-capitalized, and widely recognized as a trusted U.S. litigation funder."
     },
     {
       icon: Zap,
-      title: "Fast",
-      description: "Funding from $500 to over $1,000,000 within 24 hours of approval.*"
+      title: "Rapid Access to Funds",
+      description: "Advances from $500 to over $1,000,000—often within 24 hours of approval.*"
     },
     {
       icon: Shield,
-      title: "No Risk",
-      description: "We get paid only when you win. No win, no repayment."
+      title: "Truly Risk-Free Funding",
+      description: "Repayment only occurs if your case is successful. If you don't win, you owe nothing."
     },
     {
       icon: Lock,
-      title: "Capped Fees",
-      description: "More money for your client, no matter how long it takes to settle."
+      title: "Fair, Capped Fees",
+      description: "Your client keeps more of their settlement, regardless of how long the case takes."
     },
     {
       icon: TrendingDown,
-      title: "Non-Compounded Rates",
-      description: "Simple interest helps protect the final settlement amount."
+      title: "Simple, Non-Compounding Rates",
+      description: "Straightforward interest designed to protect the final recovery amount."
     },
     {
       icon: Award,
-      title: "Extensive Experience",
-      description: "Attorney underwriters with extensive experience in the legal funding industry."
+      title: "Deep Industry Expertise",
+      description: "Cases reviewed by experienced attorney underwriters who understand litigation."
     },
     {
       icon: Heart,
-      title: "We Care",
-      description: "We're committed to supporting plaintiffs and their legal teams with integrity."
+      title: "Client-First Commitment",
+      description: "We stand by plaintiffs and their legal teams with transparency, care, and integrity."
     }
   ];
 
@@ -185,8 +185,8 @@ const ForAttorneys = () => {
               {/* Right side - Advantages */}
               <div>
                 <div className="border-l-4 border-primary pl-6 mb-8">
-                  <p className="text-lg font-semibold text-foreground mb-2">National Claims Assoc can help your clients.</p>
-                  <p className="text-primary font-bold text-xl">Our advantages are clear:</p>
+                  <p className="text-lg font-semibold text-foreground mb-2">National Claims Assoc — A Better Way to Support Your Clients</p>
+                  <p className="text-primary font-bold text-xl">We make litigation funding simple, fast, and fair. Here's what sets us apart:</p>
                 </div>
 
                 <div className="space-y-6">
