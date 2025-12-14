@@ -11,6 +11,7 @@ import PageTransition from "@/components/PageTransition";
 const Index = lazy(() => import("./pages/Index"));
 const WhatWeFund = lazy(() => import("./pages/WhatWeFund"));
 const HowItWorksPage = lazy(() => import("./pages/HowItWorksPage"));
+const ForAttorneys = lazy(() => import("./pages/ForAttorneys"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
                 <Route path="/" element={<Index />} />
                 <Route path="/what-we-fund" element={<WhatWeFund />} />
                 <Route path="/how-it-works" element={<HowItWorksPage />} />
+                <Route path="/for-attorneys" element={<ForAttorneys />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
