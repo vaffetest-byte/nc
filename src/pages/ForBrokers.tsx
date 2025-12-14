@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import { Button } from "@/components/ui/button";
-import { Phone, Users, DollarSign, FileCheck, TrendingUp, Briefcase, CheckCircle, ArrowRight } from "lucide-react";
+import { Phone, Users, CircleDollarSign, ClipboardCheck, TrendingUp, LayoutGrid, CheckCircle, ArrowRight } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BrokerSignupForm from "@/components/BrokerSignupForm";
@@ -12,12 +12,12 @@ const ForBrokers = () => {
 
   const brokerBenefits = [
     {
-      icon: DollarSign,
+      icon: CircleDollarSign,
       title: "Flexible Broker Compensation",
       description: "Choose when you receive your broker fee. Options include payment at funding time, weekly disbursements, or monthly settlements—whatever works best for your business.",
     },
     {
-      icon: FileCheck,
+      icon: ClipboardCheck,
       title: "Experienced Underwriting Team",
       description: "Work directly with knowledgeable legal funding underwriters who understand personal injury cases and can provide fast, informed decisions on complex matters.",
     },
@@ -27,7 +27,7 @@ const ForBrokers = () => {
       description: "Offer your clients non-compounding rates with capped repayment structures. Our client-first pricing approach means plaintiffs keep more of their settlement.",
     },
     {
-      icon: Briefcase,
+      icon: LayoutGrid,
       title: "Broker Growth Tools",
       description: "Access co-branded marketing materials, custom contracts, and real-time deal tracking. Stay informed with instant updates and comprehensive reporting dashboards.",
     },
