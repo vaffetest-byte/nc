@@ -4,9 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { CheckCircle, Loader2 } from "lucide-react";
-import ReCaptcha from "./ReCaptcha";
-
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || "";
 
 interface BrokerFormData {
   fullName: string;
@@ -33,8 +30,6 @@ const BrokerSignupForm = ({ variant = "light", className = "" }: BrokerSignupFor
     states: "",
   });
   const [errors, setErrors] = useState<Partial<BrokerFormData>>({});
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-  const [captchaError, setCaptchaError] = useState<string>("");
 
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -92,22 +87,10 @@ const BrokerSignupForm = ({ variant = "light", className = "" }: BrokerSignupFor
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleCaptchaVerify = (token: string | null) => {
-    setCaptchaToken(token);
-    if (token) {
-      setCaptchaError("");
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validate()) return;
-
-    if (RECAPTCHA_SITE_KEY && !captchaToken) {
-      setCaptchaError("Please complete the CAPTCHA verification");
-      return;
-    }
 
     setIsSubmitting(true);
 
@@ -246,23 +229,9 @@ const BrokerSignupForm = ({ variant = "light", className = "" }: BrokerSignupFor
           )}
         </div>
 
-        {/* CAPTCHA */}
-        {RECAPTCHA_SITE_KEY && (
-          <div className="flex flex-col items-center space-y-2">
-            <ReCaptcha
-              siteKey={RECAPTCHA_SITE_KEY}
-              onVerify={handleCaptchaVerify}
-              theme={isDark ? "dark" : "light"}
-            />
-            {captchaError && (
-              <p className="text-destructive text-sm">{captchaError}</p>
-            )}
-          </div>
-        )}
-
         <Button
           type="submit"
-          disabled={isSubmitting || (RECAPTCHA_SITE_KEY && !captchaToken)}
+          disabled={isSubmitting}
           className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-6 text-lg mt-6"
         >
           {isSubmitting ? (
