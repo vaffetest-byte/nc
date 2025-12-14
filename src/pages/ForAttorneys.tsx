@@ -18,6 +18,12 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FundingForm from "@/components/FundingForm";
+import attorneysTeam from "@/assets/attorneys-team.jpg";
+import attorneyTestimonial from "@/assets/attorney-testimonial.jpg";
+import fundingSpecialist from "@/assets/funding-specialist.jpg";
+import thoughtLeadership1 from "@/assets/thought-leadership-1.jpg";
+import thoughtLeadership2 from "@/assets/thought-leadership-2.jpg";
+import thoughtLeadership3 from "@/assets/thought-leadership-3.jpg";
 
 const ForAttorneys = () => {
   const advantages = [
@@ -84,27 +90,33 @@ const ForAttorneys = () => {
   const articles = [
     {
       title: "Understanding Pre-Settlement Funding for Personal Injury Cases",
-      excerpt: "A comprehensive guide for attorneys on how litigation funding can benefit their clients."
+      excerpt: "A comprehensive guide for attorneys on how litigation funding can benefit their clients.",
+      image: thoughtLeadership1
     },
     {
       title: "Ethical Considerations in Client Litigation Funding",
-      excerpt: "Key ethical guidelines for attorneys when recommending funding solutions."
+      excerpt: "Key ethical guidelines for attorneys when recommending funding solutions.",
+      image: thoughtLeadership2
     },
     {
       title: "How Non-Compounded Rates Protect Your Client's Settlement",
-      excerpt: "Understanding the financial benefits of simple interest funding structures."
+      excerpt: "Understanding the financial benefits of simple interest funding structures.",
+      image: thoughtLeadership3
     },
     {
       title: "Maximizing Settlement Value with Pre-Settlement Funding",
-      excerpt: "Strategies for attorneys to help clients avoid premature settlements."
+      excerpt: "Strategies for attorneys to help clients avoid premature settlements.",
+      image: thoughtLeadership1
     },
     {
       title: "The Role of Litigation Funding in Access to Justice",
-      excerpt: "How funding helps level the playing field against well-resourced defendants."
+      excerpt: "How funding helps level the playing field against well-resourced defendants.",
+      image: thoughtLeadership2
     },
     {
       title: "Best Practices for Attorney-Funder Communication",
-      excerpt: "Tips for efficient case evaluation and funding approval processes."
+      excerpt: "Tips for efficient case evaluation and funding approval processes.",
+      image: thoughtLeadership3
     }
   ];
 
@@ -172,14 +184,13 @@ const ForAttorneys = () => {
             </div>
 
             <div className="grid lg:grid-cols-2 gap-12 items-start">
-              {/* Left side - Image placeholder */}
-              <div className="bg-muted rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center">
-                <div className="text-center p-8">
-                  <div className="w-24 h-24 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Award className="w-12 h-12 text-secondary" />
-                  </div>
-                  <p className="text-muted-foreground font-body">Professional Legal Team</p>
-                </div>
+              {/* Left side - Image */}
+              <div className="rounded-xl overflow-hidden">
+                <img 
+                  src={attorneysTeam} 
+                  alt="Professional Legal Team" 
+                  className="w-full h-full object-cover"
+                />
               </div>
 
               {/* Right side - Advantages */}
@@ -216,17 +227,14 @@ const ForAttorneys = () => {
 
             <div className="max-w-3xl mx-auto text-center">
               <div className="mb-8">
-                <div className="w-20 h-20 bg-secondary/20 rounded-full flex items-center justify-center mx-auto mb-6 border-4 border-secondary/30">
-                  <Award className="w-10 h-10 text-secondary" />
+                <div className="w-32 h-32 rounded-full overflow-hidden mx-auto mb-6 border-4 border-secondary/30">
+                  <img src={attorneyTestimonial} alt="Attorney Testimonial" className="w-full h-full object-cover" />
                 </div>
                 <p className="text-lg text-muted-foreground mb-2">Prominent Trial Attorney</p>
                 <p className="text-sm text-muted-foreground">Referring clients to National Claims Assoc for years</p>
               </div>
 
               <div className="bg-background rounded-xl p-8 shadow-lg">
-                <div className="w-24 h-24 bg-muted rounded-full mx-auto mb-6 flex items-center justify-center">
-                  <span className="text-3xl font-heading font-bold text-muted-foreground">NCA</span>
-                </div>
                 <h3 className="font-heading text-2xl font-bold text-foreground mb-2">Legal Partner</h3>
                 <p className="text-primary font-semibold mb-4">National Claims Assoc Advocate</p>
                 <p className="text-muted-foreground italic font-body leading-relaxed">
@@ -258,10 +266,8 @@ const ForAttorneys = () => {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {articles.map((article, index) => (
                 <div key={index} className="bg-background border border-border rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="h-40 bg-muted flex items-center justify-center">
-                    <div className="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center">
-                      <Award className="w-8 h-8 text-secondary" />
-                    </div>
+                  <div className="h-40 overflow-hidden">
+                    <img src={article.image} alt={article.title} className="w-full h-full object-cover" />
                   </div>
                   <div className="p-5">
                     <h3 className="font-heading text-lg font-bold text-foreground mb-2 line-clamp-2">
@@ -327,13 +333,8 @@ const ForAttorneys = () => {
           <div className="container mx-auto px-4 relative z-10">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div className="hidden lg:flex justify-center">
-                <div className="w-64 h-80 bg-white/10 rounded-xl flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="w-20 h-20 bg-white/20 rounded-full mx-auto mb-4 flex items-center justify-center">
-                      <Phone className="w-10 h-10 text-white" />
-                    </div>
-                    <p className="text-white/80 font-body">Funding Specialist</p>
-                  </div>
+                <div className="w-64 h-80 rounded-xl overflow-hidden">
+                  <img src={fundingSpecialist} alt="Funding Specialist" className="w-full h-full object-cover" />
                 </div>
               </div>
 
