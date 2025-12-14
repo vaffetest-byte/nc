@@ -18,12 +18,15 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FundingForm from "@/components/FundingForm";
-import attorneysTeam from "@/assets/attorneys-team.jpg";
+import attorneysTeam from "@/assets/attorneys-team.png";
 import attorneyTestimonial from "@/assets/attorney-testimonial.jpg";
 import fundingSpecialist from "@/assets/funding-specialist.jpg";
-import thoughtLeadership1 from "@/assets/thought-leadership-1.jpg";
-import thoughtLeadership2 from "@/assets/thought-leadership-2.jpg";
-import thoughtLeadership3 from "@/assets/thought-leadership-3.jpg";
+import thoughtLeadership1 from "@/assets/thought-leadership-1.png";
+import thoughtLeadership2 from "@/assets/thought-leadership-2.png";
+import thoughtLeadership3 from "@/assets/thought-leadership-3.png";
+import thoughtLeadership4 from "@/assets/thought-leadership-4.png";
+import thoughtLeadership5 from "@/assets/thought-leadership-5.png";
+import thoughtLeadership6 from "@/assets/thought-leadership-6.png";
 
 const ForAttorneys = () => {
   const advantages = [
@@ -106,17 +109,17 @@ const ForAttorneys = () => {
     {
       title: "Maximizing Settlement Value with Pre-Settlement Funding",
       excerpt: "Strategies for attorneys to help clients avoid premature settlements.",
-      image: thoughtLeadership1
+      image: thoughtLeadership4
     },
     {
       title: "The Role of Litigation Funding in Access to Justice",
       excerpt: "How funding helps level the playing field against well-resourced defendants.",
-      image: thoughtLeadership2
+      image: thoughtLeadership5
     },
     {
       title: "Best Practices for Attorney-Funder Communication",
       excerpt: "Tips for efficient case evaluation and funding approval processes.",
-      image: thoughtLeadership3
+      image: thoughtLeadership6
     }
   ];
 
