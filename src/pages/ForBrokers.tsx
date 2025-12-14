@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Phone, Users, Headphones, DollarSign, FileCheck, TrendingUp, Briefcase, CheckCircle, ArrowRight } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import BrokerSignupForm from "@/components/BrokerSignupForm";
 
 const ForBrokers = () => {
 
@@ -254,27 +255,7 @@ const ForBrokers = () => {
                 </p>
               </div>
               
-              <div className="flex items-center justify-center">
-                <div className="bg-secondary-foreground/5 rounded-2xl p-8 w-full max-w-md">
-                  <div className="text-center space-y-6">
-                    <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto">
-                      <Headphones className="w-10 h-10 text-primary-foreground" />
-                    </div>
-                    <h3 className="font-heading text-2xl font-bold text-secondary-foreground">
-                      Ready to Connect?
-                    </h3>
-                    <p className="text-secondary-foreground/70 font-body">
-                      Our broker support team is standing by to answer your questions and help you get started.
-                    </p>
-                    <a href="tel:718-587-9965" className="block">
-                      <Button size="lg" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-6">
-                        <Phone className="mr-2 w-5 h-5" />
-                        (718) 587-9965
-                      </Button>
-                    </a>
-                  </div>
-                </div>
-              </div>
+              <BrokerSignupForm variant="dark" />
             </div>
           </div>
         </section>
