@@ -188,11 +188,11 @@ const ForAttorneys = () => {
 
             <div className="grid lg:grid-cols-2 gap-12 items-start">
               {/* Left side - Image */}
-              <div className="rounded-xl overflow-hidden">
+              <div className="rounded-xl overflow-hidden bg-white shadow-lg">
                 <img 
                   src={attorneysTeam} 
                   alt="Professional Legal Team" 
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
               </div>
 
