@@ -12,9 +12,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
-import ReCaptcha from "./ReCaptcha";
-
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || "";
 
 interface FundingFormProps {
   variant?: "dark" | "light";
@@ -24,8 +21,6 @@ interface FundingFormProps {
 const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => {
   const [role, setRole] = useState<"plaintiff" | "attorney">("plaintiff");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-  const [captchaError, setCaptchaError] = useState<string>("");
 
   // Plaintiff form state
   const [plaintiffForm, setPlaintiffForm] = useState({
@@ -57,20 +52,8 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
     setAttorneyForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleCaptchaVerify = (token: string | null) => {
-    setCaptchaToken(token);
-    if (token) {
-      setCaptchaError("");
-    }
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (RECAPTCHA_SITE_KEY && !captchaToken) {
-      setCaptchaError("Please complete the CAPTCHA verification");
-      return;
-    }
 
     setIsSubmitting(true);
 
@@ -334,23 +317,9 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
           </div>
         </div>
 
-        {/* CAPTCHA */}
-        {RECAPTCHA_SITE_KEY && (
-          <div className="flex flex-col items-center space-y-2 mt-4">
-            <ReCaptcha
-              siteKey={RECAPTCHA_SITE_KEY}
-              onVerify={handleCaptchaVerify}
-              theme={isDark ? "dark" : "light"}
-            />
-            {captchaError && (
-              <p className="text-destructive text-sm">{captchaError}</p>
-            )}
-          </div>
-        )}
-
         <Button 
           type="submit" 
-          disabled={isSubmitting || (RECAPTCHA_SITE_KEY && !captchaToken)}
+          disabled={isSubmitting}
           className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg py-5 h-14 shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 glow-effect mt-6 rounded-lg tracking-wide"
         >
           {isSubmitting ? "Submitting..." : "Submit a Request for Funding"}
