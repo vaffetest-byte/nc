@@ -81,42 +81,53 @@ const ForBrokers = () => {
         </section>
 
         {/* Trust Metrics / Stats Bar */}
-        <section className="relative -mt-8 z-20 px-4">
-          <div className="container mx-auto">
-            <div className="bg-card rounded-lg shadow-xl overflow-hidden">
-              <div className="grid grid-cols-2 md:grid-cols-5 divide-y md:divide-y-0 md:divide-x divide-border">
-                <div className="p-6 lg:p-8 text-center">
-                  <p className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-secondary">
-                    24<sup className="text-primary text-lg md:text-xl font-semibold ml-1">Hrs</sup>
-                  </p>
-                  <p className="text-muted-foreground text-sm mt-2 font-body">From Approval To Funding</p>
+        <section className="bg-secondary py-16">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-0">
+              {/* Stat 1 */}
+              <div className="text-center px-8 md:px-12">
+                <div className="flex items-baseline justify-center gap-1">
+                  <span className="font-heading text-5xl md:text-6xl font-bold text-primary">24</span>
+                  <span className="font-heading text-xl md:text-2xl font-semibold text-secondary-foreground">Hrs</span>
                 </div>
-                <div className="p-6 lg:p-8 text-center">
-                  <p className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-secondary">
-                    1,000<sup className="text-primary text-lg md:text-xl font-semibold ml-1">'s</sup>
-                  </p>
-                  <p className="text-muted-foreground text-sm mt-2 font-body">Happy Customers</p>
-                </div>
-                <div className="p-6 lg:p-8 text-center">
-                  <p className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-secondary">
-                    +50
-                  </p>
-                  <p className="text-muted-foreground text-sm mt-2 font-body">Industry Awards</p>
-                </div>
-                <div className="p-6 lg:p-8 text-center">
-                  <p className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-secondary">
-                    100%
-                  </p>
-                  <p className="text-muted-foreground text-sm mt-2 font-body">Broker Support</p>
-                </div>
-                <div className="p-6 lg:p-8 text-center col-span-2 md:col-span-1">
-                  <p className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-secondary">
-                    10+
-                  </p>
-                  <p className="text-muted-foreground text-sm mt-2 font-body">Underwriters</p>
-                </div>
+                <p className="text-secondary-foreground/70 text-sm mt-2 font-body uppercase tracking-wide">From Approval To Funding</p>
               </div>
-              <div className="h-1 bg-primary"></div>
+              
+              {/* Divider */}
+              <div className="hidden md:block w-px h-16 bg-secondary-foreground/20"></div>
+              
+              {/* Stat 2 */}
+              <div className="text-center px-8 md:px-12">
+                <div className="flex items-baseline justify-center gap-1">
+                  <span className="font-heading text-5xl md:text-6xl font-bold text-primary">1,000</span>
+                  <span className="font-heading text-xl md:text-2xl font-semibold text-secondary-foreground">+</span>
+                </div>
+                <p className="text-secondary-foreground/70 text-sm mt-2 font-body uppercase tracking-wide">Happy Customers</p>
+              </div>
+              
+              {/* Divider */}
+              <div className="hidden md:block w-px h-16 bg-secondary-foreground/20"></div>
+              
+              {/* Stat 3 */}
+              <div className="text-center px-8 md:px-12">
+                <div className="flex items-baseline justify-center gap-1">
+                  <span className="font-heading text-5xl md:text-6xl font-bold text-primary">100</span>
+                  <span className="font-heading text-xl md:text-2xl font-semibold text-secondary-foreground">%</span>
+                </div>
+                <p className="text-secondary-foreground/70 text-sm mt-2 font-body uppercase tracking-wide">Broker Support</p>
+              </div>
+              
+              {/* Divider */}
+              <div className="hidden md:block w-px h-16 bg-secondary-foreground/20"></div>
+              
+              {/* Stat 4 */}
+              <div className="text-center px-8 md:px-12">
+                <div className="flex items-baseline justify-center gap-1">
+                  <span className="font-heading text-5xl md:text-6xl font-bold text-primary">10</span>
+                  <span className="font-heading text-xl md:text-2xl font-semibold text-secondary-foreground">+</span>
+                </div>
+                <p className="text-secondary-foreground/70 text-sm mt-2 font-body uppercase tracking-wide">Underwriters</p>
+              </div>
             </div>
           </div>
         </section>
