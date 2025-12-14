@@ -77,7 +77,7 @@ const ForBrokers = () => {
                   </Button>
                 </Link>
                 <a href="tel:718-587-9965">
-                  <Button size="lg" variant="outline" className="border-2 border-secondary-foreground/30 text-secondary-foreground hover:bg-secondary-foreground/10 font-semibold px-8 py-6 text-lg">
+                  <Button size="lg" className="bg-secondary-foreground/10 border-2 border-secondary-foreground/40 text-secondary-foreground hover:bg-secondary-foreground/20 font-semibold px-8 py-6 text-lg">
                     <Phone className="mr-2 w-5 h-5" />
                     Call Toll-Free: (718) 587-9965
                   </Button>
