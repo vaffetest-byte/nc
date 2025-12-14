@@ -1,7 +1,6 @@
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Phone, Users, Headphones, DollarSign, FileCheck, TrendingUp, Briefcase, CheckCircle, ArrowRight } from "lucide-react";
+import { Phone, Users, DollarSign, FileCheck, TrendingUp, Briefcase, CheckCircle } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BrokerSignupForm from "@/components/BrokerSignupForm";
@@ -63,15 +62,9 @@ const ForBrokers = () => {
                 Simple processes. Speed you can count on. Support that puts your success first.
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link to="/">
-                  <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all duration-300 group">
-                    Get Started
-                    <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </Link>
+              <div className="flex justify-center">
                 <a href="tel:718-587-9965">
-                  <Button size="lg" className="bg-secondary-foreground/10 border-2 border-secondary-foreground/40 text-secondary-foreground hover:bg-secondary-foreground/20 font-semibold px-8 py-6 text-lg">
+                  <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all duration-300">
                     <Phone className="mr-2 w-5 h-5" />
                     Call Toll-Free: (718) 587-9965
                   </Button>
@@ -272,15 +265,9 @@ const ForBrokers = () => {
                 with competitive compensation, reliable funding, and the support you need to thrive.
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link to="/">
-                  <Button size="lg" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 font-semibold px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all duration-300 group">
-                    Get Started
-                    <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </Link>
+              <div className="flex justify-center">
                 <a href="tel:718-587-9965">
-                  <Button size="lg" className="bg-primary-foreground/10 border-2 border-primary-foreground/50 text-primary-foreground hover:bg-primary-foreground/20 font-semibold px-8 py-6 text-lg">
+                  <Button size="lg" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 font-semibold px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all duration-300">
                     <Phone className="mr-2 w-5 h-5" />
                     Call Toll-Free: (718) 587-9965
                   </Button>
