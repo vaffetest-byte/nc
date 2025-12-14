@@ -10,9 +10,7 @@ import {
   TrendingDown,
   Award,
   Heart,
-  Star,
-  ChevronLeft,
-  ChevronRight
+  Star
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
@@ -292,37 +290,27 @@ const ForAttorneys = () => {
               What Our Customers Are Saying...
             </h2>
 
-            <div className="relative">
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {testimonials.map((testimonial, index) => (
-                  <div key={index} className="text-center">
-                    <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden border-4 border-primary/20">
-                      <img 
-                        src={testimonial.image} 
-                        alt={testimonial.name} 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <p className="text-muted-foreground italic text-sm font-body mb-4 leading-relaxed">
-                      "{testimonial.review}"
-                    </p>
-                    <h4 className="font-heading font-bold text-foreground">{testimonial.name}</h4>
-                    <div className="flex justify-center gap-0.5 mt-2">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                      ))}
-                    </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {testimonials.map((testimonial, index) => (
+                <div key={index} className="text-center">
+                  <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden border-4 border-primary/20">
+                    <img 
+                      src={testimonial.image} 
+                      alt={testimonial.name} 
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                ))}
-              </div>
-
-              {/* Navigation arrows */}
-              <button className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-10 h-10 bg-background border border-border rounded-full flex items-center justify-center hover:bg-muted transition-colors hidden lg:flex">
-                <ChevronLeft className="w-5 h-5 text-muted-foreground" />
-              </button>
-              <button className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-10 h-10 bg-background border border-border rounded-full flex items-center justify-center hover:bg-muted transition-colors hidden lg:flex">
-                <ChevronRight className="w-5 h-5 text-muted-foreground" />
-              </button>
+                  <p className="text-muted-foreground italic text-sm font-body mb-4 leading-relaxed">
+                    "{testimonial.review}"
+                  </p>
+                  <h4 className="font-heading font-bold text-foreground">{testimonial.name}</h4>
+                  <div className="flex justify-center gap-0.5 mt-2">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
