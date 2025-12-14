@@ -1,11 +1,14 @@
 import { Helmet } from "react-helmet-async";
 import { Button } from "@/components/ui/button";
-import { Phone, Users, DollarSign, FileCheck, TrendingUp, Briefcase, CheckCircle } from "lucide-react";
+import { Phone, Users, DollarSign, FileCheck, TrendingUp, Briefcase, CheckCircle, ArrowRight } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BrokerSignupForm from "@/components/BrokerSignupForm";
 
 const ForBrokers = () => {
+  const scrollToForm = () => {
+    document.getElementById('broker-signup-form')?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   const brokerBenefits = [
     {
@@ -62,9 +65,17 @@ const ForBrokers = () => {
                 Simple processes. Speed you can count on. Support that puts your success first.
               </p>
               
-              <div className="flex justify-center">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button 
+                  size="lg" 
+                  onClick={scrollToForm}
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all duration-300 group"
+                >
+                  Apply Now
+                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
                 <a href="tel:718-587-9965">
-                  <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all duration-300">
+                  <Button size="lg" className="bg-secondary-foreground/10 border-2 border-secondary-foreground/40 text-secondary-foreground hover:bg-secondary-foreground/20 font-semibold px-8 py-6 text-lg">
                     <Phone className="mr-2 w-5 h-5" />
                     Call Toll-Free: (718) 587-9965
                   </Button>
@@ -248,7 +259,9 @@ const ForBrokers = () => {
                 </p>
               </div>
               
-              <BrokerSignupForm variant="dark" />
+              <div id="broker-signup-form">
+                <BrokerSignupForm variant="dark" />
+              </div>
             </div>
           </div>
         </section>
