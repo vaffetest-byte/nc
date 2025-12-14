@@ -1,99 +1,136 @@
-import { Star, Quote } from "lucide-react";
+import { Star } from "lucide-react";
+import { useEffect, useState, useCallback } from "react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from "@/components/ui/carousel";
+import testimonialMichael from "@/assets/testimonial-michael.jpg";
+import testimonialSarah from "@/assets/testimonial-sarah.jpg";
+import testimonialDavid from "@/assets/testimonial-david.jpg";
+import testimonialJennifer from "@/assets/testimonial-jennifer.jpg";
 
 const Testimonials = () => {
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+
   const testimonials = [
     {
       name: "Michael R.",
-      location: "New York, NY",
+      image: testimonialMichael,
       rating: 5,
-      text: "National Claims Assoc was a lifesaver during my car accident case. They approved my funding in less than 24 hours and the process was completely stress-free.",
-      verified: true,
+      text: "National Claims Assoc has been instrumental in helping my clients. Their fast funding allows my clients to focus on recovery while I focus on winning their case.",
     },
     {
-      name: "Sarah T.",
-      location: "Los Angeles, CA",
+      name: "Sarah K.",
+      image: testimonialSarah,
       rating: 5,
-      text: "Professional, fast, and caring. They understood my situation and provided the financial support I needed while waiting for my settlement.",
-      verified: true,
+      text: "The team at National Claims Assoc understands the legal process. They work efficiently and their non-compounded rates are the best in the industry.",
     },
     {
-      name: "James L.",
-      location: "Chicago, IL",
+      name: "David L.",
+      image: testimonialDavid,
       rating: 5,
-      text: "I was skeptical at first, but their team explained everything clearly. No hidden fees, no credit check, and I only repaid when I won my case.",
-      verified: true,
+      text: "I've worked with many funding companies, but National Claims Assoc stands out for their professionalism and client-first approach.",
+    },
+    {
+      name: "Jennifer M.",
+      image: testimonialJennifer,
+      rating: 5,
+      text: "Quick approvals, reasonable terms, and excellent communication. I recommend National Claims Assoc to all my colleagues.",
     },
   ];
 
-  const stats = {
-    rating: "4.9",
-    reviews: "2,500+",
-  };
+  useEffect(() => {
+    if (!api) return;
+
+    setCurrent(api.selectedScrollSnap());
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap());
+    });
+  }, [api]);
+
+  // Auto-scroll every 5 seconds
+  useEffect(() => {
+    if (!api) return;
+
+    const interval = setInterval(() => {
+      api.scrollNext();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [api]);
 
   return (
     <section className="py-24 section-gradient">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <span className="text-primary font-semibold text-sm uppercase tracking-widest">
-            Client Testimonials
-          </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mt-3 mb-4">
-            What Our Clients Say
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-foreground italic">
+            What Our Customers Are Saying...
           </h2>
-          
-          {/* Rating Summary */}
-          <div className="flex items-center justify-center gap-4 mt-6">
-            <div className="flex items-center gap-1">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
-              ))}
-            </div>
-            <span className="text-2xl font-bold text-foreground">{stats.rating}</span>
-            <span className="text-muted-foreground">from {stats.reviews} reviews</span>
-          </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {testimonials.map((testimonial, index) => (
-            <div
-              key={testimonial.name}
-              className="bg-card rounded-2xl p-7 card-shadow relative animate-fade-in border border-border group hover:-translate-y-1 transition-all duration-300"
-              style={{ animationDelay: `${index * 0.15}s` }}
-            >
-              {/* Quote Icon */}
-              <Quote className="absolute top-6 right-6 w-10 h-10 text-primary/10 group-hover:text-primary/20 transition-colors" />
+        <div className="max-w-6xl mx-auto relative px-12">
+          <Carousel
+            setApi={setApi}
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+            className="w-full"
+          >
+            <CarouselContent className="-ml-4">
+              {testimonials.map((testimonial, index) => (
+                <CarouselItem key={testimonial.name} className="pl-4 md:basis-1/2 lg:basis-1/4">
+                  <div className="flex flex-col items-center text-center p-4 animate-fade-in">
+                    {/* Avatar */}
+                    <div className="w-32 h-32 rounded-full overflow-hidden mb-6 ring-4 ring-border shadow-lg">
+                      <img
+                        src={testimonial.image}
+                        alt={testimonial.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
 
-              {/* Rating */}
-              <div className="flex items-center gap-1 mb-4">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
-                ))}
-              </div>
+                    {/* Quote */}
+                    <p className="text-foreground/80 mb-6 leading-relaxed text-sm min-h-[100px]">
+                      "{testimonial.text}"
+                    </p>
 
-              {/* Text */}
-              <p className="text-foreground/80 mb-6 leading-relaxed text-sm">
-                "{testimonial.text}"
-              </p>
+                    {/* Name */}
+                    <p className="font-heading font-bold text-foreground text-lg mb-2">
+                      {testimonial.name}
+                    </p>
 
-              {/* Author */}
-              <div className="flex items-center gap-3">
-                <div className="w-11 h-11 bg-secondary rounded-full flex items-center justify-center">
-                  <span className="text-secondary-foreground font-bold text-sm">
-                    {testimonial.name.charAt(0)}
-                  </span>
-                </div>
-                <div>
-                  <p className="font-semibold text-foreground text-sm">{testimonial.name}</p>
-                  <p className="text-xs text-muted-foreground">{testimonial.location}</p>
-                </div>
-                {testimonial.verified && (
-                  <span className="ml-auto text-xs bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full font-medium border border-emerald-200">
-                    Verified
-                  </span>
-                )}
-              </div>
-            </div>
-          ))}
+                    {/* Rating */}
+                    <div className="flex items-center gap-1">
+                      {[...Array(testimonial.rating)].map((_, i) => (
+                        <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
+                      ))}
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="left-0 bg-background/80 hover:bg-background border-border" />
+            <CarouselNext className="right-0 bg-background/80 hover:bg-background border-border" />
+          </Carousel>
+
+          {/* Dots indicator */}
+          <div className="flex justify-center gap-2 mt-8">
+            {testimonials.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => api?.scrollTo(index)}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  current === index ? "bg-primary w-6" : "bg-border hover:bg-muted-foreground"
+                }`}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>
