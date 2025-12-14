@@ -6,10 +6,10 @@ import {
   CarouselItem,
   type CarouselApi,
 } from "@/components/ui/carousel";
-import testimonialMichael from "@/assets/testimonial-michael.jpg";
-import testimonialSarah from "@/assets/testimonial-sarah.jpg";
-import testimonialDavid from "@/assets/testimonial-david.jpg";
-import testimonialJennifer from "@/assets/testimonial-jennifer.jpg";
+import testimonialJames from "@/assets/testimonial-james.jpg";
+import testimonialMaria from "@/assets/testimonial-maria.jpg";
+import testimonialRobert from "@/assets/testimonial-robert.jpg";
+import testimonialLisa from "@/assets/testimonial-lisa.jpg";
 
 const Testimonials = () => {
   const [api, setApi] = useState<CarouselApi>();
@@ -17,26 +17,26 @@ const Testimonials = () => {
 
   const testimonials = [
     {
-      name: "Michael R.",
-      image: testimonialMichael,
+      name: "James T.",
+      image: testimonialJames,
       rating: 5,
       text: "National Claims Assoc has been instrumental in helping my clients. Their fast funding allows my clients to focus on recovery while I focus on winning their case.",
     },
     {
-      name: "Sarah K.",
-      image: testimonialSarah,
+      name: "Maria C.",
+      image: testimonialMaria,
       rating: 5,
       text: "The team at National Claims Assoc understands the legal process. They work efficiently and their non-compounded rates are the best in the industry.",
     },
     {
-      name: "David L.",
-      image: testimonialDavid,
+      name: "Robert H.",
+      image: testimonialRobert,
       rating: 5,
       text: "I've worked with many funding companies, but National Claims Assoc stands out for their professionalism and client-first approach.",
     },
     {
-      name: "Jennifer M.",
-      image: testimonialJennifer,
+      name: "Lisa P.",
+      image: testimonialLisa,
       rating: 5,
       text: "Quick approvals, reasonable terms, and excellent communication. I recommend National Claims Assoc to all my colleagues.",
     },
