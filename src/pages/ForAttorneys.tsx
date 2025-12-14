@@ -186,13 +186,13 @@ const ForAttorneys = () => {
               </p>
             </div>
 
-            <div className="grid lg:grid-cols-2 gap-12 items-start">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
               {/* Left side - Image */}
-              <div className="rounded-xl overflow-hidden bg-white shadow-lg">
+              <div className="flex justify-center">
                 <img 
                   src={attorneysTeam} 
                   alt="Professional Legal Team" 
-                  className="w-full h-full object-contain"
+                  className="w-full max-w-lg h-auto object-contain"
                 />
               </div>
 
