@@ -1,18 +1,11 @@
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Phone, Clock, Users, Shield, Headphones, MapPin, DollarSign, FileCheck, TrendingUp, Briefcase, CheckCircle, ArrowRight } from "lucide-react";
+import { Phone, Users, Headphones, DollarSign, FileCheck, TrendingUp, Briefcase, CheckCircle, ArrowRight } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 const ForBrokers = () => {
-  const stats = [
-    { icon: Clock, label: "Funding Within 24 Hours", description: "of approval" },
-    { icon: Users, label: "Thousands of Clients", description: "funded nationwide" },
-    { icon: Shield, label: "Experienced Underwriters", description: "legal finance experts" },
-    { icon: Headphones, label: "Dedicated Broker Support", description: "priority access" },
-    { icon: MapPin, label: "Nationwide Coverage", description: "all 50 states" },
-  ];
 
   const brokerBenefits = [
     {
@@ -88,18 +81,42 @@ const ForBrokers = () => {
         </section>
 
         {/* Trust Metrics / Stats Bar */}
-        <section className="bg-primary py-8">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-              {stats.map((stat, index) => (
-                <div key={index} className="text-center">
-                  <div className="w-12 h-12 bg-primary-foreground/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <stat.icon className="w-6 h-6 text-primary-foreground" />
-                  </div>
-                  <p className="font-heading font-bold text-primary-foreground text-sm">{stat.label}</p>
-                  <p className="text-primary-foreground/70 text-xs">{stat.description}</p>
+        <section className="relative -mt-8 z-20 px-4">
+          <div className="container mx-auto">
+            <div className="bg-card rounded-lg shadow-xl overflow-hidden">
+              <div className="grid grid-cols-2 md:grid-cols-5 divide-y md:divide-y-0 md:divide-x divide-border">
+                <div className="p-6 lg:p-8 text-center">
+                  <p className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-secondary">
+                    24<sup className="text-primary text-lg md:text-xl font-semibold ml-1">Hrs</sup>
+                  </p>
+                  <p className="text-muted-foreground text-sm mt-2 font-body">From Approval To Funding</p>
                 </div>
-              ))}
+                <div className="p-6 lg:p-8 text-center">
+                  <p className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-secondary">
+                    1,000<sup className="text-primary text-lg md:text-xl font-semibold ml-1">'s</sup>
+                  </p>
+                  <p className="text-muted-foreground text-sm mt-2 font-body">Happy Customers</p>
+                </div>
+                <div className="p-6 lg:p-8 text-center">
+                  <p className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-secondary">
+                    +50
+                  </p>
+                  <p className="text-muted-foreground text-sm mt-2 font-body">Industry Awards</p>
+                </div>
+                <div className="p-6 lg:p-8 text-center">
+                  <p className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-secondary">
+                    100%
+                  </p>
+                  <p className="text-muted-foreground text-sm mt-2 font-body">Broker Support</p>
+                </div>
+                <div className="p-6 lg:p-8 text-center col-span-2 md:col-span-1">
+                  <p className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-secondary">
+                    10+
+                  </p>
+                  <p className="text-muted-foreground text-sm mt-2 font-body">Underwriters</p>
+                </div>
+              </div>
+              <div className="h-1 bg-primary"></div>
             </div>
           </div>
         </section>
