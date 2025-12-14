@@ -9,8 +9,8 @@ const Header = forwardRef<HTMLElement>((_, ref) => {
 
   const navLinks = [
     { name: "Get Started", href: "/", isPage: true, disabled: false },
-    { name: "What We Fund", href: "/what-we-fund", isPage: true, disabled: true },
-    { name: "How It Works", href: "/how-it-works", isPage: true, disabled: true },
+    { name: "What We Fund", href: "/what-we-fund", isPage: true, disabled: false },
+    { name: "How It Works", href: "/how-it-works", isPage: true, disabled: false },
     { name: "For Attorneys", href: "/for-attorneys", isPage: true, disabled: false },
     { name: "For Brokers", href: "/for-brokers", isPage: true, disabled: false },
   ];
