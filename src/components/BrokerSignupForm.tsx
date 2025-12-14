@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { CheckCircle, Loader2 } from "lucide-react";
 
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || "";
 interface BrokerFormData {
   fullName: string;
   companyName: string;
@@ -30,6 +32,9 @@ const BrokerSignupForm = ({ variant = "light", className = "" }: BrokerSignupFor
     states: "",
   });
   const [errors, setErrors] = useState<Partial<BrokerFormData>>({});
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [captchaError, setCaptchaError] = useState<string>("");
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -87,10 +92,22 @@ const BrokerSignupForm = ({ variant = "light", className = "" }: BrokerSignupFor
     return Object.keys(newErrors).length === 0;
   };
 
+  const handleCaptchaChange = (token: string | null) => {
+    setCaptchaToken(token);
+    if (token) {
+      setCaptchaError("");
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validate()) return;
+
+    if (!captchaToken) {
+      setCaptchaError("Please complete the CAPTCHA verification");
+      return;
+    }
 
     setIsSubmitting(true);
 
@@ -99,6 +116,10 @@ const BrokerSignupForm = ({ variant = "light", className = "" }: BrokerSignupFor
 
     setIsSubmitting(false);
     setIsSubmitted(true);
+
+    // Reset captcha
+    recaptchaRef.current?.reset();
+    setCaptchaToken(null);
 
     toast({
       title: "Application Received!",
@@ -229,9 +250,24 @@ const BrokerSignupForm = ({ variant = "light", className = "" }: BrokerSignupFor
           )}
         </div>
 
+        {/* CAPTCHA */}
+        <div className="flex flex-col items-center space-y-2">
+          {RECAPTCHA_SITE_KEY && (
+            <ReCAPTCHA
+              ref={recaptchaRef}
+              sitekey={RECAPTCHA_SITE_KEY}
+              onChange={handleCaptchaChange}
+              theme={isDark ? "dark" : "light"}
+            />
+          )}
+          {captchaError && (
+            <p className="text-destructive text-sm">{captchaError}</p>
+          )}
+        </div>
+
         <Button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || !captchaToken}
           className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-6 text-lg mt-6"
         >
           {isSubmitting ? (
