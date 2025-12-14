@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import { Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,6 +14,8 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || "";
+
 interface FundingFormProps {
   variant?: "dark" | "light";
   className?: string;
@@ -21,6 +24,9 @@ interface FundingFormProps {
 const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => {
   const [role, setRole] = useState<"plaintiff" | "attorney">("plaintiff");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [captchaError, setCaptchaError] = useState<string>("");
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   // Plaintiff form state
   const [plaintiffForm, setPlaintiffForm] = useState({
@@ -44,6 +50,13 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
     plaintiffName: "",
   });
 
+  const handleCaptchaChange = (token: string | null) => {
+    setCaptchaToken(token);
+    if (token) {
+      setCaptchaError("");
+    }
+  };
+
   const handlePlaintiffChange = (field: string, value: string) => {
     setPlaintiffForm((prev) => ({ ...prev, [field]: value }));
   };
@@ -54,6 +67,12 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!captchaToken) {
+      setCaptchaError("Please complete the CAPTCHA verification");
+      return;
+    }
+
     setIsSubmitting(true);
 
     // Simulate submission
@@ -63,6 +82,10 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
         title: "Request Submitted!",
         description: "Your funding request has been submitted successfully.",
       });
+
+      // Reset captcha
+      recaptchaRef.current?.reset();
+      setCaptchaToken(null);
       
       // Reset forms
       if (role === "plaintiff") {
@@ -316,9 +339,24 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
           </div>
         </div>
 
+        {/* CAPTCHA */}
+        <div className="flex flex-col items-center space-y-2 mt-4">
+          {RECAPTCHA_SITE_KEY && (
+            <ReCAPTCHA
+              ref={recaptchaRef}
+              sitekey={RECAPTCHA_SITE_KEY}
+              onChange={handleCaptchaChange}
+              theme={isDark ? "dark" : "light"}
+            />
+          )}
+          {captchaError && (
+            <p className="text-destructive text-sm">{captchaError}</p>
+          )}
+        </div>
+
         <Button 
           type="submit" 
-          disabled={isSubmitting}
+          disabled={isSubmitting || !captchaToken}
           className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg py-5 h-14 shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 glow-effect mt-6 rounded-lg tracking-wide"
         >
           {isSubmitting ? "Submitting..." : "Submit a Request for Funding"}
