@@ -27,6 +27,10 @@ import thoughtLeadership3 from "@/assets/thought-leadership-3.png";
 import thoughtLeadership4 from "@/assets/thought-leadership-4.png";
 import thoughtLeadership5 from "@/assets/thought-leadership-5.png";
 import thoughtLeadership6 from "@/assets/thought-leadership-6.png";
+import testimonialMichael from "@/assets/testimonial-michael.jpg";
+import testimonialSarah from "@/assets/testimonial-sarah.jpg";
+import testimonialDavid from "@/assets/testimonial-david.jpg";
+import testimonialJennifer from "@/assets/testimonial-jennifer.jpg";
 
 const ForAttorneys = () => {
   const advantages = [
@@ -71,22 +75,26 @@ const ForAttorneys = () => {
     {
       name: "Michael R.",
       review: "National Claims Assoc has been instrumental in helping my clients. Their fast funding allows my clients to focus on recovery while I focus on winning their case.",
-      rating: 5
+      rating: 5,
+      image: testimonialMichael
     },
     {
       name: "Sarah K.",
       review: "The team at National Claims Assoc understands the legal process. They work efficiently and their non-compounded rates are the best in the industry.",
-      rating: 5
+      rating: 5,
+      image: testimonialSarah
     },
     {
       name: "David L.",
       review: "I've worked with many funding companies, but National Claims Assoc stands out for their professionalism and client-first approach.",
-      rating: 5
+      rating: 5,
+      image: testimonialDavid
     },
     {
       name: "Jennifer M.",
       review: "Quick approvals, reasonable terms, and excellent communication. I recommend National Claims Assoc to all my colleagues.",
-      rating: 5
+      rating: 5,
+      image: testimonialJennifer
     }
   ];
 
@@ -288,10 +296,12 @@ const ForAttorneys = () => {
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {testimonials.map((testimonial, index) => (
                   <div key={index} className="text-center">
-                    <div className="w-24 h-24 bg-muted rounded-full mx-auto mb-4 flex items-center justify-center border-4 border-primary/20">
-                      <span className="text-2xl font-heading font-bold text-muted-foreground">
-                        {testimonial.name.charAt(0)}
-                      </span>
+                    <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden border-4 border-primary/20">
+                      <img 
+                        src={testimonial.image} 
+                        alt={testimonial.name} 
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                     <p className="text-muted-foreground italic text-sm font-body mb-4 leading-relaxed">
                       "{testimonial.review}"
