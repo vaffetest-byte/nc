@@ -6,7 +6,8 @@ import {
   Edit3, 
   BarChart3, 
   LogOut,
-  Shield
+  Shield,
+  PenLine
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -23,6 +24,7 @@ const AdminSidebar = () => {
   const navItems = [
     { to: "/admin", icon: LayoutDashboard, label: "Dashboard", end: true },
     { to: "/admin/submissions", icon: FileText, label: "Submissions" },
+    { to: "/admin/blog", icon: PenLine, label: "Blog" },
     { to: "/admin/content", icon: Edit3, label: "Content" },
     { to: "/admin/analytics", icon: BarChart3, label: "Analytics" },
   ];

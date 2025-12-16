@@ -14,6 +14,8 @@ const WhatWeFund = lazy(() => import("./pages/WhatWeFund"));
 const HowItWorksPage = lazy(() => import("./pages/HowItWorksPage"));
 const ForAttorneys = lazy(() => import("./pages/ForAttorneys"));
 const ForBrokers = lazy(() => import("./pages/ForBrokers"));
+const Blog = lazy(() => import("./pages/Blog"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 // Admin pages
@@ -23,6 +25,7 @@ const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
 const AdminSubmissions = lazy(() => import("./pages/admin/Submissions"));
 const AdminContent = lazy(() => import("./pages/admin/Content"));
 const AdminAnalytics = lazy(() => import("./pages/admin/Analytics"));
+const AdminBlogManager = lazy(() => import("./pages/admin/BlogManager"));
 
 const queryClient = new QueryClient();
 
@@ -49,6 +52,8 @@ const AppRoutes = () => {
           <Route path="/how-it-works" element={<HowItWorksPage />} />
           <Route path="/for-attorneys" element={<ForAttorneys />} />
           <Route path="/for-brokers" element={<ForBrokers />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
           
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
@@ -57,6 +62,7 @@ const AppRoutes = () => {
             <Route path="submissions" element={<AdminSubmissions />} />
             <Route path="content" element={<AdminContent />} />
             <Route path="analytics" element={<AdminAnalytics />} />
+            <Route path="blog" element={<AdminBlogManager />} />
           </Route>
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
