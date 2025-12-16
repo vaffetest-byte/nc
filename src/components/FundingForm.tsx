@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
+import { WEBHOOK_CONFIG, sendToWebhook } from "@/config/webhooks";
 
 interface FundingFormProps {
   variant?: "dark" | "light";
@@ -52,42 +53,55 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
     setAttorneyForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     setIsSubmitting(true);
 
-    // Simulate submission
-    setTimeout(() => {
-      setIsSubmitting(false);
-      toast({
-        title: "Request Submitted!",
-        description: "Your funding request has been submitted successfully.",
+    // Prepare data based on role
+    const formData = role === "plaintiff" 
+      ? {
+          formType: "funding_request",
+          role: "plaintiff",
+          ...plaintiffForm,
+        }
+      : {
+          formType: "funding_request",
+          role: "attorney",
+          ...attorneyForm,
+        };
+
+    // Send to webhook (Zapier/Make.com -> Zoho CRM)
+    await sendToWebhook(WEBHOOK_CONFIG.fundingForm, formData);
+
+    setIsSubmitting(false);
+    toast({
+      title: "Request Submitted!",
+      description: "Your funding request has been submitted successfully.",
+    });
+    
+    // Reset forms
+    if (role === "plaintiff") {
+      setPlaintiffForm({
+        name: "",
+        email: "",
+        phone: "",
+        amountNeeded: "",
+        attorneyName: "",
+        attorneyPhone: "",
+        attorneyEmail: "",
       });
-      
-      // Reset forms
-      if (role === "plaintiff") {
-        setPlaintiffForm({
-          name: "",
-          email: "",
-          phone: "",
-          amountNeeded: "",
-          attorneyName: "",
-          attorneyPhone: "",
-          attorneyEmail: "",
-        });
-      } else {
-        setAttorneyForm({
-          contactName: "",
-          contactEmail: "",
-          contactPhone: "",
-          amountNeeded: "",
-          fundingFor: "plaintiff-initial",
-          dateOfAccident: "",
-          plaintiffName: "",
-        });
-      }
-    }, 1000);
+    } else {
+      setAttorneyForm({
+        contactName: "",
+        contactEmail: "",
+        contactPhone: "",
+        amountNeeded: "",
+        fundingFor: "plaintiff-initial",
+        dateOfAccident: "",
+        plaintiffName: "",
+      });
+    }
   };
 
   const isDark = variant === "dark";
