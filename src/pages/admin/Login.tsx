@@ -20,6 +20,7 @@ const AdminLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   
   const { signIn, signUp, user, isAdmin, loading } = useAdmin();
@@ -35,6 +36,35 @@ const AdminLogin = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
+
+    // Handle forgot password
+    if (isForgotPassword) {
+      if (!email || !z.string().email().safeParse(email).success) {
+        setErrors({ email: "Please enter a valid email address" });
+        return;
+      }
+      
+      setIsLoading(true);
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/admin/login`,
+      });
+      
+      if (error) {
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Password Reset Email Sent",
+          description: "Check your inbox for a password reset link.",
+        });
+        setIsForgotPassword(false);
+      }
+      setIsLoading(false);
+      return;
+    }
 
     // Validate input
     const result = loginSchema.safeParse({ email, password });
@@ -121,10 +151,14 @@ const AdminLogin = () => {
               <Shield className="w-8 h-8 text-primary-foreground" />
             </div>
             <h1 className="font-heading text-2xl font-bold text-foreground">
-              {isSignUp ? "Create Admin Account" : "Admin Login"}
+              {isForgotPassword ? "Reset Password" : isSignUp ? "Create Admin Account" : "Admin Login"}
             </h1>
             <p className="text-muted-foreground font-body mt-2">
-              {isSignUp ? "Set up your admin credentials" : "Sign in to access the admin console"}
+              {isForgotPassword 
+                ? "Enter your email to receive a reset link" 
+                : isSignUp 
+                  ? "Set up your admin credentials" 
+                  : "Sign in to access the admin console"}
             </p>
           </div>
 
@@ -147,32 +181,34 @@ const AdminLogin = () => {
               )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-foreground">
-                Password
-              </Label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="h-12 pr-10"
-                  disabled={isLoading}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
+            {!isForgotPassword && (
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-foreground">
+                  Password
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="h-12 pr-10"
+                    disabled={isLoading}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
+                {errors.password && (
+                  <p className="text-destructive text-sm">{errors.password}</p>
+                )}
               </div>
-              {errors.password && (
-                <p className="text-destructive text-sm">{errors.password}</p>
-              )}
-            </div>
+            )}
 
             <Button
               type="submit"
@@ -182,21 +218,37 @@ const AdminLogin = () => {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 w-5 h-5 animate-spin" />
-                  {isSignUp ? "Creating Account..." : "Signing in..."}
+                  {isForgotPassword ? "Sending..." : isSignUp ? "Creating Account..." : "Signing in..."}
                 </>
               ) : (
-                isSignUp ? "Create Admin Account" : "Sign In"
+                isForgotPassword ? "Send Reset Link" : isSignUp ? "Create Admin Account" : "Sign In"
               )}
             </Button>
           </form>
 
-          <div className="mt-6 text-center">
+          <div className="mt-6 text-center space-y-2">
+            {!isForgotPassword && !isSignUp && (
+              <button
+                type="button"
+                onClick={() => setIsForgotPassword(true)}
+                className="text-sm text-muted-foreground hover:text-primary block w-full"
+              >
+                Forgot your password?
+              </button>
+            )}
             <button
               type="button"
-              onClick={() => setIsSignUp(!isSignUp)}
+              onClick={() => {
+                setIsForgotPassword(false);
+                setIsSignUp(!isSignUp);
+              }}
               className="text-sm text-primary hover:underline"
             >
-              {isSignUp ? "Already have an account? Sign in" : "Need an admin account? Sign up"}
+              {isForgotPassword 
+                ? "← Back to sign in" 
+                : isSignUp 
+                  ? "Already have an account? Sign in" 
+                  : "Need an admin account? Sign up"}
             </button>
           </div>
         </div>
