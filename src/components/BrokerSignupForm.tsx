@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { CheckCircle, Loader2 } from "lucide-react";
 import { WEBHOOK_CONFIG, sendToWebhook } from "@/config/webhooks";
+import { supabase } from "@/integrations/supabase/client";
 
 interface BrokerFormData {
   fullName: string;
@@ -95,11 +96,19 @@ const BrokerSignupForm = ({ variant = "light", className = "" }: BrokerSignupFor
 
     setIsSubmitting(true);
 
-    // Send to webhook (Zapier/Make.com -> Zoho CRM)
-    await sendToWebhook(WEBHOOK_CONFIG.brokerSignup, {
+    const submissionData = {
       formType: "broker_signup",
       ...formData,
+    };
+
+    // Save to database
+    await supabase.from("form_submissions").insert({
+      form_type: "broker",
+      data: submissionData,
     });
+
+    // Send to webhook (Zapier/Make.com -> Zoho CRM)
+    await sendToWebhook(WEBHOOK_CONFIG.brokerSignup, submissionData);
 
     setIsSubmitting(false);
     setIsSubmitted(true);

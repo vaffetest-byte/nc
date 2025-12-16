@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import { WEBHOOK_CONFIG, sendToWebhook } from "@/config/webhooks";
+import { supabase } from "@/integrations/supabase/client";
 
 interface FundingFormProps {
   variant?: "dark" | "light";
@@ -70,6 +71,12 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
           role: "attorney",
           ...attorneyForm,
         };
+
+    // Save to database
+    await supabase.from("form_submissions").insert({
+      form_type: "funding",
+      data: formData,
+    });
 
     // Send to webhook (Zapier/Make.com -> Zoho CRM)
     await sendToWebhook(WEBHOOK_CONFIG.fundingForm, formData);
