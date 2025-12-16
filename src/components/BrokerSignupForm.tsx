@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { CheckCircle, Loader2 } from "lucide-react";
+import { WEBHOOK_CONFIG, sendToWebhook } from "@/config/webhooks";
 
 interface BrokerFormData {
   fullName: string;
@@ -94,8 +95,11 @@ const BrokerSignupForm = ({ variant = "light", className = "" }: BrokerSignupFor
 
     setIsSubmitting(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    // Send to webhook (Zapier/Make.com -> Zoho CRM)
+    await sendToWebhook(WEBHOOK_CONFIG.brokerSignup, {
+      formType: "broker_signup",
+      ...formData,
+    });
 
     setIsSubmitting(false);
     setIsSubmitted(true);
