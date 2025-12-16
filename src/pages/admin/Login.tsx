@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Shield, Loader2, Eye, EyeOff } from "lucide-react";
 import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -18,9 +19,10 @@ const AdminLogin = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   
-  const { signIn, user, isAdmin, loading } = useAdmin();
+  const { signIn, signUp, user, isAdmin, loading } = useAdmin();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -48,6 +50,43 @@ const AdminLogin = () => {
 
     setIsLoading(true);
 
+    if (isSignUp) {
+      const { data, error } = await signUp(email, password);
+      
+      if (error) {
+        setIsLoading(false);
+        toast({
+          title: "Signup Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (data?.user) {
+        // Add to admin_users table
+        const { error: insertError } = await supabase
+          .from("admin_users")
+          .insert({ id: data.user.id, email: data.user.email });
+
+        if (insertError) {
+          toast({
+            title: "Account Created",
+            description: "Account created but admin access failed. Contact support.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Admin Account Created!",
+            description: "You can now sign in with your credentials.",
+          });
+          setIsSignUp(false);
+        }
+      }
+      setIsLoading(false);
+      return;
+    }
+
     const { error } = await signIn(email, password);
 
     if (error) {
@@ -62,7 +101,6 @@ const AdminLogin = () => {
       return;
     }
 
-    // Auth state change will handle redirect if user is admin
     setIsLoading(false);
   };
 
@@ -83,10 +121,10 @@ const AdminLogin = () => {
               <Shield className="w-8 h-8 text-primary-foreground" />
             </div>
             <h1 className="font-heading text-2xl font-bold text-foreground">
-              Admin Login
+              {isSignUp ? "Create Admin Account" : "Admin Login"}
             </h1>
             <p className="text-muted-foreground font-body mt-2">
-              Sign in to access the admin console
+              {isSignUp ? "Set up your admin credentials" : "Sign in to access the admin console"}
             </p>
           </div>
 
@@ -144,17 +182,23 @@ const AdminLogin = () => {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 w-5 h-5 animate-spin" />
-                  Signing in...
+                  {isSignUp ? "Creating Account..." : "Signing in..."}
                 </>
               ) : (
-                "Sign In"
+                isSignUp ? "Create Admin Account" : "Sign In"
               )}
             </Button>
           </form>
 
-          <p className="text-xs text-muted-foreground text-center mt-6">
-            Contact your administrator if you need access.
-          </p>
+          <div className="mt-6 text-center">
+            <button
+              type="button"
+              onClick={() => setIsSignUp(!isSignUp)}
+              className="text-sm text-primary hover:underline"
+            >
+              {isSignUp ? "Already have an account? Sign in" : "Need an admin account? Sign up"}
+            </button>
+          </div>
         </div>
 
         <p className="text-center text-sm text-muted-foreground mt-6">
