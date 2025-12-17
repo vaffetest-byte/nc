@@ -95,6 +95,7 @@ const Submissions = () => {
     let query = supabase
       .from("form_submissions")
       .select("*")
+      .is("deleted_at", null) // Only show non-deleted items
       .order("created_at", { ascending: false });
 
     if (filter !== "all") {
@@ -149,23 +150,24 @@ const Submissions = () => {
     if (!deleteId) return;
     
     setIsDeleting(true);
+    // Soft delete - set deleted_at timestamp instead of actual delete
     const { error } = await supabase
       .from("form_submissions")
-      .delete()
+      .update({ deleted_at: new Date().toISOString() })
       .eq("id", deleteId);
 
     if (error) {
       console.error("Delete error:", error);
       toast({
         title: "Delete Failed",
-        description: "There was an error deleting the submission.",
+        description: "There was an error moving the submission to trash.",
         variant: "destructive",
       });
     } else {
       setSubmissions(prev => prev.filter(s => s.id !== deleteId));
       toast({
-        title: "Deleted",
-        description: "Submission has been deleted successfully.",
+        title: "Moved to Trash",
+        description: "Submission has been moved to trash. It will be permanently deleted after 7 days.",
       });
       // Close detail dialog if viewing the deleted submission
       if (selectedSubmission?.id === deleteId) {
@@ -502,7 +504,7 @@ const Submissions = () => {
                   className="w-full"
                 >
                   <Trash2 className="w-4 h-4 mr-2" />
-                  Delete Submission
+                  Move to Trash
                 </Button>
               </div>
             </div>
@@ -514,9 +516,9 @@ const Submissions = () => {
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Submission?</AlertDialogTitle>
+            <AlertDialogTitle>Move to Trash?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete this submission from the database.
+              This submission will be moved to the trash. You can restore it within 7 days before it's permanently deleted.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -526,7 +528,7 @@ const Submissions = () => {
               disabled={isDeleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {isDeleting ? "Deleting..." : "Delete"}
+              {isDeleting ? "Moving..." : "Move to Trash"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

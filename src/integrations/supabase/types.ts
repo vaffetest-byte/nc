@@ -107,6 +107,7 @@ export type Database = {
         Row: {
           created_at: string
           data: Json
+          deleted_at: string | null
           form_type: string
           id: string
           read_status: boolean
@@ -114,6 +115,7 @@ export type Database = {
         Insert: {
           created_at?: string
           data: Json
+          deleted_at?: string | null
           form_type: string
           id?: string
           read_status?: boolean
@@ -121,6 +123,7 @@ export type Database = {
         Update: {
           created_at?: string
           data?: Json
+          deleted_at?: string | null
           form_type?: string
           id?: string
           read_status?: boolean
