@@ -55,12 +55,13 @@ const AdminSidebar = () => {
   const navItems = [
     { to: "/admin", icon: LayoutDashboard, label: "Dashboard", end: true },
     { to: "/admin/submissions", icon: FileText, label: "Submissions" },
-    { to: "/admin/trash", icon: Trash2, label: "Trash", badge: trashCount },
     { to: "/admin/blog", icon: PenLine, label: "Blog" },
     { to: "/admin/content", icon: Edit3, label: "Content" },
     { to: "/admin/analytics", icon: BarChart3, label: "Analytics" },
     { to: "/admin/account", icon: Settings, label: "Account" },
   ];
+
+  const trashItem = { to: "/admin/trash", icon: Trash2, label: "Trash", badge: trashCount };
 
   return (
     <aside className="w-64 bg-card border-r border-border min-h-screen flex flex-col">
@@ -95,16 +96,31 @@ const AdminSidebar = () => {
           >
             <item.icon className="w-5 h-5" />
             <span className="flex-1">{item.label}</span>
-            {item.badge !== undefined && item.badge > 0 && (
-              <Badge variant="destructive" className="text-xs px-1.5 py-0.5 min-w-[20px] justify-center">
-                {item.badge}
-              </Badge>
-            )}
           </NavLink>
         ))}
       </nav>
 
-      <div className="p-4 border-t border-border">
+      <div className="p-4 border-t border-border space-y-1">
+        <NavLink
+          to={trashItem.to}
+          className={({ isActive }) =>
+            cn(
+              "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors font-body",
+              isActive
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:bg-muted hover:text-foreground"
+            )
+          }
+        >
+          <trashItem.icon className="w-5 h-5" />
+          <span className="flex-1">{trashItem.label}</span>
+          {trashItem.badge > 0 && (
+            <Badge variant="destructive" className="text-xs px-1.5 py-0.5 min-w-[20px] justify-center">
+              {trashItem.badge}
+            </Badge>
+          )}
+        </NavLink>
+        
         <Button
           variant="ghost"
           className="w-full justify-start gap-3 text-muted-foreground hover:text-foreground"
