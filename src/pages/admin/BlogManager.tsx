@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Plus, Edit, Trash2, Eye, EyeOff, Loader2, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import ImageUpload from "@/components/admin/ImageUpload";
 import { useAdmin } from "@/hooks/useAdmin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -494,14 +495,12 @@ const BlogManager = () => {
                   <AccordionContent className="space-y-4 pt-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="featured_image">Image URL</Label>
-                        <Input
-                          id="featured_image"
+                        <Label>Featured Image</Label>
+                        <ImageUpload
                           value={formData.featured_image}
-                          onChange={(e) =>
-                            setFormData({ ...formData, featured_image: e.target.value })
+                          onChange={(url) =>
+                            setFormData({ ...formData, featured_image: url })
                           }
-                          placeholder="https://example.com/image.jpg"
                         />
                       </div>
                       <div className="space-y-2">
@@ -516,16 +515,6 @@ const BlogManager = () => {
                         />
                       </div>
                     </div>
-                    {formData.featured_image && (
-                      <div className="mt-2">
-                        <p className="text-sm text-muted-foreground mb-2">Preview:</p>
-                        <img
-                          src={formData.featured_image}
-                          alt={formData.featured_image_alt || "Preview"}
-                          className="max-h-48 rounded-lg object-cover"
-                        />
-                      </div>
-                    )}
                   </AccordionContent>
                 </AccordionItem>
 
