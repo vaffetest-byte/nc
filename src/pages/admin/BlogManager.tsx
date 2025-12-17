@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Plus, Edit, Trash2, Eye, EyeOff, Loader2 } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, EyeOff, Loader2, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAdmin } from "@/hooks/useAdmin";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 
@@ -34,10 +40,17 @@ interface BlogPost {
   excerpt: string | null;
   content: string;
   featured_image: string | null;
+  featured_image_alt: string | null;
   published: boolean;
   published_at: string | null;
   created_at: string;
   updated_at: string;
+  category: string | null;
+  tags: string[] | null;
+  meta_title: string | null;
+  meta_description: string | null;
+  cta_text: string | null;
+  cta_url: string | null;
 }
 
 const generateSlug = (title: string) => {
@@ -46,6 +59,15 @@ const generateSlug = (title: string) => {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
 };
+
+const CATEGORIES = [
+  "Litigation Funding",
+  "Legal Tips",
+  "Case Studies",
+  "Industry News",
+  "For Attorneys",
+  "For Plaintiffs",
+];
 
 const BlogManager = () => {
   const { user } = useAdmin();
@@ -57,6 +79,7 @@ const BlogManager = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [postToDelete, setPostToDelete] = useState<string | null>(null);
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
+  const [tagInput, setTagInput] = useState("");
 
   const [formData, setFormData] = useState({
     title: "",
@@ -64,7 +87,14 @@ const BlogManager = () => {
     excerpt: "",
     content: "",
     featured_image: "",
+    featured_image_alt: "",
     published: false,
+    category: "",
+    tags: [] as string[],
+    meta_title: "",
+    meta_description: "",
+    cta_text: "",
+    cta_url: "",
   });
 
   const fetchPosts = async () => {
@@ -74,7 +104,7 @@ const BlogManager = () => {
       .order("created_at", { ascending: false });
 
     if (!error && data) {
-      setPosts(data);
+      setPosts(data as BlogPost[]);
     }
     setLoading(false);
   };
@@ -90,8 +120,16 @@ const BlogManager = () => {
       excerpt: "",
       content: "",
       featured_image: "",
+      featured_image_alt: "",
       published: false,
+      category: "",
+      tags: [],
+      meta_title: "",
+      meta_description: "",
+      cta_text: "",
+      cta_url: "",
     });
+    setTagInput("");
     setEditingPost(null);
   };
 
@@ -108,8 +146,16 @@ const BlogManager = () => {
       excerpt: post.excerpt || "",
       content: post.content,
       featured_image: post.featured_image || "",
+      featured_image_alt: post.featured_image_alt || "",
       published: post.published,
+      category: post.category || "",
+      tags: post.tags || [],
+      meta_title: post.meta_title || "",
+      meta_description: post.meta_description || "",
+      cta_text: post.cta_text || "",
+      cta_url: post.cta_url || "",
     });
+    setTagInput("");
     setDialogOpen(true);
   };
 
@@ -118,6 +164,22 @@ const BlogManager = () => {
       ...prev,
       title,
       slug: editingPost ? prev.slug : generateSlug(title),
+      meta_title: prev.meta_title || title,
+    }));
+  };
+
+  const addTag = () => {
+    const tag = tagInput.trim().toLowerCase();
+    if (tag && !formData.tags.includes(tag)) {
+      setFormData((prev) => ({ ...prev, tags: [...prev.tags, tag] }));
+    }
+    setTagInput("");
+  };
+
+  const removeTag = (tagToRemove: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      tags: prev.tags.filter((tag) => tag !== tagToRemove),
     }));
   };
 
@@ -141,9 +203,16 @@ const BlogManager = () => {
       excerpt: formData.excerpt.trim() || null,
       content: formData.content,
       featured_image: formData.featured_image.trim() || null,
+      featured_image_alt: formData.featured_image_alt.trim() || null,
       published: formData.published,
       published_at: formData.published ? new Date().toISOString() : null,
       author_id: user?.id,
+      category: formData.category || null,
+      tags: formData.tags.length > 0 ? formData.tags : null,
+      meta_title: formData.meta_title.trim() || null,
+      meta_description: formData.meta_description.trim() || null,
+      cta_text: formData.cta_text.trim() || null,
+      cta_url: formData.cta_url.trim() || null,
     };
 
     if (editingPost) {
@@ -246,7 +315,7 @@ const BlogManager = () => {
             Blog Manager
           </h1>
           <p className="text-muted-foreground mt-1">
-            Create and manage blog posts
+            Create and manage SEO-optimized blog posts
           </p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -256,90 +325,276 @@ const BlogManager = () => {
               New Post
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
                 {editingPost ? "Edit Post" : "Create New Post"}
               </DialogTitle>
             </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-5 mt-4">
-              <div className="space-y-2">
-                <Label htmlFor="title">Title *</Label>
-                <Input
-                  id="title"
-                  value={formData.title}
-                  onChange={(e) => handleTitleChange(e.target.value)}
-                  placeholder="Enter post title"
-                  required
-                />
-              </div>
+            <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+              <Accordion type="multiple" defaultValue={["basic", "content", "seo"]} className="w-full">
+                {/* Basic Info */}
+                <AccordionItem value="basic">
+                  <AccordionTrigger className="text-base font-semibold">
+                    Basic Information
+                  </AccordionTrigger>
+                  <AccordionContent className="space-y-4 pt-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="title">Title (H1) *</Label>
+                        <Input
+                          id="title"
+                          value={formData.title}
+                          onChange={(e) => handleTitleChange(e.target.value)}
+                          placeholder="Enter post title"
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="slug">URL Slug</Label>
+                        <Input
+                          id="slug"
+                          value={formData.slug}
+                          onChange={(e) =>
+                            setFormData({ ...formData, slug: e.target.value })
+                          }
+                          placeholder="post-url-slug"
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          /blog/{formData.slug || "your-post-slug"}
+                        </p>
+                      </div>
+                    </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="slug">Slug</Label>
-                <Input
-                  id="slug"
-                  value={formData.slug}
-                  onChange={(e) =>
-                    setFormData({ ...formData, slug: e.target.value })
-                  }
-                  placeholder="post-url-slug"
-                />
-                <p className="text-xs text-muted-foreground">
-                  URL: /blog/{formData.slug || "your-post-slug"}
-                </p>
-              </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="category">Category</Label>
+                        <select
+                          id="category"
+                          value={formData.category}
+                          onChange={(e) =>
+                            setFormData({ ...formData, category: e.target.value })
+                          }
+                          className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm"
+                        >
+                          <option value="">Select category...</option>
+                          {CATEGORIES.map((cat) => (
+                            <option key={cat} value={cat}>
+                              {cat}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="tags">Tags</Label>
+                        <div className="flex gap-2">
+                          <Input
+                            id="tags"
+                            value={tagInput}
+                            onChange={(e) => setTagInput(e.target.value)}
+                            placeholder="Add tag and press Enter"
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                e.preventDefault();
+                                addTag();
+                              }
+                            }}
+                          />
+                          <Button type="button" variant="outline" onClick={addTag}>
+                            Add
+                          </Button>
+                        </div>
+                        {formData.tags.length > 0 && (
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {formData.tags.map((tag) => (
+                              <Badge
+                                key={tag}
+                                variant="secondary"
+                                className="gap-1 cursor-pointer"
+                                onClick={() => removeTag(tag)}
+                              >
+                                {tag}
+                                <X className="w-3 h-3" />
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
 
-              <div className="space-y-2">
-                <Label htmlFor="excerpt">Excerpt</Label>
-                <Textarea
-                  id="excerpt"
-                  value={formData.excerpt}
-                  onChange={(e) =>
-                    setFormData({ ...formData, excerpt: e.target.value })
-                  }
-                  placeholder="Brief summary of the post..."
-                  rows={2}
-                />
-              </div>
+                {/* Content */}
+                <AccordionItem value="content">
+                  <AccordionTrigger className="text-base font-semibold">
+                    Content
+                  </AccordionTrigger>
+                  <AccordionContent className="space-y-4 pt-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="excerpt">Introduction / Excerpt</Label>
+                      <Textarea
+                        id="excerpt"
+                        value={formData.excerpt}
+                        onChange={(e) =>
+                          setFormData({ ...formData, excerpt: e.target.value })
+                        }
+                        placeholder="Brief summary or introduction of the post..."
+                        rows={3}
+                      />
+                    </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="content">Content * (HTML supported)</Label>
-                <Textarea
-                  id="content"
-                  value={formData.content}
-                  onChange={(e) =>
-                    setFormData({ ...formData, content: e.target.value })
-                  }
-                  placeholder="Write your post content here... HTML tags are supported."
-                  rows={12}
-                  required
-                />
-              </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="content">
+                        Body Content * (HTML supported - use H2/H3 for headings, &lt;a&gt; for internal links)
+                      </Label>
+                      <Textarea
+                        id="content"
+                        value={formData.content}
+                        onChange={(e) =>
+                          setFormData({ ...formData, content: e.target.value })
+                        }
+                        placeholder="Write your post content here... Use <h2>, <h3> for headings, <a href='/page'> for internal links."
+                        rows={14}
+                        required
+                      />
+                    </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="featured_image">Featured Image URL</Label>
-                <Input
-                  id="featured_image"
-                  value={formData.featured_image}
-                  onChange={(e) =>
-                    setFormData({ ...formData, featured_image: e.target.value })
-                  }
-                  placeholder="https://example.com/image.jpg"
-                />
-              </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="cta_text">CTA Button Text</Label>
+                        <Input
+                          id="cta_text"
+                          value={formData.cta_text}
+                          onChange={(e) =>
+                            setFormData({ ...formData, cta_text: e.target.value })
+                          }
+                          placeholder="e.g., Apply for Funding Today"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="cta_url">CTA Button URL</Label>
+                        <Input
+                          id="cta_url"
+                          value={formData.cta_url}
+                          onChange={(e) =>
+                            setFormData({ ...formData, cta_url: e.target.value })
+                          }
+                          placeholder="e.g., /#funding-form"
+                        />
+                      </div>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
 
-              <div className="flex items-center gap-3">
-                <Switch
-                  id="published"
-                  checked={formData.published}
-                  onCheckedChange={(checked) =>
-                    setFormData({ ...formData, published: checked })
-                  }
-                />
-                <Label htmlFor="published">Publish immediately</Label>
-              </div>
+                {/* Featured Image */}
+                <AccordionItem value="image">
+                  <AccordionTrigger className="text-base font-semibold">
+                    Featured Image
+                  </AccordionTrigger>
+                  <AccordionContent className="space-y-4 pt-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="featured_image">Image URL</Label>
+                        <Input
+                          id="featured_image"
+                          value={formData.featured_image}
+                          onChange={(e) =>
+                            setFormData({ ...formData, featured_image: e.target.value })
+                          }
+                          placeholder="https://example.com/image.jpg"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="featured_image_alt">Image Alt Text (for SEO)</Label>
+                        <Input
+                          id="featured_image_alt"
+                          value={formData.featured_image_alt}
+                          onChange={(e) =>
+                            setFormData({ ...formData, featured_image_alt: e.target.value })
+                          }
+                          placeholder="Descriptive alt text for the image"
+                        />
+                      </div>
+                    </div>
+                    {formData.featured_image && (
+                      <div className="mt-2">
+                        <p className="text-sm text-muted-foreground mb-2">Preview:</p>
+                        <img
+                          src={formData.featured_image}
+                          alt={formData.featured_image_alt || "Preview"}
+                          className="max-h-48 rounded-lg object-cover"
+                        />
+                      </div>
+                    )}
+                  </AccordionContent>
+                </AccordionItem>
 
-              <div className="flex justify-end gap-3 pt-4">
+                {/* SEO */}
+                <AccordionItem value="seo">
+                  <AccordionTrigger className="text-base font-semibold">
+                    SEO Settings
+                  </AccordionTrigger>
+                  <AccordionContent className="space-y-4 pt-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="meta_title">
+                        Meta Title (max 60 chars)
+                      </Label>
+                      <Input
+                        id="meta_title"
+                        value={formData.meta_title}
+                        onChange={(e) =>
+                          setFormData({ ...formData, meta_title: e.target.value })
+                        }
+                        placeholder="SEO title for search engines"
+                        maxLength={60}
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        {formData.meta_title.length}/60 characters
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="meta_description">
+                        Meta Description (max 160 chars)
+                      </Label>
+                      <Textarea
+                        id="meta_description"
+                        value={formData.meta_description}
+                        onChange={(e) =>
+                          setFormData({ ...formData, meta_description: e.target.value })
+                        }
+                        placeholder="SEO description for search engines"
+                        rows={2}
+                        maxLength={160}
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        {formData.meta_description.length}/160 characters
+                      </p>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+
+                {/* Publishing */}
+                <AccordionItem value="publish">
+                  <AccordionTrigger className="text-base font-semibold">
+                    Publishing
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-4">
+                    <div className="flex items-center gap-3">
+                      <Switch
+                        id="published"
+                        checked={formData.published}
+                        onCheckedChange={(checked) =>
+                          setFormData({ ...formData, published: checked })
+                        }
+                      />
+                      <Label htmlFor="published">Publish immediately</Label>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+
+              <div className="flex justify-end gap-3 pt-4 border-t">
                 <Button
                   type="button"
                   variant="outline"
@@ -379,6 +634,9 @@ const BlogManager = () => {
                     Title
                   </th>
                   <th className="text-left px-4 py-3 text-sm font-semibold text-foreground">
+                    Category
+                  </th>
+                  <th className="text-left px-4 py-3 text-sm font-semibold text-foreground">
                     Status
                   </th>
                   <th className="text-left px-4 py-3 text-sm font-semibold text-foreground">
@@ -401,6 +659,13 @@ const BlogManager = () => {
                           /blog/{post.slug}
                         </p>
                       </div>
+                    </td>
+                    <td className="px-4 py-4">
+                      {post.category ? (
+                        <Badge variant="outline">{post.category}</Badge>
+                      ) : (
+                        <span className="text-muted-foreground text-sm">—</span>
+                      )}
                     </td>
                     <td className="px-4 py-4">
                       <Badge variant={post.published ? "default" : "secondary"}>
