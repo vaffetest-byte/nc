@@ -10,7 +10,8 @@ import {
   LogOut,
   Shield,
   PenLine,
-  Trash2
+  Trash2,
+  MessageSquareQuote
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -20,6 +21,7 @@ const AdminSidebar = () => {
   const { signOut, user } = useAdmin();
   const navigate = useNavigate();
   const [trashCount, setTrashCount] = useState(0);
+  const [testimonialsTrashCount, setTestimonialsTrashCount] = useState(0);
 
   useEffect(() => {
     const fetchTrashCount = async () => {
@@ -30,7 +32,16 @@ const AdminSidebar = () => {
       setTrashCount(count || 0);
     };
 
+    const fetchTestimonialsTrashCount = async () => {
+      const { count } = await supabase
+        .from("testimonials")
+        .select("*", { count: "exact", head: true })
+        .not("deleted_at", "is", null);
+      setTestimonialsTrashCount(count || 0);
+    };
+
     fetchTrashCount();
+    fetchTestimonialsTrashCount();
 
     const channel = supabase
       .channel("trash-count")
@@ -38,6 +49,11 @@ const AdminSidebar = () => {
         "postgres_changes",
         { event: "*", schema: "public", table: "form_submissions" },
         () => fetchTrashCount()
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "testimonials" },
+        () => fetchTestimonialsTrashCount()
       )
       .subscribe();
 
@@ -54,7 +70,9 @@ const AdminSidebar = () => {
   const navItems = [
     { to: "/admin", icon: LayoutDashboard, label: "Dashboard", end: true },
     { to: "/admin/submissions", icon: FileText, label: "Submissions" },
-    { to: "/admin/trash", icon: Trash2, label: "Trash", badge: trashCount },
+    { to: "/admin/trash", icon: Trash2, label: "Submissions Trash", badge: trashCount },
+    { to: "/admin/testimonials", icon: MessageSquareQuote, label: "Testimonials" },
+    { to: "/admin/testimonials/trash", icon: Trash2, label: "Testimonials Trash", badge: testimonialsTrashCount },
     { to: "/admin/blog", icon: PenLine, label: "Blog" },
     { to: "/admin/content", icon: Edit3, label: "Content" },
     { to: "/admin/analytics", icon: BarChart3, label: "Analytics" },

@@ -183,6 +183,54 @@ export type Database = {
           },
         ]
       }
+      testimonials: {
+        Row: {
+          created_at: string
+          customer_company: string | null
+          customer_image: string | null
+          customer_name: string
+          customer_role: string | null
+          deleted_at: string | null
+          display_order: number
+          featured: boolean
+          id: string
+          published: boolean
+          rating: number | null
+          testimonial_text: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_company?: string | null
+          customer_image?: string | null
+          customer_name: string
+          customer_role?: string | null
+          deleted_at?: string | null
+          display_order?: number
+          featured?: boolean
+          id?: string
+          published?: boolean
+          rating?: number | null
+          testimonial_text: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_company?: string | null
+          customer_image?: string | null
+          customer_name?: string
+          customer_role?: string | null
+          deleted_at?: string | null
+          display_order?: number
+          featured?: boolean
+          id?: string
+          published?: boolean
+          rating?: number | null
+          testimonial_text?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
