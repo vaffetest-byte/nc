@@ -445,7 +445,7 @@ const BlogManager = () => {
 
                     <div className="space-y-2">
                       <Label htmlFor="content">
-                        Body Content * (HTML supported - use H2/H3 for headings, &lt;a&gt; for internal links)
+                        Body Content * (Plain text or HTML supported)
                       </Label>
                       <Textarea
                         id="content"
@@ -453,7 +453,7 @@ const BlogManager = () => {
                         onChange={(e) =>
                           setFormData({ ...formData, content: e.target.value })
                         }
-                        placeholder="Write your post content here... Use <h2>, <h3> for headings, <a href='/page'> for internal links."
+                        placeholder={"Write your post content here...\n\nYou can use plain text - just press Enter twice for new paragraphs.\n\nOr use HTML tags like <h2>, <h3>, <ul>, <a> for formatting."}
                         rows={14}
                         required
                       />
