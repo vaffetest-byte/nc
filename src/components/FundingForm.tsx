@@ -46,11 +46,27 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
     plaintiffName: "",
   });
 
+  const formatPhone = (value: string) => {
+    const digits = value.replace(/\D/g, "").slice(0, 10);
+    if (digits.length >= 6) {
+      return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+    } else if (digits.length >= 3) {
+      return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+    }
+    return digits;
+  };
+
   const handlePlaintiffChange = (field: string, value: string) => {
+    if (field === "phone" || field === "attorneyPhone") {
+      value = formatPhone(value);
+    }
     setPlaintiffForm((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleAttorneyChange = (field: string, value: string) => {
+    if (field === "contactPhone") {
+      value = formatPhone(value);
+    }
     setAttorneyForm((prev) => ({ ...prev, [field]: value }));
   };
 
