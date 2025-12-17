@@ -27,6 +27,28 @@ interface BlogPost {
   cta_url: string | null;
 }
 
+// Convert plain text to HTML paragraphs
+const formatContent = (content: string): string => {
+  // Check if content already contains HTML tags
+  const hasHtmlTags = /<[a-z][\s\S]*>/i.test(content);
+  
+  if (hasHtmlTags) {
+    return content; // Already HTML, return as-is
+  }
+  
+  // Convert plain text to HTML
+  // Split by double line breaks for paragraphs
+  const paragraphs = content.split(/\n\n+/);
+  
+  return paragraphs
+    .map(para => {
+      // Convert single line breaks to <br>
+      const withBreaks = para.trim().replace(/\n/g, '<br>');
+      return `<p>${withBreaks}</p>`;
+    })
+    .join('\n');
+};
+
 const BlogPostPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
@@ -192,7 +214,7 @@ const BlogPostPage = () => {
 
           <div
             className="prose prose-lg max-w-none font-body text-foreground prose-headings:font-heading prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-primary prose-strong:text-foreground"
-            dangerouslySetInnerHTML={{ __html: post.content }}
+            dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
           />
 
           {post.cta_text && post.cta_url && (
