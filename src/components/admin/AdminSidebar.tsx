@@ -1,5 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAdmin } from "@/hooks/useAdmin";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { 
   LayoutDashboard, 
   FileText, 
@@ -11,11 +13,38 @@ import {
   Trash2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 const AdminSidebar = () => {
   const { signOut, user } = useAdmin();
   const navigate = useNavigate();
+  const [trashCount, setTrashCount] = useState(0);
+
+  useEffect(() => {
+    const fetchTrashCount = async () => {
+      const { count } = await supabase
+        .from("form_submissions")
+        .select("*", { count: "exact", head: true })
+        .not("deleted_at", "is", null);
+      setTrashCount(count || 0);
+    };
+
+    fetchTrashCount();
+
+    const channel = supabase
+      .channel("trash-count")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "form_submissions" },
+        () => fetchTrashCount()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   const handleSignOut = async () => {
     await signOut();
@@ -25,7 +54,7 @@ const AdminSidebar = () => {
   const navItems = [
     { to: "/admin", icon: LayoutDashboard, label: "Dashboard", end: true },
     { to: "/admin/submissions", icon: FileText, label: "Submissions" },
-    { to: "/admin/trash", icon: Trash2, label: "Trash" },
+    { to: "/admin/trash", icon: Trash2, label: "Trash", badge: trashCount },
     { to: "/admin/blog", icon: PenLine, label: "Blog" },
     { to: "/admin/content", icon: Edit3, label: "Content" },
     { to: "/admin/analytics", icon: BarChart3, label: "Analytics" },
@@ -63,7 +92,12 @@ const AdminSidebar = () => {
             }
           >
             <item.icon className="w-5 h-5" />
-            {item.label}
+            <span className="flex-1">{item.label}</span>
+            {item.badge !== undefined && item.badge > 0 && (
+              <Badge variant="destructive" className="text-xs px-1.5 py-0.5 min-w-[20px] justify-center">
+                {item.badge}
+              </Badge>
+            )}
           </NavLink>
         ))}
       </nav>
