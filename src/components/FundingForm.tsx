@@ -14,15 +14,53 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { WEBHOOK_CONFIG, sendToWebhook } from "@/config/webhooks";
 import { supabase } from "@/integrations/supabase/client";
+import { z } from "zod";
 
 interface FundingFormProps {
   variant?: "dark" | "light";
   className?: string;
 }
 
+// Validation schemas
+const phoneSchema = z.string().refine(
+  (val) => val.replace(/\D/g, "").length === 10,
+  { message: "Phone must be exactly 10 digits" }
+);
+
+const emailSchema = z.string().email({ message: "Please enter a valid email" });
+
+const nameSchema = z.string().min(2, { message: "Name must be at least 2 characters" });
+
+const amountSchema = z.string().min(1, { message: "Amount is required" });
+
+const plaintiffFormSchema = z.object({
+  name: nameSchema,
+  email: emailSchema,
+  phone: phoneSchema,
+  amountNeeded: amountSchema,
+  attorneyName: nameSchema,
+  attorneyPhone: phoneSchema,
+  attorneyEmail: emailSchema,
+});
+
+const attorneyFormSchema = z.object({
+  contactName: nameSchema,
+  contactEmail: emailSchema,
+  contactPhone: phoneSchema,
+  amountNeeded: amountSchema,
+  fundingFor: z.string().min(1, { message: "Please select an option" }),
+  dateOfAccident: z.string().min(1, { message: "Date is required" }),
+  plaintiffName: nameSchema,
+});
+
+type PlaintiffErrors = Partial<Record<keyof z.infer<typeof plaintiffFormSchema>, string>>;
+type AttorneyErrors = Partial<Record<keyof z.infer<typeof attorneyFormSchema>, string>>;
+
 const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => {
   const [role, setRole] = useState<"plaintiff" | "attorney">("plaintiff");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [plaintiffErrors, setPlaintiffErrors] = useState<PlaintiffErrors>({});
+  const [attorneyErrors, setAttorneyErrors] = useState<AttorneyErrors>({});
 
   // Plaintiff form state
   const [plaintiffForm, setPlaintiffForm] = useState({
@@ -61,6 +99,10 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
       value = formatPhone(value);
     }
     setPlaintiffForm((prev) => ({ ...prev, [field]: value }));
+    // Clear error when user types
+    if (plaintiffErrors[field as keyof PlaintiffErrors]) {
+      setPlaintiffErrors((prev) => ({ ...prev, [field]: undefined }));
+    }
   };
 
   const handleAttorneyChange = (field: string, value: string) => {
@@ -68,10 +110,53 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
       value = formatPhone(value);
     }
     setAttorneyForm((prev) => ({ ...prev, [field]: value }));
+    // Clear error when user types
+    if (attorneyErrors[field as keyof AttorneyErrors]) {
+      setAttorneyErrors((prev) => ({ ...prev, [field]: undefined }));
+    }
+  };
+
+  const validateForm = (): boolean => {
+    if (role === "plaintiff") {
+      const result = plaintiffFormSchema.safeParse(plaintiffForm);
+      if (!result.success) {
+        const errors: PlaintiffErrors = {};
+        result.error.errors.forEach((err) => {
+          const path = err.path[0] as keyof PlaintiffErrors;
+          errors[path] = err.message;
+        });
+        setPlaintiffErrors(errors);
+        return false;
+      }
+      setPlaintiffErrors({});
+      return true;
+    } else {
+      const result = attorneyFormSchema.safeParse(attorneyForm);
+      if (!result.success) {
+        const errors: AttorneyErrors = {};
+        result.error.errors.forEach((err) => {
+          const path = err.path[0] as keyof AttorneyErrors;
+          errors[path] = err.message;
+        });
+        setAttorneyErrors(errors);
+        return false;
+      }
+      setAttorneyErrors({});
+      return true;
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      toast({
+        title: "Please fix the errors",
+        description: "Some fields have validation errors.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     setIsSubmitting(true);
 
@@ -125,6 +210,7 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
           attorneyPhone: "",
           attorneyEmail: "",
         });
+        setPlaintiffErrors({});
       } else {
         setAttorneyForm({
           contactName: "",
@@ -135,6 +221,7 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
           dateOfAccident: "",
           plaintiffName: "",
         });
+        setAttorneyErrors({});
       }
     } catch (err) {
       console.error("Submission error:", err);
@@ -154,6 +241,7 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
   const textLabel = isDark ? "text-white/80" : "text-foreground";
   const inputBg = isDark ? "bg-white/5 border-white/15 text-white placeholder:text-white/40" : "bg-background border-border text-foreground placeholder:text-muted-foreground";
   const cardBg = isDark ? "glass-card" : "bg-muted/50 border border-border";
+  const errorClass = "text-red-400 text-xs mt-1";
 
   return (
     <div className={`${cardBg} rounded-2xl p-8 shadow-2xl ${className}`}>
@@ -205,9 +293,9 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
                 placeholder="Full Name"
                 value={plaintiffForm.name}
                 onChange={(e) => handlePlaintiffChange("name", e.target.value)}
-                required={role === "plaintiff"}
-                className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12`}
+                className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12 ${plaintiffErrors.name ? "border-red-400" : ""}`}
               />
+              {plaintiffErrors.name && <p className={errorClass}>{plaintiffErrors.name}</p>}
             </div>
             <div className="space-y-2">
               <Label className={`${textLabel} text-sm`}>Your Email *</Label>
@@ -216,9 +304,9 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
                 placeholder="Email Address"
                 value={plaintiffForm.email}
                 onChange={(e) => handlePlaintiffChange("email", e.target.value)}
-                required={role === "plaintiff"}
-                className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12`}
+                className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12 ${plaintiffErrors.email ? "border-red-400" : ""}`}
               />
+              {plaintiffErrors.email && <p className={errorClass}>{plaintiffErrors.email}</p>}
             </div>
           </div>
           
@@ -233,9 +321,9 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
                 placeholder="(555) 555-5555"
                 value={plaintiffForm.phone}
                 onChange={(e) => handlePlaintiffChange("phone", e.target.value)}
-                required={role === "plaintiff"}
-                className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12`}
+                className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12 ${plaintiffErrors.phone ? "border-red-400" : ""}`}
               />
+              {plaintiffErrors.phone && <p className={errorClass}>{plaintiffErrors.phone}</p>}
             </div>
             <div className="space-y-2">
               <Label className={`${textLabel} text-sm`}>How Much Do You Need? *</Label>
@@ -244,9 +332,9 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
                 placeholder="$1,000,000 Maximum"
                 value={plaintiffForm.amountNeeded}
                 onChange={(e) => handlePlaintiffChange("amountNeeded", e.target.value)}
-                required={role === "plaintiff"}
-                className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12`}
+                className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12 ${plaintiffErrors.amountNeeded ? "border-red-400" : ""}`}
               />
+              {plaintiffErrors.amountNeeded && <p className={errorClass}>{plaintiffErrors.amountNeeded}</p>}
             </div>
           </div>
 
@@ -259,23 +347,23 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
                   placeholder="Attorney Name"
                   value={plaintiffForm.attorneyName}
                   onChange={(e) => handlePlaintiffChange("attorneyName", e.target.value)}
-                  required={role === "plaintiff"}
-                  className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12`}
+                  className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12 ${plaintiffErrors.attorneyName ? "border-red-400" : ""}`}
                 />
+                {plaintiffErrors.attorneyName && <p className={errorClass}>{plaintiffErrors.attorneyName}</p>}
               </div>
               <div className="space-y-2">
                 <Label className={`${textLabel} text-sm`}>Attorney's Phone *</Label>
-                 <Input
-                   type="tel"
-                   inputMode="tel"
-                   autoComplete="tel"
-                   maxLength={14}
-                   placeholder="(555) 555-5555"
-                   value={plaintiffForm.attorneyPhone}
-                   onChange={(e) => handlePlaintiffChange("attorneyPhone", e.target.value)}
-                   required={role === "plaintiff"}
-                   className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12`}
-                 />
+                <Input
+                  type="tel"
+                  inputMode="tel"
+                  autoComplete="tel"
+                  maxLength={14}
+                  placeholder="(555) 555-5555"
+                  value={plaintiffForm.attorneyPhone}
+                  onChange={(e) => handlePlaintiffChange("attorneyPhone", e.target.value)}
+                  className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12 ${plaintiffErrors.attorneyPhone ? "border-red-400" : ""}`}
+                />
+                {plaintiffErrors.attorneyPhone && <p className={errorClass}>{plaintiffErrors.attorneyPhone}</p>}
               </div>
             </div>
             <div className="space-y-2 mt-4">
@@ -285,9 +373,9 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
                 placeholder="attorney@lawfirm.com"
                 value={plaintiffForm.attorneyEmail}
                 onChange={(e) => handlePlaintiffChange("attorneyEmail", e.target.value)}
-                required={role === "plaintiff"}
-                className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12`}
+                className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12 ${plaintiffErrors.attorneyEmail ? "border-red-400" : ""}`}
               />
+              {plaintiffErrors.attorneyEmail && <p className={errorClass}>{plaintiffErrors.attorneyEmail}</p>}
             </div>
           </div>
         </div>
@@ -301,9 +389,9 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
                 placeholder="Contact Name"
                 value={attorneyForm.contactName}
                 onChange={(e) => handleAttorneyChange("contactName", e.target.value)}
-                required={role === "attorney"}
-                className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12`}
+                className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12 ${attorneyErrors.contactName ? "border-red-400" : ""}`}
               />
+              {attorneyErrors.contactName && <p className={errorClass}>{attorneyErrors.contactName}</p>}
             </div>
             <div className="space-y-2">
               <Label className={`${textLabel} text-sm`}>Law Firm Contact – Email *</Label>
@@ -312,26 +400,26 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
                 placeholder="contact@lawfirm.com"
                 value={attorneyForm.contactEmail}
                 onChange={(e) => handleAttorneyChange("contactEmail", e.target.value)}
-                required={role === "attorney"}
-                className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12`}
+                className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12 ${attorneyErrors.contactEmail ? "border-red-400" : ""}`}
               />
+              {attorneyErrors.contactEmail && <p className={errorClass}>{attorneyErrors.contactEmail}</p>}
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label className={`${textLabel} text-sm`}>Law Firm Contact – Phone *</Label>
-               <Input
-                 type="tel"
-                 inputMode="tel"
-                 autoComplete="tel"
-                 maxLength={14}
-                 placeholder="(555) 555-5555"
-                 value={attorneyForm.contactPhone}
-                 onChange={(e) => handleAttorneyChange("contactPhone", e.target.value)}
-                 required={role === "attorney"}
-                 className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12`}
-               />
+              <Input
+                type="tel"
+                inputMode="tel"
+                autoComplete="tel"
+                maxLength={14}
+                placeholder="(555) 555-5555"
+                value={attorneyForm.contactPhone}
+                onChange={(e) => handleAttorneyChange("contactPhone", e.target.value)}
+                className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12 ${attorneyErrors.contactPhone ? "border-red-400" : ""}`}
+              />
+              {attorneyErrors.contactPhone && <p className={errorClass}>{attorneyErrors.contactPhone}</p>}
             </div>
             <div className="space-y-2">
               <Label className={`${textLabel} text-sm`}>Amount Needed *</Label>
@@ -340,9 +428,9 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
                 placeholder="$0.00"
                 value={attorneyForm.amountNeeded}
                 onChange={(e) => handleAttorneyChange("amountNeeded", e.target.value)}
-                required={role === "attorney"}
-                className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12`}
+                className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12 ${attorneyErrors.amountNeeded ? "border-red-400" : ""}`}
               />
+              {attorneyErrors.amountNeeded && <p className={errorClass}>{attorneyErrors.amountNeeded}</p>}
             </div>
           </div>
 
@@ -353,7 +441,7 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
                 value={attorneyForm.fundingFor}
                 onValueChange={(value) => handleAttorneyChange("fundingFor", value)}
               >
-                <SelectTrigger className={`${inputBg} h-12`}>
+                <SelectTrigger className={`${inputBg} h-12 ${attorneyErrors.fundingFor ? "border-red-400" : ""}`}>
                   <SelectValue placeholder="Select option" />
                 </SelectTrigger>
                 <SelectContent className={isDark ? "bg-secondary border-white/20" : "bg-background border-border"}>
@@ -362,6 +450,7 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
                   <SelectItem value="law-firm" className={isDark ? "text-white hover:bg-white/10" : ""}>Law Firm Funding</SelectItem>
                 </SelectContent>
               </Select>
+              {attorneyErrors.fundingFor && <p className={errorClass}>{attorneyErrors.fundingFor}</p>}
             </div>
             <div className="space-y-2">
               <Label className={`${textLabel} text-sm`}>Date of Accident *</Label>
@@ -369,9 +458,9 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
                 type="date"
                 value={attorneyForm.dateOfAccident}
                 onChange={(e) => handleAttorneyChange("dateOfAccident", e.target.value)}
-                required={role === "attorney"}
-                className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12`}
+                className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12 ${attorneyErrors.dateOfAccident ? "border-red-400" : ""}`}
               />
+              {attorneyErrors.dateOfAccident && <p className={errorClass}>{attorneyErrors.dateOfAccident}</p>}
             </div>
           </div>
 
@@ -381,9 +470,9 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
               placeholder="Plaintiff Full Name"
               value={attorneyForm.plaintiffName}
               onChange={(e) => handleAttorneyChange("plaintiffName", e.target.value)}
-              required={role === "attorney"}
-              className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12`}
+              className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12 ${attorneyErrors.plaintiffName ? "border-red-400" : ""}`}
             />
+            {attorneyErrors.plaintiffName && <p className={errorClass}>{attorneyErrors.plaintiffName}</p>}
           </div>
         </div>
 
