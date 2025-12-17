@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { RefreshCw, Eye, TrendingUp, Calendar } from "lucide-react";
+import { RefreshCw, Eye, TrendingUp, Calendar, Users, Activity } from "lucide-react";
 import {
   BarChart,
   Bar,
@@ -24,6 +24,13 @@ interface DailyData {
   views: number;
 }
 
+interface RealtimeVisitor {
+  id: string;
+  page_path: string;
+  created_at: string;
+  user_agent: string | null;
+}
+
 const Analytics = () => {
   const [loading, setLoading] = useState(true);
   const [totalViews, setTotalViews] = useState(0);
@@ -31,10 +38,64 @@ const Analytics = () => {
   const [pageViews, setPageViews] = useState<PageViewData[]>([]);
   const [dailyViews, setDailyViews] = useState<DailyData[]>([]);
   const [dateRange, setDateRange] = useState<"7d" | "30d" | "90d">("30d");
+  
+  // Realtime state
+  const [activeVisitors, setActiveVisitors] = useState(0);
+  const [recentViews, setRecentViews] = useState<RealtimeVisitor[]>([]);
 
   useEffect(() => {
     fetchAnalytics();
+    fetchActiveVisitors();
   }, [dateRange]);
+
+  // Subscribe to realtime page views
+  useEffect(() => {
+    const channel = supabase
+      .channel('realtime-page-views')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'page_views'
+        },
+        (payload) => {
+          const newView = payload.new as RealtimeVisitor;
+          setRecentViews(prev => [newView, ...prev].slice(0, 10));
+          setTodayViews(prev => prev + 1);
+          fetchActiveVisitors();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const fetchActiveVisitors = async () => {
+    // Count visitors active in last 5 minutes
+    const fiveMinutesAgo = new Date();
+    fiveMinutesAgo.setMinutes(fiveMinutesAgo.getMinutes() - 5);
+
+    const { count } = await supabase
+      .from("page_views")
+      .select("*", { count: "exact", head: true })
+      .gte("created_at", fiveMinutesAgo.toISOString());
+
+    setActiveVisitors(count || 0);
+
+    // Fetch recent views for the feed
+    const { data: recent } = await supabase
+      .from("page_views")
+      .select("id, page_path, created_at, user_agent")
+      .order("created_at", { ascending: false })
+      .limit(10);
+
+    if (recent) {
+      setRecentViews(recent);
+    }
+  };
 
   const fetchAnalytics = async () => {
     setLoading(true);
@@ -126,6 +187,27 @@ const Analytics = () => {
     return path.replace(/^\//, "").replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
   };
 
+  const formatTimeAgo = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffSecs = Math.floor(diffMs / 1000);
+    const diffMins = Math.floor(diffSecs / 60);
+    
+    if (diffSecs < 60) return `${diffSecs}s ago`;
+    if (diffMins < 60) return `${diffMins}m ago`;
+    return formatDate(dateStr);
+  };
+
+  const getBrowserFromUA = (ua: string | null) => {
+    if (!ua) return "Unknown";
+    if (ua.includes("Chrome")) return "Chrome";
+    if (ua.includes("Firefox")) return "Firefox";
+    if (ua.includes("Safari")) return "Safari";
+    if (ua.includes("Edge")) return "Edge";
+    return "Other";
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
@@ -160,6 +242,47 @@ const Analytics = () => {
           <Button variant="outline" size="sm" onClick={fetchAnalytics} disabled={loading}>
             <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
           </Button>
+        </div>
+      </div>
+
+      {/* Realtime Stats */}
+      <div className="bg-card border border-border rounded-xl p-6 mb-6">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
+          <h2 className="font-heading text-xl font-bold text-foreground">Live Activity</h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
+              <Users className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <p className="text-3xl font-bold text-foreground">{activeVisitors}</p>
+              <p className="text-sm text-muted-foreground">Active visitors (last 5 min)</p>
+            </div>
+          </div>
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <Activity className="w-4 h-4 text-muted-foreground" />
+              <span className="text-sm font-medium text-muted-foreground">Recent Activity</span>
+            </div>
+            <div className="space-y-1 max-h-32 overflow-y-auto">
+              {recentViews.length > 0 ? (
+                recentViews.slice(0, 5).map((view) => (
+                  <div key={view.id} className="flex items-center justify-between text-sm">
+                    <span className="text-foreground font-medium">
+                      {formatPagePath(view.page_path)}
+                    </span>
+                    <span className="text-muted-foreground text-xs">
+                      {getBrowserFromUA(view.user_agent)} · {formatTimeAgo(view.created_at)}
+                    </span>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-muted-foreground">No recent activity</p>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
