@@ -10,7 +10,8 @@ import {
   LogOut,
   Shield,
   PenLine,
-  Trash2
+  Trash2,
+  Settings
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -58,6 +59,7 @@ const AdminSidebar = () => {
     { to: "/admin/blog", icon: PenLine, label: "Blog" },
     { to: "/admin/content", icon: Edit3, label: "Content" },
     { to: "/admin/analytics", icon: BarChart3, label: "Analytics" },
+    { to: "/admin/account", icon: Settings, label: "Account" },
   ];
 
   return (
