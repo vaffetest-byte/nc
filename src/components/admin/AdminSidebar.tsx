@@ -100,7 +100,11 @@ const AdminSidebar = () => {
         ))}
       </nav>
 
-      <div className="p-4 border-t border-border space-y-1">
+      <div className="px-4 py-2">
+        <div className="h-px bg-border" />
+      </div>
+
+      <div className="p-4 pt-0 space-y-1">
         <NavLink
           to={trashItem.to}
           className={({ isActive }) =>
