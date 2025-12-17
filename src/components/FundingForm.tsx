@@ -227,6 +227,9 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
               <Label className={`${textLabel} text-sm`}>Phone Number *</Label>
               <Input
                 type="tel"
+                inputMode="tel"
+                autoComplete="tel"
+                maxLength={14}
                 placeholder="(555) 555-5555"
                 value={plaintiffForm.phone}
                 onChange={(e) => handlePlaintiffChange("phone", e.target.value)}
@@ -262,14 +265,17 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
               </div>
               <div className="space-y-2">
                 <Label className={`${textLabel} text-sm`}>Attorney's Phone *</Label>
-                <Input
-                  type="tel"
-                  placeholder="(555) 555-5555"
-                  value={plaintiffForm.attorneyPhone}
-                  onChange={(e) => handlePlaintiffChange("attorneyPhone", e.target.value)}
-                  required={role === "plaintiff"}
-                  className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12`}
-                />
+                 <Input
+                   type="tel"
+                   inputMode="tel"
+                   autoComplete="tel"
+                   maxLength={14}
+                   placeholder="(555) 555-5555"
+                   value={plaintiffForm.attorneyPhone}
+                   onChange={(e) => handlePlaintiffChange("attorneyPhone", e.target.value)}
+                   required={role === "plaintiff"}
+                   className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12`}
+                 />
               </div>
             </div>
             <div className="space-y-2 mt-4">
@@ -315,14 +321,17 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label className={`${textLabel} text-sm`}>Law Firm Contact – Phone *</Label>
-              <Input
-                type="tel"
-                placeholder="(555) 555-5555"
-                value={attorneyForm.contactPhone}
-                onChange={(e) => handleAttorneyChange("contactPhone", e.target.value)}
-                required={role === "attorney"}
-                className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12`}
-              />
+               <Input
+                 type="tel"
+                 inputMode="tel"
+                 autoComplete="tel"
+                 maxLength={14}
+                 placeholder="(555) 555-5555"
+                 value={attorneyForm.contactPhone}
+                 onChange={(e) => handleAttorneyChange("contactPhone", e.target.value)}
+                 required={role === "attorney"}
+                 className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12`}
+               />
             </div>
             <div className="space-y-2">
               <Label className={`${textLabel} text-sm`}>Amount Needed *</Label>
