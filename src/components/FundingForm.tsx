@@ -211,35 +211,38 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
           </div>
 
           <div className={`pt-2 border-t ${isDark ? "border-white/10" : "border-border"}`}>
-            <p className={`${isDark ? "text-white/50" : "text-muted-foreground"} text-xs mb-3`}>Attorney Information (Optional)</p>
+            <p className={`${isDark ? "text-white/50" : "text-muted-foreground"} text-xs mb-3`}>Attorney Information</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label className={`${textLabel} text-sm`}>Attorney's Name</Label>
+                <Label className={`${textLabel} text-sm`}>Attorney's Name *</Label>
                 <Input
                   placeholder="Attorney Name"
                   value={plaintiffForm.attorneyName}
                   onChange={(e) => handlePlaintiffChange("attorneyName", e.target.value)}
+                  required={role === "plaintiff"}
                   className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12`}
                 />
               </div>
               <div className="space-y-2">
-                <Label className={`${textLabel} text-sm`}>Attorney's Phone</Label>
+                <Label className={`${textLabel} text-sm`}>Attorney's Phone *</Label>
                 <Input
                   type="tel"
                   placeholder="(555) 555-5555"
                   value={plaintiffForm.attorneyPhone}
                   onChange={(e) => handlePlaintiffChange("attorneyPhone", e.target.value)}
+                  required={role === "plaintiff"}
                   className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12`}
                 />
               </div>
             </div>
             <div className="space-y-2 mt-4">
-              <Label className={`${textLabel} text-sm`}>Attorney's Email</Label>
+              <Label className={`${textLabel} text-sm`}>Attorney's Email *</Label>
               <Input
                 type="email"
                 placeholder="attorney@lawfirm.com"
                 value={plaintiffForm.attorneyEmail}
                 onChange={(e) => handlePlaintiffChange("attorneyEmail", e.target.value)}
+                required={role === "plaintiff"}
                 className={`${inputBg} focus:border-primary focus:ring-primary/20 h-12`}
               />
             </div>
