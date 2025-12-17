@@ -16,8 +16,19 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Filter, RefreshCw } from "lucide-react";
+import { Eye, Filter, RefreshCw, Download, FileSpreadsheet, FileText, Calendar } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import * as XLSX from "xlsx";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 interface Submission {
   id: string;
@@ -27,16 +38,45 @@ interface Submission {
   read_status: boolean;
 }
 
+type DateFilter = "all" | "today" | "week" | "month";
+
 const Submissions = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
   const [filter, setFilter] = useState<string>(searchParams.get("type") || "all");
+  const [dateFilter, setDateFilter] = useState<DateFilter>("all");
+  const { toast } = useToast();
 
   useEffect(() => {
     fetchSubmissions();
-  }, [filter]);
+  }, [filter, dateFilter]);
+
+  const getDateRange = (filterType: DateFilter): { start: Date; end: Date } | null => {
+    if (filterType === "all") return null;
+    
+    const now = new Date();
+    const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+    let start: Date;
+
+    switch (filterType) {
+      case "today":
+        start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+        break;
+      case "week":
+        start = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        start.setHours(0, 0, 0, 0);
+        break;
+      case "month":
+        start = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate(), 0, 0, 0);
+        break;
+      default:
+        return null;
+    }
+
+    return { start, end };
+  };
 
   const fetchSubmissions = async () => {
     setLoading(true);
@@ -49,10 +89,16 @@ const Submissions = () => {
       query = query.eq("form_type", filter);
     }
 
+    const dateRange = getDateRange(dateFilter);
+    if (dateRange) {
+      query = query
+        .gte("created_at", dateRange.start.toISOString())
+        .lte("created_at", dateRange.end.toISOString());
+    }
+
     const { data, error } = await query;
     
     if (!error && data) {
-      // Type cast the JSON data field
       const typedData = data.map(item => ({
         ...item,
         data: item.data as Record<string, any>
@@ -65,7 +111,6 @@ const Submissions = () => {
   const handleViewSubmission = async (submission: Submission) => {
     setSelectedSubmission(submission);
     
-    // Mark as read
     if (!submission.read_status) {
       await supabase
         .from("form_submissions")
@@ -98,6 +143,109 @@ const Submissions = () => {
     return data?.email || data?.contactEmail || "N/A";
   };
 
+  const getContactPhone = (submission: Submission) => {
+    const { data } = submission;
+    return data?.phone || data?.contactPhone || "N/A";
+  };
+
+  const flattenData = (submission: Submission) => {
+    const baseData = {
+      "ID": submission.id,
+      "Type": submission.form_type === "funding" ? "Funding Request" : "Broker Signup",
+      "Date": new Date(submission.created_at).toLocaleString(),
+      "Status": submission.read_status ? "Read" : "New",
+    };
+
+    const formData: Record<string, string> = {};
+    Object.entries(submission.data).forEach(([key, value]) => {
+      const formattedKey = key.replace(/([A-Z])/g, " $1").trim();
+      formData[formattedKey.charAt(0).toUpperCase() + formattedKey.slice(1)] = 
+        typeof value === "string" ? value : JSON.stringify(value);
+    });
+
+    return { ...baseData, ...formData };
+  };
+
+  const exportToExcel = () => {
+    if (submissions.length === 0) {
+      toast({
+        title: "No data to export",
+        description: "There are no submissions to export.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const exportData = submissions.map(flattenData);
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Submissions");
+    
+    const dateStr = new Date().toISOString().split("T")[0];
+    const filterStr = filter !== "all" ? `_${filter}` : "";
+    const dateFilterStr = dateFilter !== "all" ? `_${dateFilter}` : "";
+    XLSX.writeFile(workbook, `submissions${filterStr}${dateFilterStr}_${dateStr}.xlsx`);
+
+    toast({
+      title: "Export successful",
+      description: `Exported ${submissions.length} submissions to Excel.`,
+    });
+  };
+
+  const exportToPDF = () => {
+    if (submissions.length === 0) {
+      toast({
+        title: "No data to export",
+        description: "There are no submissions to export.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const doc = new jsPDF();
+    
+    // Title
+    doc.setFontSize(18);
+    doc.setTextColor(158, 27, 50); // Primary color
+    doc.text("National Claims Assoc - Submissions Report", 14, 22);
+    
+    // Date and filter info
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    const filterText = filter === "all" ? "All Types" : filter === "funding" ? "Funding Requests" : "Broker Signups";
+    const dateText = dateFilter === "all" ? "All Time" : dateFilter === "today" ? "Today" : dateFilter === "week" ? "Last 7 Days" : "Last 30 Days";
+    doc.text(`Filter: ${filterText} | Date Range: ${dateText} | Generated: ${new Date().toLocaleString()}`, 14, 30);
+
+    // Table data
+    const tableData = submissions.map(sub => [
+      sub.form_type === "funding" ? "Funding" : "Broker",
+      getContactName(sub),
+      getContactEmail(sub),
+      getContactPhone(sub),
+      new Date(sub.created_at).toLocaleDateString(),
+      sub.read_status ? "Read" : "New"
+    ]);
+
+    autoTable(doc, {
+      head: [["Type", "Name", "Email", "Phone", "Date", "Status"]],
+      body: tableData,
+      startY: 38,
+      styles: { fontSize: 9 },
+      headStyles: { fillColor: [158, 27, 50] },
+      alternateRowStyles: { fillColor: [245, 245, 245] },
+    });
+
+    const dateStr = new Date().toISOString().split("T")[0];
+    const filterStr = filter !== "all" ? `_${filter}` : "";
+    const dateFilterStr = dateFilter !== "all" ? `_${dateFilter}` : "";
+    doc.save(`submissions${filterStr}${dateFilterStr}_${dateStr}.pdf`);
+
+    toast({
+      title: "Export successful",
+      description: `Exported ${submissions.length} submissions to PDF.`,
+    });
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
@@ -107,36 +255,81 @@ const Submissions = () => {
             View and manage form submissions
           </p>
         </div>
-        <Button variant="outline" onClick={fetchSubmissions} disabled={loading}>
-          <RefreshCw className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`} />
-          Refresh
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={fetchSubmissions} disabled={loading}>
+            <RefreshCw className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`} />
+            Refresh
+          </Button>
+        </div>
       </div>
 
-      {/* Filters */}
-      <div className="flex gap-2 mb-6">
-        <Button
-          variant={filter === "all" ? "default" : "outline"}
-          size="sm"
-          onClick={() => handleFilterChange("all")}
-        >
-          <Filter className="w-4 h-4 mr-2" />
-          All
-        </Button>
-        <Button
-          variant={filter === "funding" ? "default" : "outline"}
-          size="sm"
-          onClick={() => handleFilterChange("funding")}
-        >
-          Funding Requests
-        </Button>
-        <Button
-          variant={filter === "broker" ? "default" : "outline"}
-          size="sm"
-          onClick={() => handleFilterChange("broker")}
-        >
-          Broker Signups
-        </Button>
+      {/* Filters and Export */}
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+        <div className="flex flex-wrap gap-2">
+          {/* Type Filter */}
+          <Button
+            variant={filter === "all" ? "default" : "outline"}
+            size="sm"
+            onClick={() => handleFilterChange("all")}
+          >
+            <Filter className="w-4 h-4 mr-2" />
+            All
+          </Button>
+          <Button
+            variant={filter === "funding" ? "default" : "outline"}
+            size="sm"
+            onClick={() => handleFilterChange("funding")}
+          >
+            Funding Requests
+          </Button>
+          <Button
+            variant={filter === "broker" ? "default" : "outline"}
+            size="sm"
+            onClick={() => handleFilterChange("broker")}
+          >
+            Broker Signups
+          </Button>
+
+          {/* Date Filter */}
+          <div className="flex items-center gap-2 ml-4">
+            <Calendar className="w-4 h-4 text-muted-foreground" />
+            <Select value={dateFilter} onValueChange={(value: DateFilter) => setDateFilter(value)}>
+              <SelectTrigger className="w-[140px] h-9">
+                <SelectValue placeholder="Date range" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Time</SelectItem>
+                <SelectItem value="today">Today</SelectItem>
+                <SelectItem value="week">Last 7 Days</SelectItem>
+                <SelectItem value="month">Last 30 Days</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        {/* Export Buttons */}
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={exportToExcel}>
+            <FileSpreadsheet className="w-4 h-4 mr-2" />
+            Export Excel
+          </Button>
+          <Button variant="outline" size="sm" onClick={exportToPDF}>
+            <FileText className="w-4 h-4 mr-2" />
+            Export PDF
+          </Button>
+        </div>
+      </div>
+
+      {/* Summary */}
+      <div className="flex gap-4 mb-6">
+        <div className="bg-card border border-border rounded-lg px-4 py-3">
+          <p className="text-sm text-muted-foreground">Total Submissions</p>
+          <p className="text-2xl font-bold text-foreground">{submissions.length}</p>
+        </div>
+        <div className="bg-card border border-border rounded-lg px-4 py-3">
+          <p className="text-sm text-muted-foreground">New (Unread)</p>
+          <p className="text-2xl font-bold text-primary">{submissions.filter(s => !s.read_status).length}</p>
+        </div>
       </div>
 
       {/* Table */}
@@ -148,6 +341,7 @@ const Submissions = () => {
               <TableHead>Type</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
+              <TableHead>Phone</TableHead>
               <TableHead>Date</TableHead>
               <TableHead>Action</TableHead>
             </TableRow>
@@ -155,13 +349,13 @@ const Submissions = () => {
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8">
+                <TableCell colSpan={7} className="text-center py-8">
                   Loading...
                 </TableCell>
               </TableRow>
             ) : submissions.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                   No submissions found.
                 </TableCell>
               </TableRow>
@@ -182,6 +376,7 @@ const Submissions = () => {
                   </TableCell>
                   <TableCell className="font-medium">{getContactName(submission)}</TableCell>
                   <TableCell>{getContactEmail(submission)}</TableCell>
+                  <TableCell>{getContactPhone(submission)}</TableCell>
                   <TableCell>
                     {new Date(submission.created_at).toLocaleDateString()}{" "}
                     {new Date(submission.created_at).toLocaleTimeString()}
