@@ -1,7 +1,8 @@
+import { forwardRef, memo } from "react";
 import { CheckCircle, Users, Clock, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const Attorneys = () => {
+const Attorneys = forwardRef<HTMLElement>((_, ref) => {
   const benefits = [
     {
       icon: Users,
@@ -30,7 +31,7 @@ const Attorneys = () => {
   ];
 
   return (
-    <section id="attorneys" className="py-24 bg-secondary relative overflow-hidden">
+    <section ref={ref} id="attorneys" className="py-24 bg-secondary relative overflow-hidden">
       {/* Background accent */}
       <div className="absolute top-0 left-0 w-1/3 h-full opacity-5">
         <div className="absolute top-20 left-10 w-80 h-80 border border-white/20 rounded-full" />
@@ -102,6 +103,8 @@ const Attorneys = () => {
       </div>
     </section>
   );
-};
+});
 
-export default Attorneys;
+Attorneys.displayName = "Attorneys";
+
+export default memo(Attorneys);

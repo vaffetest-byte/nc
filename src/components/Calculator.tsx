@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef, memo } from "react";
 import { Input } from "@/components/ui/input";
 import { TrendingUp } from "lucide-react";
 
@@ -10,7 +10,7 @@ const COMPETITOR_CAP_MULTIPLIER = 2.5; // Competitor cap: 2.5x advance amount
 const MAX_ADVANCE_PERCENT = 0.30; // Advance cannot exceed 30% of settlement
 // ============================================
 
-const Calculator = () => {
+const Calculator = forwardRef<HTMLElement>((_, ref) => {
   const [settlementAmount, setSettlementAmount] = useState(100000);
   const [months, setMonths] = useState(12);
   const [attorneyFeePercent, setAttorneyFeePercent] = useState(40);
@@ -75,7 +75,7 @@ const Calculator = () => {
   const advanceExceedsLimit = advanceAmount > maxAdvance;
 
   return (
-    <section className="py-24 bg-muted/50">
+    <section ref={ref} className="py-24 bg-muted/50">
       <div className="container mx-auto px-4">
         {/* Headline - matching site style */}
         <div className="text-center mb-16">
@@ -271,6 +271,8 @@ const Calculator = () => {
       </div>
     </section>
   );
-};
+});
 
-export default Calculator;
+Calculator.displayName = "Calculator";
+
+export default memo(Calculator);

@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { forwardRef, memo } from "react";
 import { Phone, Mail, Facebook, Twitter, Linkedin } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "@/assets/logo.jpeg";
@@ -213,4 +213,4 @@ const Footer = forwardRef<HTMLElement>((_, ref) => {
 
 Footer.displayName = "Footer";
 
-export default Footer;
+export default memo(Footer);

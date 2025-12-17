@@ -1,6 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAdmin } from "@/hooks/useAdmin";
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { 
   LayoutDashboard, 
@@ -47,10 +47,10 @@ const AdminSidebar = () => {
     };
   }, []);
 
-  const handleSignOut = async () => {
+  const handleSignOut = useCallback(async () => {
     await signOut();
     navigate("/admin/login");
-  };
+  }, [signOut, navigate]);
 
   const navItems = [
     { to: "/admin", icon: LayoutDashboard, label: "Dashboard", end: true },
@@ -138,4 +138,6 @@ const AdminSidebar = () => {
   );
 };
 
-export default AdminSidebar;
+AdminSidebar.displayName = "AdminSidebar";
+
+export default memo(AdminSidebar);

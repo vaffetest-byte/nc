@@ -1,8 +1,9 @@
+import { memo } from "react";
 import { CheckCircle, Shield, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import FundingForm from "@/components/FundingForm";
 
-const Hero = () => {
+const Hero = memo(() => {
   const benefits = ["No Credit Check", "24-Hour Approval*", "100% Risk-Free"];
 
   return (
@@ -83,6 +84,8 @@ const Hero = () => {
       </div>
     </section>
   );
-};
+});
+
+Hero.displayName = "Hero";
 
 export default Hero;
