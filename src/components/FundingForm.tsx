@@ -75,55 +75,76 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
 
     setIsSubmitting(true);
 
-    // Prepare data based on role
-    const formData = role === "plaintiff" 
-      ? {
-          formType: "funding_request",
-          role: "plaintiff",
-          ...plaintiffForm,
-        }
-      : {
-          formType: "funding_request",
-          role: "attorney",
-          ...attorneyForm,
-        };
+    try {
+      // Prepare data based on role
+      const formData = role === "plaintiff" 
+        ? {
+            formType: "funding_request",
+            role: "plaintiff",
+            ...plaintiffForm,
+          }
+        : {
+            formType: "funding_request",
+            role: "attorney",
+            ...attorneyForm,
+          };
 
-    // Save to database
-    await supabase.from("form_submissions").insert({
-      form_type: "funding",
-      data: formData,
-    });
-
-    // Send to webhook (Zapier/Make.com -> Zoho CRM)
-    await sendToWebhook(WEBHOOK_CONFIG.fundingForm, formData);
-
-    setIsSubmitting(false);
-    toast({
-      title: "Request Submitted!",
-      description: "Your funding request has been submitted successfully.",
-    });
-    
-    // Reset forms
-    if (role === "plaintiff") {
-      setPlaintiffForm({
-        name: "",
-        email: "",
-        phone: "",
-        amountNeeded: "",
-        attorneyName: "",
-        attorneyPhone: "",
-        attorneyEmail: "",
+      // Save to database
+      const { error } = await supabase.from("form_submissions").insert({
+        form_type: "funding",
+        data: formData,
       });
-    } else {
-      setAttorneyForm({
-        contactName: "",
-        contactEmail: "",
-        contactPhone: "",
-        amountNeeded: "",
-        fundingFor: "plaintiff-initial",
-        dateOfAccident: "",
-        plaintiffName: "",
+
+      if (error) {
+        console.error("Database error:", error);
+        toast({
+          title: "Submission Failed",
+          description: "There was an error submitting your request. Please try again.",
+          variant: "destructive",
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Send to webhook (Zapier/Make.com -> Zoho CRM)
+      await sendToWebhook(WEBHOOK_CONFIG.fundingForm, formData);
+
+      toast({
+        title: "Request Submitted!",
+        description: "Your funding request has been submitted successfully.",
       });
+      
+      // Reset forms
+      if (role === "plaintiff") {
+        setPlaintiffForm({
+          name: "",
+          email: "",
+          phone: "",
+          amountNeeded: "",
+          attorneyName: "",
+          attorneyPhone: "",
+          attorneyEmail: "",
+        });
+      } else {
+        setAttorneyForm({
+          contactName: "",
+          contactEmail: "",
+          contactPhone: "",
+          amountNeeded: "",
+          fundingFor: "plaintiff-initial",
+          dateOfAccident: "",
+          plaintiffName: "",
+        });
+      }
+    } catch (err) {
+      console.error("Submission error:", err);
+      toast({
+        title: "Submission Failed",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
