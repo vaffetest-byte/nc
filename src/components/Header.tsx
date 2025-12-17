@@ -1,4 +1,4 @@
-import { useState, forwardRef } from "react";
+import { useState, forwardRef, memo } from "react";
 import { Menu, X, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -141,4 +141,4 @@ const Header = forwardRef<HTMLElement>((_, ref) => {
 
 Header.displayName = "Header";
 
-export default Header;
+export default memo(Header);

@@ -1,5 +1,5 @@
+import { memo, useEffect, useState } from "react";
 import { Star } from "lucide-react";
-import { useEffect, useState, useCallback } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -11,7 +11,7 @@ import testimonialMaria from "@/assets/testimonial-maria.jpg";
 import testimonialRobert from "@/assets/testimonial-robert.jpg";
 import testimonialLisa from "@/assets/testimonial-lisa.jpg";
 
-const Testimonials = () => {
+const Testimonials = memo(() => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
 
@@ -131,6 +131,8 @@ const Testimonials = () => {
       </div>
     </section>
   );
-};
+});
+
+Testimonials.displayName = "Testimonials";
 
 export default Testimonials;

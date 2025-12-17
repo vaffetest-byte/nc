@@ -1,9 +1,10 @@
+import { forwardRef, memo } from "react";
 import { Phone, Mail, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const CTA = () => {
+const CTA = forwardRef<HTMLElement>((_, ref) => {
   return (
-    <section className="py-24 patriotic-gradient relative overflow-hidden">
+    <section ref={ref} className="py-24 patriotic-gradient relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0">
         <div className="absolute top-0 left-0 w-96 h-96 bg-white/5 rounded-full -translate-x-1/2 -translate-y-1/2" />
@@ -59,6 +60,8 @@ const CTA = () => {
       </div>
     </section>
   );
-};
+});
 
-export default CTA;
+CTA.displayName = "CTA";
+
+export default memo(CTA);

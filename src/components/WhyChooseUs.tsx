@@ -1,4 +1,6 @@
-const WhyChooseUs = () => {
+import { memo } from "react";
+
+const WhyChooseUs = memo(() => {
   const benefits = [
     {
       title: "Lightning-Fast Funding",
@@ -85,6 +87,8 @@ const WhyChooseUs = () => {
       </div>
     </section>
   );
-};
+});
+
+WhyChooseUs.displayName = "WhyChooseUs";
 
 export default WhyChooseUs;

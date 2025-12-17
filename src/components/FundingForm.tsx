@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import { Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -492,4 +492,6 @@ const FundingForm = ({ variant = "dark", className = "" }: FundingFormProps) => 
   );
 };
 
-export default FundingForm;
+FundingForm.displayName = "FundingForm";
+
+export default memo(FundingForm);
