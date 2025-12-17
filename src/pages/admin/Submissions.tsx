@@ -17,6 +17,16 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -24,7 +34,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Filter, RefreshCw, Download, FileSpreadsheet, FileText, Calendar } from "lucide-react";
+import { Eye, Filter, RefreshCw, FileSpreadsheet, FileText, Calendar, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
@@ -47,6 +57,8 @@ const Submissions = () => {
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
   const [filter, setFilter] = useState<string>(searchParams.get("type") || "all");
   const [dateFilter, setDateFilter] = useState<DateFilter>("all");
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -131,6 +143,38 @@ const Submissions = () => {
       searchParams.set("type", newFilter);
     }
     setSearchParams(searchParams);
+  };
+
+  const handleDeleteSubmission = async () => {
+    if (!deleteId) return;
+    
+    setIsDeleting(true);
+    const { error } = await supabase
+      .from("form_submissions")
+      .delete()
+      .eq("id", deleteId);
+
+    if (error) {
+      console.error("Delete error:", error);
+      toast({
+        title: "Delete Failed",
+        description: "There was an error deleting the submission.",
+        variant: "destructive",
+      });
+    } else {
+      setSubmissions(prev => prev.filter(s => s.id !== deleteId));
+      toast({
+        title: "Deleted",
+        description: "Submission has been deleted successfully.",
+      });
+      // Close detail dialog if viewing the deleted submission
+      if (selectedSubmission?.id === deleteId) {
+        setSelectedSubmission(null);
+      }
+    }
+    
+    setIsDeleting(false);
+    setDeleteId(null);
   };
 
   const getContactName = (submission: Submission) => {
@@ -382,14 +426,24 @@ const Submissions = () => {
                     {new Date(submission.created_at).toLocaleTimeString()}
                   </TableCell>
                   <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleViewSubmission(submission)}
-                    >
-                      <Eye className="w-4 h-4 mr-2" />
-                      View
-                    </Button>
+                    <div className="flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleViewSubmission(submission)}
+                      >
+                        <Eye className="w-4 h-4 mr-1" />
+                        View
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                        onClick={() => setDeleteId(submission.id)}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))
@@ -439,10 +493,44 @@ const Submissions = () => {
                   ))}
                 </div>
               </div>
+
+              {/* Delete button in dialog */}
+              <div className="border-t border-border pt-4 mt-4">
+                <Button
+                  variant="destructive"
+                  onClick={() => setDeleteId(selectedSubmission.id)}
+                  className="w-full"
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Delete Submission
+                </Button>
+              </div>
             </div>
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Submission?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete this submission from the database.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteSubmission}
+              disabled={isDeleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {isDeleting ? "Deleting..." : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
