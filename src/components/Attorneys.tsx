@@ -45,7 +45,7 @@ const Attorneys = forwardRef<HTMLElement>((_, ref) => {
               For Legal Professionals
             </span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mt-3 mb-6">
-              Partner With National Claims Assoc
+              Partner With National Claims Association
             </h2>
             <p className="text-base text-secondary-foreground/70 mb-8 leading-relaxed">
               We understand the challenges your clients face during litigation. Our litigation funding solutions help your clients meet financial obligations while you focus on winning their case.
@@ -64,15 +64,12 @@ const Attorneys = forwardRef<HTMLElement>((_, ref) => {
               <Button 
                 size="lg" 
                 className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-lg glow-effect"
+                onClick={() => {
+                  const fundingForm = document.getElementById('funding-form');
+                  fundingForm?.scrollIntoView({ behavior: 'smooth' });
+                }}
               >
                 Become a Partner
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="border-white/30 bg-white/5 text-secondary-foreground hover:bg-white/10"
-              >
-                Attorney Portal
               </Button>
             </div>
           </div>
