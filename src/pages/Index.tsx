@@ -12,10 +12,10 @@ const Index = () => {
   return (
     <>
       <Helmet>
-        <title>National Claims Assoc | Litigation Funding Made Simple</title>
+        <title>National Claims Association | Litigation Funding Made Simple</title>
         <meta
           name="description"
-          content="Get fast, risk-free litigation funding from National Claims Assoc. No credit check, 24-hour approval. You only repay if you win your case. Call (718) 587-9965."
+          content="Get fast, risk-free litigation funding from National Claims Association. No credit check, 24-hour approval. You only repay if you win your case. Call (718) 587-9965."
         />
         <meta name="keywords" content="litigation funding, lawsuit funding, pre-settlement funding, legal funding, personal injury funding, car accident funding" />
         <link rel="canonical" href="https://ncaclaim.com" />

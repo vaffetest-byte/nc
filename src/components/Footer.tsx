@@ -41,7 +41,7 @@ const Footer = forwardRef<HTMLElement>((_, ref) => {
       ],
     },
     about: {
-      title: "About National Claims Assoc",
+      title: "About National Claims Association",
       links: [
         { name: "News", href: "/#news", isPage: false },
         { name: "Site Map", href: "/#sitemap", isPage: false },
@@ -134,13 +134,13 @@ const Footer = forwardRef<HTMLElement>((_, ref) => {
             <div className="flex items-center gap-5">
               <img 
                 src={logo} 
-                alt="National Claims Assoc" 
+                alt="National Claims Association" 
                 className="h-14 w-auto rounded-lg shadow-md" 
               />
-              <div>
-                <p className="text-secondary-foreground font-heading text-lg font-semibold">National Claims Assoc</p>
-                <p className="text-primary text-sm font-medium tracking-wider">NCACLAIM.COM</p>
-              </div>
+            <div>
+              <p className="text-secondary-foreground font-heading text-lg font-semibold">National Claims Association</p>
+              <p className="text-primary text-sm font-medium tracking-wider">NCACLAIM.COM</p>
+            </div>
             </div>
             <div className="text-center md:text-right">
               <p className="font-heading text-2xl md:text-3xl lg:text-4xl font-bold text-primary tracking-tight">
@@ -156,19 +156,19 @@ const Footer = forwardRef<HTMLElement>((_, ref) => {
         <div className="container mx-auto px-4 py-10">
           <div className="space-y-4 text-xs text-secondary-foreground/50 leading-relaxed max-w-6xl">
             <p>
-              By submitting information through this website, you consent to receive communications from National Claims Assoc 
+              By submitting information through this website, you consent to receive communications from National Claims Association 
               and agree to our Privacy Policy and Terms of Use. Your personal information will be handled in accordance with 
               applicable laws and our stated privacy practices.
             </p>
             <p>
-              Funding provided by National Claims Assoc is contingent upon a successful case outcome. This is not a traditional 
+              Funding provided by National Claims Association is contingent upon a successful case outcome. This is not a traditional 
               loan. Repayment is only required if your case results in a favorable settlement or judgment. If your case is 
               unsuccessful, you owe nothing.
             </p>
             <p>
               All funding is subject to approval and the execution of required agreements. Rates, caps, and terms may vary 
               depending on case type, jurisdiction, and individual circumstances. Not all cases qualify for funding. 
-              National Claims Assoc provides funding services in states where litigation funding is available under applicable law.
+              National Claims Association provides funding services in states where litigation funding is available under applicable law.
             </p>
           </div>
 
@@ -190,7 +190,7 @@ const Footer = forwardRef<HTMLElement>((_, ref) => {
             <div>
               <h4 className="font-heading font-bold text-sm mb-4 text-secondary-foreground">Accessibility</h4>
               <p className="text-secondary-foreground/50 text-xs leading-relaxed">
-                National Claims Assoc is committed to making our website accessible to all users. If you experience any 
+                National Claims Association is committed to making our website accessible to all users. If you experience any 
                 difficulty accessing our site, please contact our support team for assistance.
               </p>
             </div>
@@ -202,8 +202,8 @@ const Footer = forwardRef<HTMLElement>((_, ref) => {
       <div className="bg-secondary border-t border-secondary-foreground/10">
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-3 text-secondary-foreground/40 text-xs">
-            <p>© {new Date().getFullYear()} National Claims Assoc. All rights reserved.</p>
-            <p>National Claims Assoc and associated logos are trademarks of their respective owners.</p>
+            <p>© {new Date().getFullYear()} National Claims Association. All rights reserved.</p>
+            <p>National Claims Association and associated logos are trademarks of their respective owners.</p>
           </div>
         </div>
       </div>

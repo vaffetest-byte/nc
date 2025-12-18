@@ -35,7 +35,7 @@ const WhyChooseUs = memo(() => {
   ];
 
   return (
-    <section className="py-24 bg-gradient-to-b from-secondary/5 to-background">
+    <section id="why-choose-us" className="py-24 bg-gradient-to-b from-secondary/5 to-background">
       <div className="container mx-auto px-4">
         {/* Headline */}
         <div className="text-center mb-16">
@@ -46,7 +46,7 @@ const WhyChooseUs = memo(() => {
             The <span className="text-primary">Smarter Alternative</span> to Traditional Lawsuit Loans
           </h2>
           <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto">
-            Discover why thousands of personal injury clients trust National Claims Assoc for their pre-settlement funding needs.
+            Discover why thousands of personal injury clients trust National Claims Association for their pre-settlement funding needs.
           </p>
         </div>
 

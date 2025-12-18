@@ -22,7 +22,7 @@ const Header = forwardRef<HTMLElement>((_, ref) => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
-            <img src={logo} alt="National Claims Assoc" className="h-14 w-auto bg-white rounded-lg p-1" />
+            <img src={logo} alt="National Claims Association" className="h-14 w-auto bg-white rounded-lg p-1" />
           </Link>
 
           {/* Desktop Navigation */}

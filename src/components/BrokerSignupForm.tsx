@@ -258,7 +258,7 @@ const BrokerSignupForm = ({ variant = "light", className = "" }: BrokerSignupFor
         </Button>
 
         <p className={`text-xs text-center mt-4 ${isDark ? "text-secondary-foreground/60" : "text-muted-foreground"}`}>
-          No long forms. No obligation. Just a quick introduction to start partnering with National Claims Assoc.
+          No long forms. No obligation. Just a quick introduction to start partnering with National Claims Association.
         </p>
       </form>
     </div>

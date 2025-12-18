@@ -36,8 +36,8 @@ const ForBrokers = () => {
   return (
     <>
       <Helmet>
-        <title>Litigation Funding Broker Program | National Claims Assoc</title>
-        <meta name="description" content="Partner with National Claims Assoc for fast litigation funding approvals, competitive broker compensation, and dedicated support. Join our broker program today." />
+        <title>Litigation Funding Broker Program | National Claims Association</title>
+        <meta name="description" content="Partner with National Claims Association for fast litigation funding approvals, competitive broker compensation, and dedicated support. Join our broker program today." />
         <meta name="keywords" content="litigation funding broker, legal funding partner, broker program, lawsuit funding broker, pre-settlement funding broker" />
         <link rel="canonical" href="https://ncaclaim.com/for-brokers" />
       </Helmet>
@@ -145,7 +145,7 @@ const ForBrokers = () => {
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed font-body">
                 As a litigation funding broker, you need a dependable partner your attorneys and clients can trust. 
-                National Claims Assoc delivers fast, well-informed decisions backed by a smooth, transparent process. 
+                National Claims Association delivers fast, well-informed decisions backed by a smooth, transparent process. 
                 From initial application to final funding, we maintain clear communication at every step—so you can 
                 confidently guide your clients knowing their case is in capable hands.
               </p>
@@ -168,7 +168,7 @@ const ForBrokers = () => {
                     </h3>
                     <div className="space-y-4 text-muted-foreground font-body">
                       <p>
-                        At National Claims Assoc, we recognize that brokers are essential partners in helping 
+                        At National Claims Association, we recognize that brokers are essential partners in helping 
                         plaintiffs navigate financial hardship during their legal journey. Your expertise connects 
                         clients with the resources they need, and we're here to support that mission.
                       </p>
@@ -204,12 +204,12 @@ const ForBrokers = () => {
           </div>
         </section>
 
-        {/* As a National Claims Assoc Broker Section */}
+        {/* As a National Claims Association Broker Section */}
         <section className="py-20 bg-background">
           <div className="container mx-auto px-4">
             <div className="text-center mb-14">
               <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-4">
-                As a National Claims Assoc Broker, <span className="text-primary">You Can:</span>
+                As a National Claims Association Broker, <span className="text-primary">You Can:</span>
               </h2>
               <p className="text-lg text-muted-foreground font-body max-w-2xl mx-auto">
                 Access the tools, support, and competitive terms you need to grow your business and better serve your clients.
@@ -242,7 +242,7 @@ const ForBrokers = () => {
                   Experienced Underwriters. <span className="text-primary">Dedicated Broker Support.</span>
                 </h2>
                 <p className="text-secondary-foreground/80 font-body mb-8 leading-relaxed">
-                  Every funding decision at National Claims Assoc is handled by professionals with deep experience 
+                  Every funding decision at National Claims Association is handled by professionals with deep experience 
                   in legal finance and personal injury cases. Our underwriting team collaborates directly with 
                   attorneys on complex matters, ensuring fast and well-informed approvals that you and your 
                   clients can depend on.
@@ -252,7 +252,7 @@ const ForBrokers = () => {
                   Dedicated Broker Channel
                 </h3>
                 <p className="text-secondary-foreground/80 font-body leading-relaxed">
-                  As a National Claims Assoc broker partner, you work with a dedicated internal team that 
+                  As a National Claims Association broker partner, you work with a dedicated internal team that 
                   understands your business. You receive priority support regardless of deal size—because 
                   every client matters, and every broker relationship is valued. Our broker channel ensures 
                   your questions are answered quickly and your deals move forward without delay.
@@ -271,7 +271,7 @@ const ForBrokers = () => {
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
               <h2 className="font-heading text-3xl md:text-4xl font-bold text-primary-foreground mb-6">
-                Ready to Partner With National Claims Assoc?
+                Ready to Partner With National Claims Association?
               </h2>
               <p className="text-xl text-primary-foreground/90 font-body mb-10">
                 Join a growing network of successful litigation funding brokers. We're committed to your success 

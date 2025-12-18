@@ -20,25 +20,25 @@ const Testimonials = memo(() => {
       name: "James T.",
       image: testimonialJames,
       rating: 5,
-      text: "National Claims Assoc has been instrumental in helping my clients. Their fast funding allows my clients to focus on recovery while I focus on winning their case.",
+      text: "National Claims Association has been instrumental in helping my clients. Their fast funding allows my clients to focus on recovery while I focus on winning their case.",
     },
     {
       name: "Maria C.",
       image: testimonialMaria,
       rating: 5,
-      text: "The team at National Claims Assoc understands the legal process. They work efficiently and their non-compounded rates are the best in the industry.",
+      text: "The team at National Claims Association understands the legal process. They work efficiently and their non-compounded rates are the best in the industry.",
     },
     {
       name: "Robert H.",
       image: testimonialRobert,
       rating: 5,
-      text: "I've worked with many funding companies, but National Claims Assoc stands out for their professionalism and client-first approach.",
+      text: "I've worked with many funding companies, but National Claims Association stands out for their professionalism and client-first approach.",
     },
     {
       name: "Lisa P.",
       image: testimonialLisa,
       rating: 5,
-      text: "Quick approvals, reasonable terms, and excellent communication. I recommend National Claims Assoc to all my colleagues.",
+      text: "Quick approvals, reasonable terms, and excellent communication. I recommend National Claims Association to all my colleagues.",
     },
   ];
 
