@@ -18,7 +18,7 @@ const CTA = forwardRef<HTMLElement>((_, ref) => {
             Ready to Get the Funding You Need?
           </h2>
           <p className="text-lg text-white/85 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Don't let financial stress affect your case. Contact National Claims Assoc today and get the support you deserve.
+            Don't let financial stress affect your case. Contact National Claims Association today and get the support you deserve.
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 mb-10">
@@ -52,6 +52,7 @@ const CTA = forwardRef<HTMLElement>((_, ref) => {
           <Button 
             size="lg" 
             className="bg-white text-primary hover:bg-white/95 font-semibold text-base px-10 py-6 group shadow-xl"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
             Apply Now
             <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />

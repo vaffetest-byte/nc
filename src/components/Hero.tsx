@@ -33,7 +33,7 @@ const Hero = memo(() => {
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight opacity-0 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
                 <span className="text-white">National</span>{" "}
                 <span className="text-primary">Claims</span>{" "}
-                <span className="text-white">Assoc</span>
+                <span className="text-white">Association</span>
               </h2>
               <div className="flex items-center gap-3 mt-4">
                 <div className="w-20 h-1 bg-primary rounded-full opacity-0 animate-line-grow" style={{ animationDelay: "0.5s" }} />
@@ -50,7 +50,7 @@ const Hero = memo(() => {
               <span className="text-primary">Financial Relief</span> While You Pursue Justice.
             </h1>
             <p className="text-lg text-white/75 mb-10 max-w-xl leading-relaxed opacity-0 animate-fade-in" style={{ animationDelay: "0.6s" }}>
-              Get the financial support you need while your case is pending. Fast, reliable litigation funding with no risk to you.
+              Fast and reliable litigation funding with no risk to you.
             </p>
 
             {/* Benefits */}
@@ -66,18 +66,27 @@ const Hero = memo(() => {
             </div>
 
             <div className="flex flex-wrap gap-4 opacity-0 animate-fade-in-up" style={{ animationDelay: "0.8s" }}>
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base px-8 py-6 shadow-lg glow-effect group">
+              <Button 
+                size="lg" 
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base px-8 py-6 shadow-lg glow-effect group"
+                onClick={() => document.getElementById('funding-form')?.scrollIntoView({ behavior: 'smooth' })}
+              >
                 Apply Now
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
-              <Button size="lg" variant="outline" className="border-white/30 bg-white/5 text-white hover:bg-white/10 font-semibold text-base px-8 py-6 backdrop-blur-sm">
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="border-white/30 bg-white/5 text-white hover:bg-white/10 font-semibold text-base px-8 py-6 backdrop-blur-sm"
+                onClick={() => document.getElementById('why-choose-us')?.scrollIntoView({ behavior: 'smooth' })}
+              >
                 Learn More
               </Button>
             </div>
           </div>
 
           {/* Right Form */}
-          <div className="opacity-0 animate-slide-in-right" style={{ animationDelay: "0.4s" }}>
+          <div id="funding-form" className="opacity-0 animate-slide-in-right" style={{ animationDelay: "0.4s" }}>
             <FundingForm variant="dark" />
           </div>
         </div>

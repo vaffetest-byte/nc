@@ -80,7 +80,7 @@ const Calculator = forwardRef<HTMLElement>((_, ref) => {
         {/* Headline - matching site style */}
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-secondary max-w-4xl mx-auto leading-tight">
-            Calculate Your Savings with National Claims Assoc
+            Calculate Your Savings with National Claims Association
           </h2>
         </div>
 
@@ -179,7 +179,7 @@ const Calculator = forwardRef<HTMLElement>((_, ref) => {
               </div>
             </div>
 
-            {/* National Claims Assoc - Highlighted */}
+            {/* National Claims Association - Highlighted - Shows 45% higher due to trial opportunity */}
             <div 
               className="bg-background rounded-xl p-8 card-shadow border-2 border-primary relative animate-fade-in"
               style={{ animationDelay: '0.5s' }}
@@ -191,13 +191,13 @@ const Calculator = forwardRef<HTMLElement>((_, ref) => {
               </div>
               
               <h3 className="text-xl font-bold text-primary mb-6 font-serif text-center">
-                National Claims Assoc
+                National Claims Association
               </h3>
               
               <div className="space-y-4">
                 <div className="text-center py-4 border-b border-primary/20 bg-primary/5 rounded-lg -mx-2 px-2">
-                  <p className="text-xs uppercase tracking-wide text-primary/70 mb-1">Settlement</p>
-                  <p className="text-2xl font-bold text-primary">{formatCurrency(settlementAmount)}</p>
+                  <p className="text-xs uppercase tracking-wide text-primary/70 mb-1">Settlement (Trial Value)</p>
+                  <p className="text-2xl font-bold text-primary">{formatCurrency(settlementAmount * 1.45)}</p>
                 </div>
 
                 <div className="flex justify-between py-2">
@@ -207,13 +207,16 @@ const Calculator = forwardRef<HTMLElement>((_, ref) => {
                 
                 <div className="flex justify-between py-2 border-b border-primary/20">
                   <span className="text-muted-foreground">Attorney Fees</span>
-                  <span className="font-semibold text-foreground">{formatCurrency(attorneyFees)}</span>
+                  <span className="font-semibold text-foreground">{formatCurrency((settlementAmount * 1.45) * (attorneyFeePercent / 100))}</span>
                 </div>
                 
                 <div className="pt-4 text-center">
                   <p className="text-xs uppercase tracking-wide text-primary/70 mb-2">You Receive</p>
-                  <p className="text-3xl font-bold text-primary">{formatCurrency(netWithNCA)}</p>
+                  <p className="text-3xl font-bold text-primary">{formatCurrency((settlementAmount * 1.45) - ((settlementAmount * 1.45) * (attorneyFeePercent / 100)) - ncaAdvanceCost)}</p>
                 </div>
+                <p className="text-xs text-center text-primary/60 mt-2">
+                  +45% from going to trial instead of early settlement
+                </p>
               </div>
             </div>
 
@@ -265,7 +268,7 @@ const Calculator = forwardRef<HTMLElement>((_, ref) => {
 
           {/* Footnote */}
           <p className="text-center text-sm text-muted-foreground">
-            *NCA advance cost capped at 2× advance. Competitor capped at 2.5×. Advance limited to 30% of settlement. Rates are illustrative.
+            *NCA advance cost capped at 2× advance. Competitor capped at 2.5×. Rates are illustrative. Using our funding allows you to wait for trial, potentially increasing your settlement by 45%.
           </p>
         </div>
       </div>

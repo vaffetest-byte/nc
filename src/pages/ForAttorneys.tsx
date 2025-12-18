@@ -72,25 +72,25 @@ const ForAttorneys = () => {
   const testimonials = [
     {
       name: "Michael R.",
-      review: "National Claims Assoc has been instrumental in helping my clients. Their fast funding allows my clients to focus on recovery while I focus on winning their case.",
+      review: "National Claims Association has been instrumental in helping my clients. Their fast funding allows my clients to focus on recovery while I focus on winning their case.",
       rating: 5,
       image: testimonialMichael
     },
     {
       name: "Sarah K.",
-      review: "The team at National Claims Assoc understands the legal process. They work efficiently and their non-compounded rates are the best in the industry.",
+      review: "The team at National Claims Association understands the legal process. They work efficiently and their non-compounded rates are the best in the industry.",
       rating: 5,
       image: testimonialSarah
     },
     {
       name: "David L.",
-      review: "I've worked with many funding companies, but National Claims Assoc stands out for their professionalism and client-first approach.",
+      review: "I've worked with many funding companies, but National Claims Association stands out for their professionalism and client-first approach.",
       rating: 5,
       image: testimonialDavid
     },
     {
       name: "Jennifer M.",
-      review: "Quick approvals, reasonable terms, and excellent communication. I recommend National Claims Assoc to all my colleagues.",
+      review: "Quick approvals, reasonable terms, and excellent communication. I recommend National Claims Association to all my colleagues.",
       rating: 5,
       image: testimonialJennifer
     }
@@ -132,10 +132,10 @@ const ForAttorneys = () => {
   return (
     <>
       <Helmet>
-        <title>For Attorneys | National Claims Assoc</title>
+        <title>For Attorneys | National Claims Association</title>
         <meta
           name="description"
-          content="Partner with National Claims Assoc to help your clients get litigation funding. Fast approvals, capped fees, and non-compounded rates."
+          content="Partner with National Claims Association to help your clients get litigation funding. Fast approvals, capped fees, and non-compounded rates."
         />
         <meta name="keywords" content="attorney litigation funding, lawyer pre-settlement funding, legal funding partner, attorney referral program" />
         <link rel="canonical" href="https://ncaclaim.com/for-attorneys" />
@@ -185,7 +185,7 @@ const ForAttorneys = () => {
           <div className="container mx-auto px-4">
             <div className="text-center max-w-4xl mx-auto mb-16">
             <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-6">
-              National Claims Assoc provides your clients with financial relief through a cash advance on their pending case, allowing them to cover essential expenses while you pursue justice.
+              National Claims Association provides your clients with financial relief through a cash advance on their pending case, allowing them to cover essential expenses while you pursue justice.
             </h2>
               <p className="text-lg text-muted-foreground font-body">
                 The claims process for personal injury cases can seemingly take forever, and the financial pressures your clients face can interfere with you getting the full measure of a just settlement.
@@ -194,7 +194,7 @@ const ForAttorneys = () => {
 
             <div className="max-w-4xl mx-auto">
               <div className="border-l-4 border-primary pl-6 mb-8">
-                <p className="text-lg font-semibold text-foreground mb-2">National Claims Assoc — A Better Way to Support Your Clients</p>
+                <p className="text-lg font-semibold text-foreground mb-2">National Claims Association — A Better Way to Support Your Clients</p>
                 <p className="text-primary font-bold text-xl">We make litigation funding simple, fast, and fair. Here's what sets us apart:</p>
               </div>
 
@@ -228,14 +228,14 @@ const ForAttorneys = () => {
                   <img src={attorneyTestimonial} alt="Attorney Testimonial" className="w-full h-full object-cover" />
                 </div>
                 <p className="text-lg text-muted-foreground mb-2">Prominent Trial Attorney</p>
-                <p className="text-sm text-muted-foreground">Referring clients to National Claims Assoc for years</p>
+                <p className="text-sm text-muted-foreground">Referring clients to National Claims Association for years</p>
               </div>
 
               <div className="bg-background rounded-xl p-8 shadow-lg">
                 <h3 className="font-heading text-2xl font-bold text-foreground mb-2">Legal Partner</h3>
-                <p className="text-primary font-semibold mb-4">National Claims Assoc Advocate</p>
+                <p className="text-primary font-semibold mb-4">National Claims Association Advocate</p>
                 <p className="text-muted-foreground italic font-body leading-relaxed">
-                  "We are committed to our mission of providing essential funds to plaintiffs, so their attorneys have the time to pursue fair settlements. You can trust National Claims Assoc to get the job done fast and done well."
+                  "We are committed to our mission of providing essential funds to plaintiffs, so their attorneys have the time to pursue fair settlements. You can trust National Claims Association to get the job done fast and done well."
                 </p>
               </div>
 

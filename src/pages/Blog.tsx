@@ -50,10 +50,10 @@ const Blog = () => {
   return (
     <>
       <Helmet>
-        <title>Blog | National Claims Assoc - Litigation Funding Insights</title>
+        <title>Blog | National Claims Association - Litigation Funding Insights</title>
         <meta
           name="description"
-          content="Stay informed with the latest news, insights, and updates on litigation funding from National Claims Assoc."
+          content="Stay informed with the latest news, insights, and updates on litigation funding from National Claims Association."
         />
       </Helmet>
 
@@ -68,7 +68,7 @@ const Blog = () => {
             </h1>
             <p className="font-body text-lg md:text-xl text-secondary-foreground/80 max-w-2xl mx-auto">
               Stay informed with the latest news, case studies, and expert insights 
-              on litigation funding from National Claims Assoc.
+              on litigation funding from National Claims Association.
             </p>
           </div>
         </section>

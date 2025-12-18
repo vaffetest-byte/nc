@@ -30,7 +30,7 @@ const defaultContent = {
     email: "info@ncaclaim.com",
   },
   company: {
-    name: "National Claims Assoc",
+    name: "National Claims Association",
     tagline: "Litigation Funding Made Simple®",
   },
 };

@@ -120,10 +120,10 @@ const HowItWorksPage = () => {
   return (
     <>
       <Helmet>
-        <title>How It Works | National Claims Assoc - Litigation Funding Process</title>
+        <title>How It Works | National Claims Association - Litigation Funding Process</title>
         <meta 
           name="description" 
-          content="Learn how litigation funding works at National Claims Assoc. Simple 6-step process: apply, get approved, receive funds within 24-48 hours. No win, no repayment." 
+          content="Learn how litigation funding works at National Claims Association. Simple 6-step process: apply, get approved, receive funds within 24-48 hours. No win, no repayment." 
         />
       </Helmet>
 
@@ -188,7 +188,7 @@ const HowItWorksPage = () => {
                 Your Path to Funding
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                From application to approval, here's exactly what to expect when you work with National Claims Assoc.
+                From application to approval, here's exactly what to expect when you work with National Claims Association.
               </p>
             </div>
 
@@ -274,7 +274,7 @@ const HowItWorksPage = () => {
                 },
                 {
                   q: "Will this affect my lawsuit?",
-                  a: "No. Funding is a private financial arrangement between you and National Claims Assoc. It does not affect your case or your attorney's strategy."
+                  a: "No. Funding is a private financial arrangement between you and National Claims Association. It does not affect your case or your attorney's strategy."
                 }
               ].map((faq, index) => (
                 <div 

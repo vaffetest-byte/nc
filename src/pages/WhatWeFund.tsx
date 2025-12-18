@@ -115,8 +115,8 @@ const WhatWeFund = () => {
   return (
     <>
       <Helmet>
-        <title>What We Fund - Case Types | National Claims Assoc</title>
-        <meta name="description" content="National Claims Assoc funds a wide variety of personal injury and civil litigation cases including car accidents, medical malpractice, wrongful death, and more." />
+        <title>What We Fund - Case Types | National Claims Association</title>
+        <meta name="description" content="National Claims Association funds a wide variety of personal injury and civil litigation cases including car accidents, medical malpractice, wrongful death, and more." />
       </Helmet>
       
       <Header />
@@ -137,7 +137,7 @@ const WhatWeFund = () => {
               What We <span className="text-primary">Fund</span>
             </h1>
             <p className="text-lg text-white/75 max-w-2xl mb-8">
-              National Claims Assoc funds a wide variety of personal injury and civil litigation cases. 
+              National Claims Association funds a wide variety of personal injury and civil litigation cases. 
               We provide financial relief so you can focus on your recovery while your attorney fights for the compensation you deserve.
             </p>
             <div className="flex flex-wrap gap-4">
@@ -164,7 +164,7 @@ const WhatWeFund = () => {
             <div className="text-center mb-12">
               <span className="text-primary font-semibold text-sm uppercase tracking-widest">Why Choose Us</span>
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mt-3">
-                The National Claims Assoc Advantage
+                The National Claims Association Advantage
               </h2>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
