@@ -1,67 +1,48 @@
-import { useState, useEffect, forwardRef, memo } from "react";
+import { useState, forwardRef, memo } from "react";
 import { Input } from "@/components/ui/input";
 import { TrendingUp } from "lucide-react";
 
 // ============ CONFIGURABLE RATES ============
-const NCA_MONTHLY_RATE = 0.03; // 3% per month
-const COMPETITOR_MONTHLY_RATE = 0.0425; // 4.25% per month
-const NCA_CAP_MULTIPLIER = 2; // NCA cap: 2x advance amount
-const COMPETITOR_CAP_MULTIPLIER = 2.5; // Competitor cap: 2.5x advance amount
-const MAX_ADVANCE_PERCENT = 0.30; // Advance cannot exceed 30% of settlement
+const RATE_PER_6_MONTHS = 0.18; // 18% per 6 months (simple interest)
 // ============================================
 
 const Calculator = forwardRef<HTMLElement>((_, ref) => {
-  const [settlementAmount, setSettlementAmount] = useState(100000);
+  // Expected gross settlement if case resolves later
+  const [expectedGross, setExpectedGross] = useState(100000);
+  // Net amount if settled today (after attorney fees)
+  const [todayNet, setTodayNet] = useState(50000);
+  // Case duration in months
   const [months, setMonths] = useState(12);
+  // Attorney fee percentage
   const [attorneyFeePercent, setAttorneyFeePercent] = useState(40);
+  // Advance amount needed
   const [advanceAmount, setAdvanceAmount] = useState(10000);
 
-  const MIN_SETTLEMENT = 1000;
+  const MIN_AMOUNT = 1000;
 
-  // Auto-adjust advance if it exceeds 30% of settlement
-  const maxAdvance = settlementAmount * MAX_ADVANCE_PERCENT;
-  const effectiveAdvance = Math.min(advanceAmount, maxAdvance);
+  // ===== VALIDATION =====
+  const validAttorneyPercent = Math.min(99.9, Math.max(0, attorneyFeePercent));
+  const validMonths = Math.max(0, months);
+  const validAdvance = Math.max(0, advanceAmount);
 
-  // Auto-correct advance when settlement changes
-  useEffect(() => {
-    if (advanceAmount > maxAdvance) {
-      setAdvanceAmount(Math.floor(maxAdvance));
-    }
-  }, [settlementAmount, maxAdvance, advanceAmount]);
+  // ===== "IF SETTLED TODAY" CALCULATIONS =====
+  // Derive gross from net: Today Gross = Today Net ÷ (1 − Attorney Fee %)
+  const todayGross = todayNet / (1 - validAttorneyPercent / 100);
+  const attorneyFeesToday = todayGross * (validAttorneyPercent / 100);
 
-  const handleSettlementChange = (value: string) => {
-    const numValue = Number(value.replace(/[^0-9]/g, ''));
-    setSettlementAmount(Math.max(numValue, MIN_SETTLEMENT));
-  };
+  // ===== "WITH FUNDING" CALCULATIONS =====
+  // Attorney fees on expected gross
+  const attorneyFeesExpected = expectedGross * (validAttorneyPercent / 100);
 
-  const handleAdvanceChange = (value: string) => {
-    const numValue = Number(value.replace(/[^0-9]/g, ''));
-    // Cap at 30% of settlement
-    setAdvanceAmount(Math.min(numValue, maxAdvance));
-  };
+  // Funding cost = Advance × 0.18 × (Months ÷ 6) - Simple interest, no compounding
+  const fundingCost = validMonths === 0 ? 0 : validAdvance * RATE_PER_6_MONTHS * (validMonths / 6);
 
-  // ===== ATTORNEY FEES =====
-  const attorneyFees = settlementAmount * (attorneyFeePercent / 100);
+  // Net to client = Expected Gross - Attorney Fees - Funding Cost
+  // Note: Advance principal is NOT subtracted (client receives it upfront, repays same amount later)
+  const netWithFunding = Math.max(expectedGross - attorneyFeesExpected - fundingCost, 0);
 
-  // ===== IF SETTLED TODAY =====
-  const netSettleToday = Math.max(settlementAmount - attorneyFees, 0);
-
-  // ===== WITH OUR COMPANY (NCA) ADVANCE =====
-  // cost = min(advance × monthlyRate × months, advance × capMultiplier)
-  const ncaAdvanceCostRaw = effectiveAdvance * NCA_MONTHLY_RATE * months;
-  const ncaMaxCap = effectiveAdvance * NCA_CAP_MULTIPLIER;
-  const ncaAdvanceCost = Math.min(ncaAdvanceCostRaw, ncaMaxCap);
-  const netWithNCA = Math.max(settlementAmount - attorneyFees - ncaAdvanceCost, 0);
-
-  // ===== WITH COMPETITOR ADVANCE =====
-  // cost = min(advance × monthlyRate × months, advance × capMultiplier)
-  const competitorAdvanceCostRaw = effectiveAdvance * COMPETITOR_MONTHLY_RATE * months;
-  const competitorMaxCap = effectiveAdvance * COMPETITOR_CAP_MULTIPLIER;
-  const competitorAdvanceCost = Math.min(competitorAdvanceCostRaw, competitorMaxCap);
-  const netWithCompetitor = Math.max(settlementAmount - attorneyFees - competitorAdvanceCost, 0);
-
-  // Savings comparison
-  const savingsVsCompetitor = netWithNCA - netWithCompetitor;
+  // Comparison: How much more client gets by waiting vs settling today
+  const benefitOfWaiting = netWithFunding - todayNet;
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -69,19 +50,45 @@ const Calculator = forwardRef<HTMLElement>((_, ref) => {
       currency: 'USD',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
-    }).format(value);
+    }).format(Math.round(value));
   };
 
-  const advanceExceedsLimit = advanceAmount > maxAdvance;
+  const handleExpectedGrossChange = (value: string) => {
+    const numValue = Number(value.replace(/[^0-9]/g, ''));
+    setExpectedGross(Math.max(numValue, MIN_AMOUNT));
+  };
+
+  const handleTodayNetChange = (value: string) => {
+    const numValue = Number(value.replace(/[^0-9]/g, ''));
+    setTodayNet(Math.max(numValue, MIN_AMOUNT));
+  };
+
+  const handleAdvanceChange = (value: string) => {
+    const numValue = Number(value.replace(/[^0-9]/g, ''));
+    setAdvanceAmount(numValue);
+  };
+
+  const handleMonthsChange = (value: string) => {
+    const numValue = Number(value);
+    setMonths(Math.max(0, numValue));
+  };
+
+  const handleAttorneyFeeChange = (value: string) => {
+    const numValue = Number(value);
+    setAttorneyFeePercent(Math.min(99.9, Math.max(0, numValue)));
+  };
 
   return (
     <section ref={ref} className="py-24 bg-muted/50">
       <div className="container mx-auto px-4">
-        {/* Headline - matching site style */}
+        {/* Headline */}
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-secondary max-w-4xl mx-auto leading-tight">
-            Calculate Your Savings with National Claims Association
+            Legal Funding Calculator
           </h2>
+          <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
+            See how much more you could receive by waiting for your case to resolve
+          </p>
         </div>
 
         {/* Divider */}
@@ -89,104 +96,114 @@ const Calculator = forwardRef<HTMLElement>((_, ref) => {
 
         <div className="max-w-5xl mx-auto">
           {/* Input Section */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-x-12 gap-y-6 mb-16">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6 mb-8">
             <div className="animate-fade-in" style={{ animationDelay: '0s' }}>
               <label className="text-sm text-muted-foreground block mb-2">
-                Settlement Amount (min $1,000)
+                Expected Case Value (if resolved later)
               </label>
               <Input
                 type="text"
-                value={formatCurrency(settlementAmount)}
-                onChange={(e) => handleSettlementChange(e.target.value)}
+                value={formatCurrency(expectedGross)}
+                onChange={(e) => handleExpectedGrossChange(e.target.value)}
                 className="bg-background border-border h-12 text-lg"
               />
             </div>
 
             <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
               <label className="text-sm text-muted-foreground block mb-2">
+                If Settled Today (Net after attorney fees)
+              </label>
+              <Input
+                type="text"
+                value={formatCurrency(todayNet)}
+                onChange={(e) => handleTodayNetChange(e.target.value)}
+                className="bg-background border-border h-12 text-lg"
+              />
+            </div>
+
+            <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              <label className="text-sm text-muted-foreground block mb-2">
                 Case Duration (Months)
               </label>
               <Input
                 type="number"
                 value={months}
-                onChange={(e) => setMonths(Math.max(1, Number(e.target.value)))}
+                onChange={(e) => handleMonthsChange(e.target.value)}
                 className="bg-background border-border h-12 text-lg"
-                min={1}
+                min={0}
               />
             </div>
 
-            <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
               <label className="text-sm text-muted-foreground block mb-2">
                 Attorney Fee (%)
               </label>
               <Input
                 type="number"
                 value={attorneyFeePercent}
-                onChange={(e) => setAttorneyFeePercent(Math.min(100, Math.max(0, Number(e.target.value))))}
+                onChange={(e) => handleAttorneyFeeChange(e.target.value)}
                 className="bg-background border-border h-12 text-lg"
                 min={0}
-                max={100}
+                max={99.9}
+                step={0.1}
               />
             </div>
 
-            <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
+            <div className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
               <label className="text-sm text-muted-foreground block mb-2">
-                Advance Needed (max 30%)
+                Advance Amount Needed
               </label>
               <Input
                 type="text"
                 value={formatCurrency(advanceAmount)}
                 onChange={(e) => handleAdvanceChange(e.target.value)}
-                className={`bg-background h-12 text-lg ${advanceExceedsLimit ? 'border-destructive' : 'border-border'}`}
+                className="bg-background border-border h-12 text-lg"
               />
-              <p className="text-xs text-muted-foreground mt-1">
-                Max: {formatCurrency(maxAdvance)}
-              </p>
             </div>
           </div>
 
-          {/* Results Grid */}
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Settle Today */}
+          {/* Results Grid - Two Columns */}
+          <div className="grid md:grid-cols-2 gap-8 mt-12">
+            {/* If You Settled Today */}
             <div 
               className="bg-background rounded-xl p-8 card-shadow border border-border animate-fade-in"
-              style={{ animationDelay: '0.4s' }}
+              style={{ animationDelay: '0.5s' }}
             >
               <h3 className="text-xl font-bold text-muted-foreground mb-6 font-serif text-center">
-                Settle Today
+                If You Settled Today
               </h3>
               
               <div className="space-y-4">
                 <div className="text-center py-4 border-b border-border">
-                  <p className="text-xs uppercase tracking-wide text-muted-foreground mb-1">Settlement</p>
-                  <p className="text-2xl font-bold text-foreground">{formatCurrency(settlementAmount)}</p>
+                  <p className="text-xs uppercase tracking-wide text-muted-foreground mb-1">Settlement (Gross)</p>
+                  <p className="text-2xl font-bold text-foreground">{formatCurrency(todayGross)}</p>
                 </div>
 
                 <div className="flex justify-between py-2">
-                  <span className="text-muted-foreground">Advance Cost</span>
-                  <span className="font-semibold text-muted-foreground">—</span>
+                  <span className="text-muted-foreground">Cost of Advance</span>
+                  <span className="font-semibold text-muted-foreground">N/A</span>
                 </div>
                 
                 <div className="flex justify-between py-2 border-b border-border">
                   <span className="text-muted-foreground">Attorney Fees</span>
-                  <span className="font-semibold text-foreground">{formatCurrency(attorneyFees)}</span>
+                  <span className="font-semibold text-foreground">{formatCurrency(attorneyFeesToday)}</span>
                 </div>
                 
                 <div className="pt-4 text-center">
-                  <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">You Receive</p>
-                  <p className="text-3xl font-bold text-foreground">{formatCurrency(netSettleToday)}</p>
+                  <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">Net to Client</p>
+                  <p className="text-3xl font-bold text-foreground">{formatCurrency(todayNet)}</p>
                 </div>
               </div>
             </div>
 
-            {/* National Claims Association - Highlighted - Shows 45% higher due to trial opportunity */}
+            {/* With National Claims Association Funding - Highlighted */}
             <div 
               className="bg-background rounded-xl p-8 card-shadow border-2 border-primary relative animate-fade-in"
-              style={{ animationDelay: '0.5s' }}
+              style={{ animationDelay: '0.6s' }}
             >
               <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                 <span className="bg-primary text-primary-foreground text-xs font-semibold px-4 py-1.5 rounded-full uppercase tracking-wide">
-                  Best Value
+                  With Funding
                 </span>
               </div>
               
@@ -196,79 +213,46 @@ const Calculator = forwardRef<HTMLElement>((_, ref) => {
               
               <div className="space-y-4">
                 <div className="text-center py-4 border-b border-primary/20 bg-primary/5 rounded-lg -mx-2 px-2">
-                  <p className="text-xs uppercase tracking-wide text-primary/70 mb-1">Settlement (Trial Value)</p>
-                  <p className="text-2xl font-bold text-primary">{formatCurrency(settlementAmount * 1.45)}</p>
+                  <p className="text-xs uppercase tracking-wide text-primary/70 mb-1">Expected Settlement (Gross)</p>
+                  <p className="text-2xl font-bold text-primary">{formatCurrency(expectedGross)}</p>
                 </div>
 
                 <div className="flex justify-between py-2">
-                  <span className="text-muted-foreground">Advance Cost</span>
-                  <span className="font-semibold text-primary">{formatCurrency(ncaAdvanceCost)}</span>
+                  <span className="text-muted-foreground">Cost of Advance</span>
+                  <span className="font-semibold text-primary">{formatCurrency(fundingCost)}</span>
                 </div>
                 
                 <div className="flex justify-between py-2 border-b border-primary/20">
                   <span className="text-muted-foreground">Attorney Fees</span>
-                  <span className="font-semibold text-foreground">{formatCurrency((settlementAmount * 1.45) * (attorneyFeePercent / 100))}</span>
+                  <span className="font-semibold text-foreground">{formatCurrency(attorneyFeesExpected)}</span>
                 </div>
                 
                 <div className="pt-4 text-center">
-                  <p className="text-xs uppercase tracking-wide text-primary/70 mb-2">You Receive</p>
-                  <p className="text-3xl font-bold text-primary">{formatCurrency((settlementAmount * 1.45) - ((settlementAmount * 1.45) * (attorneyFeePercent / 100)) - ncaAdvanceCost)}</p>
-                </div>
-                <p className="text-xs text-center text-primary/60 mt-2">
-                  +45% from going to trial instead of early settlement
-                </p>
-              </div>
-            </div>
-
-            {/* Competitor */}
-            <div 
-              className="bg-background rounded-xl p-8 card-shadow border border-border animate-fade-in"
-              style={{ animationDelay: '0.6s' }}
-            >
-              <h3 className="text-xl font-bold text-muted-foreground mb-6 font-serif text-center">
-                Typical Competitor
-              </h3>
-              
-              <div className="space-y-4">
-                <div className="text-center py-4 border-b border-border">
-                  <p className="text-xs uppercase tracking-wide text-muted-foreground mb-1">Settlement</p>
-                  <p className="text-2xl font-bold text-foreground">{formatCurrency(settlementAmount)}</p>
-                </div>
-
-                <div className="flex justify-between py-2">
-                  <span className="text-muted-foreground">Advance Cost</span>
-                  <span className="font-semibold text-destructive">{formatCurrency(competitorAdvanceCost)}</span>
-                </div>
-                
-                <div className="flex justify-between py-2 border-b border-border">
-                  <span className="text-muted-foreground">Attorney Fees</span>
-                  <span className="font-semibold text-foreground">{formatCurrency(attorneyFees)}</span>
-                </div>
-                
-                <div className="pt-4 text-center">
-                  <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">You Receive</p>
-                  <p className="text-3xl font-bold text-foreground">{formatCurrency(netWithCompetitor)}</p>
+                  <p className="text-xs uppercase tracking-wide text-primary/70 mb-2">Net to Client</p>
+                  <p className="text-3xl font-bold text-primary">{formatCurrency(netWithFunding)}</p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Savings Banner */}
-          <div className="mt-12 text-center animate-fade-in" style={{ animationDelay: '0.7s' }}>
-            <div className="inline-flex items-center gap-3 bg-primary/10 text-primary px-8 py-4 rounded-full">
-              <TrendingUp className="w-5 h-5" />
-              <span className="text-lg">
-                Save <span className="font-bold text-xl">{formatCurrency(savingsVsCompetitor)}</span> compared to competitors
-              </span>
+          {/* Benefit Banner */}
+          {benefitOfWaiting > 0 && (
+            <div className="mt-12 text-center animate-fade-in" style={{ animationDelay: '0.7s' }}>
+              <div className="inline-flex items-center gap-3 bg-primary/10 text-primary px-8 py-4 rounded-full">
+                <TrendingUp className="w-5 h-5" />
+                <span className="text-lg">
+                  Potential benefit of waiting: <span className="font-bold text-xl">{formatCurrency(benefitOfWaiting)}</span> more
+                </span>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Bottom Divider */}
           <div className="w-full h-px bg-border mt-12 mb-8" />
 
-          {/* Footnote */}
+          {/* Disclosure */}
           <p className="text-center text-sm text-muted-foreground">
-            *NCA advance cost capped at 2× advance. Competitor capped at 2.5×. Rates are illustrative. Using our funding allows you to wait for trial, potentially increasing your settlement by 45%.
+            Funding cost is calculated at 18% per six-month period using simple interest, prorated by time. Interest does not compound.
           </p>
         </div>
       </div>
