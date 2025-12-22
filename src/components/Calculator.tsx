@@ -7,35 +7,54 @@ const RATE_PER_6_MONTHS = 0.18; // 18% per 6 months (simple interest)
 // ============================================
 
 const Calculator = forwardRef<HTMLElement>((_, ref) => {
-  // Expected gross settlement if case resolves later
-  const [expectedGross, setExpectedGross] = useState(100000);
-  // Net amount if settled today (after attorney fees)
-  const [todayNet, setTodayNet] = useState(50000);
-  // Case duration in months
-  const [months, setMonths] = useState(12);
-  // Attorney fee percentage
-  const [attorneyFeePercent, setAttorneyFeePercent] = useState(40);
-  // Advance amount needed
-  const [advanceAmount, setAdvanceAmount] = useState(10000);
+  // Keep raw strings so users can type freely (including commas) without auto-formatting.
+  const [expectedGrossInput, setExpectedGrossInput] = useState<string>("100000");
+  const [todayNetInput, setTodayNetInput] = useState<string>("50000");
+  const [monthsInput, setMonthsInput] = useState<string>("12");
+  const [attorneyFeePercentInput, setAttorneyFeePercentInput] = useState<string>("40");
+  const [advanceAmountInput, setAdvanceAmountInput] = useState<string>("10000");
 
-  const MIN_AMOUNT = 1000;
+  const MIN_VALUE = 1;
 
-  // ===== VALIDATION =====
-  const validAttorneyPercent = Math.min(99.9, Math.max(0, attorneyFeePercent));
-  const validMonths = Math.max(0, months);
-  const validAdvance = Math.max(0, advanceAmount);
+  const sanitizeMoneyInput = (raw: string) => raw.replace(/[^0-9,]/g, "");
+  const sanitizeIntegerInput = (raw: string) => raw.replace(/[^0-9]/g, "");
+  const sanitizePercentInput = (raw: string) => {
+    // Allow digits and one decimal point; no snapping/rounding.
+    const cleaned = raw.replace(/[^0-9.]/g, "");
+    const firstDot = cleaned.indexOf(".");
+    if (firstDot === -1) return cleaned;
+    return cleaned.slice(0, firstDot + 1) + cleaned.slice(firstDot + 1).replace(/\./g, "");
+  };
+
+  const parseIntFromInput = (raw: string) => {
+    const n = Number.parseInt(raw.replace(/,/g, ""), 10);
+    return Number.isFinite(n) ? n : NaN;
+  };
+
+  const parseFloatFromInput = (raw: string) => {
+    const n = Number.parseFloat(raw);
+    return Number.isFinite(n) ? n : NaN;
+  };
+
+  // ===== VALIDATION (no rounding/snap on entry; clamp only for calculations) =====
+  const expectedGross = Math.max(MIN_VALUE, parseIntFromInput(expectedGrossInput) || MIN_VALUE);
+  const todayNet = Math.max(MIN_VALUE, parseIntFromInput(todayNetInput) || MIN_VALUE);
+  const months = Math.max(MIN_VALUE, parseIntFromInput(monthsInput) || MIN_VALUE);
+  const attorneyFeePercentRaw = parseFloatFromInput(attorneyFeePercentInput);
+  const attorneyFeePercent = Math.min(99.9, Math.max(MIN_VALUE, Number.isFinite(attorneyFeePercentRaw) ? attorneyFeePercentRaw : MIN_VALUE));
+  const advanceAmount = Math.max(MIN_VALUE, parseIntFromInput(advanceAmountInput) || MIN_VALUE);
 
   // ===== "IF SETTLED TODAY" CALCULATIONS =====
   // Derive gross from net: Today Gross = Today Net ÷ (1 − Attorney Fee %)
-  const todayGross = todayNet / (1 - validAttorneyPercent / 100);
-  const attorneyFeesToday = todayGross * (validAttorneyPercent / 100);
+  const todayGross = todayNet / (1 - attorneyFeePercent / 100);
+  const attorneyFeesToday = todayGross * (attorneyFeePercent / 100);
 
   // ===== "WITH FUNDING" CALCULATIONS =====
   // Attorney fees on expected gross
-  const attorneyFeesExpected = expectedGross * (validAttorneyPercent / 100);
+  const attorneyFeesExpected = expectedGross * (attorneyFeePercent / 100);
 
   // Funding cost = Advance × 0.18 × (Months ÷ 6) - Simple interest, no compounding
-  const fundingCost = validMonths === 0 ? 0 : validAdvance * RATE_PER_6_MONTHS * (validMonths / 6);
+  const fundingCost = months === 0 ? 0 : advanceAmount * RATE_PER_6_MONTHS * (months / 6);
 
   // Net to client = Expected Gross - Attorney Fees - Funding Cost
   // Note: Advance principal is NOT subtracted (client receives it upfront, repays same amount later)
@@ -45,37 +64,25 @@ const Calculator = forwardRef<HTMLElement>((_, ref) => {
   const benefitOfWaiting = netWithFunding - todayNet;
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(Math.round(value));
   };
 
-  const handleExpectedGrossChange = (value: string) => {
-    const numValue = Number(value.replace(/[^0-9]/g, ''));
-    setExpectedGross(Math.max(numValue, MIN_AMOUNT));
+  const clampInputOnBlur = (raw: string) => {
+    const n = parseIntFromInput(raw);
+    if (!Number.isFinite(n) || n < MIN_VALUE) return String(MIN_VALUE);
+    return raw;
   };
 
-  const handleTodayNetChange = (value: string) => {
-    const numValue = Number(value.replace(/[^0-9]/g, ''));
-    setTodayNet(Math.max(numValue, MIN_AMOUNT));
-  };
-
-  const handleAdvanceChange = (value: string) => {
-    const numValue = Number(value.replace(/[^0-9]/g, ''));
-    setAdvanceAmount(numValue);
-  };
-
-  const handleMonthsChange = (value: string) => {
-    const numValue = Number(value);
-    setMonths(Math.max(0, numValue));
-  };
-
-  const handleAttorneyFeeChange = (value: string) => {
-    const numValue = Number(value);
-    setAttorneyFeePercent(Math.min(99.9, Math.max(0, numValue)));
+  const clampPercentOnBlur = (raw: string) => {
+    const n = parseFloatFromInput(raw);
+    if (!Number.isFinite(n) || n < MIN_VALUE) return String(MIN_VALUE);
+    if (n >= 100) return "99.9";
+    return raw;
   };
 
   return (
@@ -103,8 +110,11 @@ const Calculator = forwardRef<HTMLElement>((_, ref) => {
               </label>
               <Input
                 type="text"
-                value={formatCurrency(expectedGross)}
-                onChange={(e) => handleExpectedGrossChange(e.target.value)}
+                inputMode="numeric"
+                pattern="[0-9,]*"
+                value={expectedGrossInput}
+                onChange={(e) => setExpectedGrossInput(sanitizeMoneyInput(e.target.value))}
+                onBlur={(e) => setExpectedGrossInput(clampInputOnBlur(e.target.value))}
                 className="bg-background border-border h-12 text-lg"
               />
             </div>
@@ -115,8 +125,11 @@ const Calculator = forwardRef<HTMLElement>((_, ref) => {
               </label>
               <Input
                 type="text"
-                value={formatCurrency(todayNet)}
-                onChange={(e) => handleTodayNetChange(e.target.value)}
+                inputMode="numeric"
+                pattern="[0-9,]*"
+                value={todayNetInput}
+                onChange={(e) => setTodayNetInput(sanitizeMoneyInput(e.target.value))}
+                onBlur={(e) => setTodayNetInput(clampInputOnBlur(e.target.value))}
                 className="bg-background border-border h-12 text-lg"
               />
             </div>
@@ -126,11 +139,13 @@ const Calculator = forwardRef<HTMLElement>((_, ref) => {
                 Case Duration (Months)
               </label>
               <Input
-                type="number"
-                value={months}
-                onChange={(e) => handleMonthsChange(e.target.value)}
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={monthsInput}
+                onChange={(e) => setMonthsInput(sanitizeIntegerInput(e.target.value))}
+                onBlur={(e) => setMonthsInput(clampInputOnBlur(e.target.value))}
                 className="bg-background border-border h-12 text-lg"
-                min={0}
               />
             </div>
 
@@ -139,13 +154,13 @@ const Calculator = forwardRef<HTMLElement>((_, ref) => {
                 Attorney Fee (%)
               </label>
               <Input
-                type="number"
-                value={attorneyFeePercent}
-                onChange={(e) => handleAttorneyFeeChange(e.target.value)}
+                type="text"
+                inputMode="decimal"
+                pattern="[0-9.]*"
+                value={attorneyFeePercentInput}
+                onChange={(e) => setAttorneyFeePercentInput(sanitizePercentInput(e.target.value))}
+                onBlur={(e) => setAttorneyFeePercentInput(clampPercentOnBlur(e.target.value))}
                 className="bg-background border-border h-12 text-lg"
-                min={0}
-                max={99.9}
-                step={0.1}
               />
             </div>
 
@@ -155,8 +170,11 @@ const Calculator = forwardRef<HTMLElement>((_, ref) => {
               </label>
               <Input
                 type="text"
-                value={formatCurrency(advanceAmount)}
-                onChange={(e) => handleAdvanceChange(e.target.value)}
+                inputMode="numeric"
+                pattern="[0-9,]*"
+                value={advanceAmountInput}
+                onChange={(e) => setAdvanceAmountInput(sanitizeMoneyInput(e.target.value))}
+                onBlur={(e) => setAdvanceAmountInput(clampInputOnBlur(e.target.value))}
                 className="bg-background border-border h-12 text-lg"
               />
             </div>
