@@ -115,18 +115,6 @@ const Testimonials = memo(() => {
             </CarouselContent>
           </Carousel>
 
-          {/* Dots indicator */}
-          <div className="flex justify-center gap-2 mt-8">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => api?.scrollTo(index)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  current === index ? "bg-primary w-6" : "bg-border hover:bg-muted-foreground"
-                }`}
-              />
-            ))}
-          </div>
         </div>
       </div>
     </section>
