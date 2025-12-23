@@ -45,9 +45,10 @@ const Calculator = forwardRef<HTMLElement>((_, ref) => {
   const advanceAmount = Math.max(MIN_VALUE, parseIntFromInput(advanceAmountInput) || MIN_VALUE);
 
   // ===== "IF SETTLED TODAY" CALCULATIONS =====
-  // Derive gross from net: Today Gross = Today Net ÷ (1 − Attorney Fee %)
-  const todayGross = todayNet / (1 - attorneyFeePercent / 100);
+  // User enters gross settlement; we subtract attorney fees to get net
+  const todayGross = todayNet; // todayNet variable now holds gross input
   const attorneyFeesToday = todayGross * (attorneyFeePercent / 100);
+  const todayNetAfterFees = todayGross - attorneyFeesToday;
 
   // ===== "WITH FUNDING" CALCULATIONS =====
   // Attorney fees on expected gross
@@ -61,7 +62,7 @@ const Calculator = forwardRef<HTMLElement>((_, ref) => {
   const netWithFunding = Math.max(expectedGross - attorneyFeesExpected - fundingCost, 0);
 
   // Comparison: How much more client gets by waiting vs settling today
-  const benefitOfWaiting = netWithFunding - todayNet;
+  const benefitOfWaiting = netWithFunding - todayNetAfterFees;
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -121,7 +122,7 @@ const Calculator = forwardRef<HTMLElement>((_, ref) => {
 
             <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
               <label className="text-sm text-muted-foreground block mb-2">
-                If Settled Today (Net after attorney fees)
+                Settlement Value if Settled Today (Gross)
               </label>
               <Input
                 type="text"
@@ -209,7 +210,7 @@ const Calculator = forwardRef<HTMLElement>((_, ref) => {
                 
                 <div className="pt-4 text-center">
                   <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">Net to Client</p>
-                  <p className="text-3xl font-bold text-foreground">{formatCurrency(todayNet)}</p>
+                  <p className="text-3xl font-bold text-foreground">{formatCurrency(todayNetAfterFees)}</p>
                 </div>
               </div>
             </div>
