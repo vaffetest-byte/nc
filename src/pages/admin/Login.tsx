@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAdmin } from "@/hooks/useAdmin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -400,9 +400,9 @@ const AdminLogin = () => {
         </div>
 
         <p className="text-center text-sm text-muted-foreground mt-6">
-          <a href="/" className="hover:text-primary transition-colors">
+          <Link to="/" className="hover:text-primary transition-colors">
             ← Back to website
-          </a>
+          </Link>
         </p>
       </div>
     </div>
