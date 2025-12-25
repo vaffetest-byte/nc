@@ -1,6 +1,6 @@
-import { memo } from "react";
+import { memo, forwardRef } from "react";
 
-const WhyChooseUs = memo(() => {
+const WhyChooseUs = memo(forwardRef<HTMLElement>((_, ref) => {
   const benefits = [
     {
       title: "Lightning-Fast Funding",
@@ -35,7 +35,7 @@ const WhyChooseUs = memo(() => {
   ];
 
   return (
-    <section id="why-choose-us" className="py-24 bg-gradient-to-b from-secondary/5 to-background">
+    <section ref={ref} id="why-choose-us" className="py-24 bg-gradient-to-b from-secondary/5 to-background">
       <div className="container mx-auto px-4">
         {/* Headline */}
         <div className="text-center mb-16">
@@ -87,7 +87,7 @@ const WhyChooseUs = memo(() => {
       </div>
     </section>
   );
-});
+}));
 
 WhyChooseUs.displayName = "WhyChooseUs";
 

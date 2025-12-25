@@ -1,13 +1,13 @@
-import { memo } from "react";
+import { memo, forwardRef } from "react";
 import { CheckCircle, Shield, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import FundingForm from "@/components/FundingForm";
 
-const Hero = memo(() => {
+const Hero = memo(forwardRef<HTMLElement>((_, ref) => {
   const benefits = ["No Credit Check", "24-Hour Approval*", "100% Risk-Free"];
 
   return (
-    <section className="relative pt-20 min-h-screen">
+    <section ref={ref} className="relative pt-20 min-h-screen">
       {/* Background */}
       <div className="absolute inset-0 hero-gradient" />
       <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=2070')] bg-cover bg-center opacity-[0.03]" />
@@ -93,7 +93,7 @@ const Hero = memo(() => {
       </div>
     </section>
   );
-});
+}));
 
 Hero.displayName = "Hero";
 
