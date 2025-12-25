@@ -12,9 +12,6 @@ Allow: /
 
 User-agent: *
 Allow: /
-
-# Sitemap - Update with your production domain
-# Sitemap: https://yourdomain.com/sitemap.xml
-
-# Disallow admin pages from indexing
 Disallow: /admin/
+
+Sitemap: https://ncaclaim.com/sitemap.xml
