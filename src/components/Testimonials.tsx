@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState, forwardRef } from "react";
 import { Star } from "lucide-react";
 import {
   Carousel,
@@ -11,7 +11,7 @@ import testimonialMaria from "@/assets/testimonial-maria.jpg";
 import testimonialRobert from "@/assets/testimonial-robert.jpg";
 import testimonialLisa from "@/assets/testimonial-lisa.jpg";
 
-const Testimonials = memo(() => {
+const Testimonials = memo(forwardRef<HTMLElement>((_, ref) => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
 
@@ -63,7 +63,7 @@ const Testimonials = memo(() => {
   }, [api]);
 
   return (
-    <section className="py-24 section-gradient">
+    <section ref={ref} className="py-24 section-gradient">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-foreground italic">
@@ -119,7 +119,7 @@ const Testimonials = memo(() => {
       </div>
     </section>
   );
-});
+}));
 
 Testimonials.displayName = "Testimonials";
 
