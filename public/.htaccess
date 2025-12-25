@@ -1,10 +1,13 @@
-# SPA Routing for GoDaddy
+# SPA Routing for GoDaddy (Apache)
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
-  
-  # Handle Front Controller - redirect all requests to index.html for SPA routing
+
+  # Redirect all non-file/non-directory requests to index.html (SPA routing)
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^ index.html [L]
+  RewriteRule . /index.html [L]
 </IfModule>
+
+# Fallback for hosts where mod_rewrite is disabled
+ErrorDocument 404 /index.html
