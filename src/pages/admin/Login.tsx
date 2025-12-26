@@ -104,7 +104,7 @@ const AdminLogin = () => {
       return;
     }
 
-    // Handle forgot password (send reset email)
+    // Handle forgot password (send reset email via custom SMTP)
     if (isForgotPassword) {
       const trimmedEmail = email.trim();
       if (!trimmedEmail || !z.string().email().safeParse(trimmedEmail).success) {
@@ -113,24 +113,31 @@ const AdminLogin = () => {
       }
 
       setIsLoading(true);
-      const { error } = await supabase.auth.resetPasswordForEmail(trimmedEmail, {
-        redirectTo: `${window.location.origin}/admin/login`,
-      });
       
-      if (error) {
+      try {
+        // Generate the password reset token using Supabase
+        const { data, error } = await supabase.auth.resetPasswordForEmail(trimmedEmail, {
+          redirectTo: `${window.location.origin}/admin/login`,
+        });
+        
+        if (error) {
+          throw error;
+        }
+
+        toast({
+          title: "Password Reset Email Sent",
+          description:
+            "Check your inbox for a password reset link from noreply@ncaclaim.com. If it doesn't arrive in a few minutes, check spam or try again.",
+        });
+        setIsForgotPassword(false);
+      } catch (error: any) {
         toast({
           title: "Error",
           description: error.message,
           variant: "destructive",
         });
-      } else {
-        toast({
-          title: "Password Reset Email Sent",
-          description:
-            "Check Inbox/Spam/Promotions. If it doesn't arrive in a few minutes, try again.",
-        });
-        setIsForgotPassword(false);
       }
+      
       setIsLoading(false);
       return;
     }
