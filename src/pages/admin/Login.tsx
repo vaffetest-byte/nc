@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { useAdmin } from "@/hooks/useAdmin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,6 +25,7 @@ const resetSchema = z
   });
 
 const AdminLogin = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -33,6 +34,7 @@ const AdminLogin = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [isSettingNewPassword, setIsSettingNewPassword] = useState(false);
+  const [resetToken, setResetToken] = useState<string | null>(null);
   const [errors, setErrors] = useState<{
     email?: string;
     password?: string;
@@ -42,35 +44,34 @@ const AdminLogin = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  // Check for reset token in URL on mount
+  useEffect(() => {
+    const token = searchParams.get("reset_token");
+    if (token) {
+      setResetToken(token);
+      setIsSettingNewPassword(true);
+      setIsForgotPassword(false);
+      setIsSignUp(false);
+      setPassword("");
+      setConfirmPassword("");
+      setErrors({});
+      // Clear the token from URL for cleaner appearance
+      setSearchParams({});
+    }
+  }, [searchParams, setSearchParams]);
+
   useEffect(() => {
     if (!loading && user && isAdmin && !isSettingNewPassword) {
       navigate("/admin");
     }
   }, [user, isAdmin, loading, navigate, isSettingNewPassword]);
 
-  useEffect(() => {
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY") {
-        setIsSettingNewPassword(true);
-        setIsForgotPassword(false);
-        setIsSignUp(false);
-        setPassword("");
-        setConfirmPassword("");
-        setErrors({});
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
 
-    // Handle password recovery flow (user clicked the email link)
-    if (isSettingNewPassword) {
+    // Handle password recovery flow (user clicked the email link with token)
+    if (isSettingNewPassword && resetToken) {
       const result = resetSchema.safeParse({ password, confirmPassword });
       if (!result.success) {
         const fieldErrors: { password?: string; confirmPassword?: string } = {};
@@ -83,23 +84,38 @@ const AdminLogin = () => {
       }
 
       setIsLoading(true);
-      const { error } = await supabase.auth.updateUser({ password });
+      
+      try {
+        // Call our custom verify-reset-token edge function
+        const { data, error } = await supabase.functions.invoke("verify-reset-token", {
+          body: { token: resetToken, newPassword: password },
+        });
 
-      if (error) {
+        if (error) {
+          throw new Error(error.message || "Failed to reset password");
+        }
+
+        if (data?.error) {
+          throw new Error(data.error);
+        }
+
+        toast({
+          title: "Password Updated",
+          description: "Your password has been reset successfully. You can now sign in.",
+        });
+        
+        setIsSettingNewPassword(false);
+        setResetToken(null);
+        setPassword("");
+        setConfirmPassword("");
+      } catch (error: any) {
         toast({
           title: "Could not update password",
-          description: error.message,
+          description: error.message || "An error occurred. Please try again.",
           variant: "destructive",
         });
-        setIsLoading(false);
-        return;
       }
-
-      toast({
-        title: "Password updated",
-        description: "You can now continue to the admin console.",
-      });
-      setIsSettingNewPassword(false);
+      
       setIsLoading(false);
       return;
     }
@@ -115,13 +131,20 @@ const AdminLogin = () => {
       setIsLoading(true);
       
       try {
-        // Generate the password reset token using Supabase
-        const { data, error } = await supabase.auth.resetPasswordForEmail(trimmedEmail, {
-          redirectTo: `${window.location.origin}/admin/login`,
+        // Call our custom send-password-reset edge function
+        const { data, error } = await supabase.functions.invoke("send-password-reset", {
+          body: { 
+            email: trimmedEmail,
+            siteUrl: window.location.origin,
+          },
         });
-        
+
         if (error) {
-          throw error;
+          throw new Error(error.message || "Failed to send reset email");
+        }
+
+        if (data?.error) {
+          throw new Error(data.error);
         }
 
         toast({
@@ -130,10 +153,11 @@ const AdminLogin = () => {
             "Check your inbox for a password reset link from noreply@ncaclaim.com. If it doesn't arrive in a few minutes, check spam or try again.",
         });
         setIsForgotPassword(false);
+        setEmail("");
       } catch (error: any) {
         toast({
           title: "Error",
-          description: error.message,
+          description: error.message || "Failed to send reset email. Please try again.",
           variant: "destructive",
         });
       }
@@ -373,6 +397,7 @@ const AdminLogin = () => {
                 type="button"
                 onClick={() => {
                   setIsSettingNewPassword(false);
+                  setResetToken(null);
                   setPassword("");
                   setConfirmPassword("");
                   setErrors({});
