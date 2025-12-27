@@ -270,13 +270,9 @@ const ForAttorneys = () => {
                     <h3 className="font-heading text-lg font-bold text-foreground mb-2 line-clamp-2">
                       {article.title}
                     </h3>
-                    <p className="text-muted-foreground text-sm font-body mb-4 line-clamp-2">
+                    <p className="text-muted-foreground text-sm font-body line-clamp-2">
                       {article.excerpt}
                     </p>
-                    <button className="inline-flex items-center gap-2 text-primary font-semibold text-sm group/btn hover:gap-3 transition-all duration-200">
-                      Read More
-                      <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover/btn:translate-x-1" />
-                    </button>
                   </div>
                 </div>
               ))}
