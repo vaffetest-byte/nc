@@ -36,8 +36,8 @@ const Footer = forwardRef<HTMLElement>((_, ref) => {
       title: "Help",
       links: [
         { name: "FAQs", href: "/#faqs", isPage: false },
-        { name: "Terms of Use", href: "/#terms", isPage: false },
-        { name: "Privacy Policy", href: "/#privacy", isPage: false },
+        { name: "Terms of Use", href: "/terms-of-use", isPage: true },
+        { name: "Privacy Policy", href: "/privacy-policy", isPage: true },
       ],
     },
     about: {
