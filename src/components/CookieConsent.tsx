@@ -44,10 +44,10 @@ const CookieConsent = () => {
             </div>
             <div className="flex items-center gap-3 w-full md:w-auto">
               <Button
-                variant="outline"
+                variant="ghost"
                 size="sm"
                 onClick={declineCookies}
-                className="flex-1 md:flex-none border-secondary-foreground/30 text-secondary-foreground hover:bg-secondary-foreground/10"
+                className="flex-1 md:flex-none text-secondary-foreground/80 hover:text-secondary-foreground hover:bg-white/10"
               >
                 Decline
               </Button>
