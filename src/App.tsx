@@ -16,6 +16,8 @@ const ForAttorneys = lazy(() => import("./pages/ForAttorneys"));
 const ForBrokers = lazy(() => import("./pages/ForBrokers"));
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const TermsOfUse = lazy(() => import("./pages/TermsOfUse"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 // Admin pages
@@ -57,6 +59,8 @@ const AppRoutes = () => {
           <Route path="/for-brokers" element={<ForBrokers />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-use" element={<TermsOfUse />} />
           
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
