@@ -262,9 +262,9 @@ const ForAttorneys = () => {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {articles.map((article, index) => (
-                <div key={index} className="bg-background border border-border rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                <div key={index} className="bg-background border border-border rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 group">
                   <div className="h-40 overflow-hidden">
-                    <img src={article.image} alt={article.title} className="w-full h-full object-cover" />
+                    <img src={article.image} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                   </div>
                   <div className="p-5">
                     <h3 className="font-heading text-lg font-bold text-foreground mb-2 line-clamp-2">
@@ -273,9 +273,10 @@ const ForAttorneys = () => {
                     <p className="text-muted-foreground text-sm font-body mb-4 line-clamp-2">
                       {article.excerpt}
                     </p>
-                    <span className="text-primary font-semibold text-sm hover:underline cursor-pointer">
-                      READ MORE »
-                    </span>
+                    <button className="inline-flex items-center gap-2 text-primary font-semibold text-sm group/btn hover:gap-3 transition-all duration-200">
+                      Read More
+                      <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover/btn:translate-x-1" />
+                    </button>
                   </div>
                 </div>
               ))}
