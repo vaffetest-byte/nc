@@ -30,7 +30,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Pencil, Trash2, Star, GripVertical, LayoutGrid, List, MoveUp, MoveDown, User } from "lucide-react";
+import { Plus, Pencil, Trash2, Star, GripVertical, LayoutGrid, List, MoveUp, MoveDown, User, Download } from "lucide-react";
 import { toast } from "sonner";
 import ImageUpload from "@/components/admin/ImageUpload";
 
@@ -55,6 +55,34 @@ const defaultTestimonial = {
   display_order: 0,
   is_active: true,
 };
+
+// Sample testimonials that can be seeded into the database
+const sampleTestimonials = [
+  {
+    name: "James T.",
+    review: "National Claims Association has been instrumental in helping my clients. Their fast funding allows my clients to focus on recovery while I focus on winning their case.",
+    rating: 5,
+    page: "index",
+  },
+  {
+    name: "Maria C.",
+    review: "The team at National Claims Association understands the legal process. They work efficiently and their non-compounded rates are the best in the industry.",
+    rating: 5,
+    page: "index",
+  },
+  {
+    name: "Robert H.",
+    review: "I've worked with many funding companies, but National Claims Association stands out for their professionalism and client-first approach.",
+    rating: 5,
+    page: "index",
+  },
+  {
+    name: "Lisa P.",
+    review: "Quick approvals, reasonable terms, and excellent communication. I recommend National Claims Association to all my colleagues.",
+    rating: 5,
+    page: "index",
+  },
+];
 
 const TestimonialsAdmin = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
@@ -174,6 +202,30 @@ const TestimonialsAdmin = () => {
       return;
     }
 
+    fetchTestimonials();
+  };
+
+  const handleSeedSampleTestimonials = async () => {
+    if (!confirm("This will add 4 sample testimonials to your database. Continue?")) return;
+
+    const startOrder = testimonials.length + 1;
+    const testimonialsToInsert = sampleTestimonials.map((t, index) => ({
+      ...t,
+      display_order: startOrder + index,
+      is_active: true,
+      image_url: null,
+    }));
+
+    const { error } = await supabase
+      .from("testimonials")
+      .insert(testimonialsToInsert);
+
+    if (error) {
+      toast.error("Failed to add sample testimonials");
+      return;
+    }
+
+    toast.success("Sample testimonials added successfully");
     fetchTestimonials();
   };
 
@@ -338,12 +390,18 @@ const TestimonialsAdmin = () => {
             setFormData(defaultTestimonial);
           }
         }}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              Add Testimonial
+          <div className="flex items-center gap-2">
+            <Button variant="outline" onClick={handleSeedSampleTestimonials}>
+              <Download className="w-4 h-4 mr-2" />
+              Add Samples
             </Button>
-          </DialogTrigger>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="w-4 h-4 mr-2" />
+                Add Testimonial
+              </Button>
+            </DialogTrigger>
+          </div>
           <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
