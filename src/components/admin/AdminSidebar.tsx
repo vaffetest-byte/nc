@@ -9,6 +9,7 @@ import {
   BarChart3, 
   LogOut,
   Shield,
+  MessageSquareQuote,
   PenLine,
   Trash2,
   Settings
@@ -56,6 +57,7 @@ const AdminSidebar = () => {
     { to: "/admin", icon: LayoutDashboard, label: "Dashboard", end: true },
     { to: "/admin/submissions", icon: FileText, label: "Submissions" },
     { to: "/admin/blog", icon: PenLine, label: "Blog" },
+    { to: "/admin/testimonials", icon: MessageSquareQuote, label: "Testimonials" },
     { to: "/admin/content", icon: Edit3, label: "Content" },
     { to: "/admin/analytics", icon: BarChart3, label: "Analytics" },
     { to: "/admin/account", icon: Settings, label: "Account" },

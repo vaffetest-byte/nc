@@ -28,6 +28,7 @@ const AdminContent = lazy(() => import("./pages/admin/Content"));
 const AdminAnalytics = lazy(() => import("./pages/admin/Analytics"));
 const AdminBlogManager = lazy(() => import("./pages/admin/BlogManager"));
 const AdminAccountSettings = lazy(() => import("./pages/admin/AccountSettings"));
+const AdminTestimonials = lazy(() => import("./pages/admin/Testimonials"));
 
 const queryClient = new QueryClient();
 
@@ -66,6 +67,7 @@ const AppRoutes = () => {
             <Route path="content" element={<AdminContent />} />
             <Route path="analytics" element={<AdminAnalytics />} />
             <Route path="blog" element={<AdminBlogManager />} />
+            <Route path="testimonials" element={<AdminTestimonials />} />
             <Route path="account" element={<AdminAccountSettings />} />
           </Route>
           

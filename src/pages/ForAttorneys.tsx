@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import {
@@ -16,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FundingForm from "@/components/FundingForm";
+import { supabase } from "@/integrations/supabase/client";
 
 import attorneyTestimonial from "@/assets/attorney-testimonial.jpg";
 import fundingSpecialist from "@/assets/funding-specialist.jpg";
@@ -29,6 +31,47 @@ import testimonialMichael from "@/assets/testimonial-michael.jpg";
 import testimonialSarah from "@/assets/testimonial-sarah.jpg";
 import testimonialDavid from "@/assets/testimonial-david.jpg";
 import testimonialJennifer from "@/assets/testimonial-jennifer.jpg";
+
+interface Testimonial {
+  id: string;
+  name: string;
+  review: string;
+  rating: number;
+  image_url: string | null;
+}
+
+const fallbackImages = [testimonialMichael, testimonialSarah, testimonialDavid, testimonialJennifer];
+
+const defaultTestimonials: Testimonial[] = [
+  {
+    id: "1",
+    name: "Michael R.",
+    review: "National Claims Association has been instrumental in helping my clients. Their fast funding allows my clients to focus on recovery while I focus on winning their case.",
+    rating: 5,
+    image_url: testimonialMichael
+  },
+  {
+    id: "2",
+    name: "Sarah K.",
+    review: "The team at National Claims Association understands the legal process. They work efficiently and their non-compounded rates are the best in the industry.",
+    rating: 5,
+    image_url: testimonialSarah
+  },
+  {
+    id: "3",
+    name: "David L.",
+    review: "I've worked with many funding companies, but National Claims Association stands out for their professionalism and client-first approach.",
+    rating: 5,
+    image_url: testimonialDavid
+  },
+  {
+    id: "4",
+    name: "Jennifer M.",
+    review: "Quick approvals, reasonable terms, and excellent communication. I recommend National Claims Association to all my colleagues.",
+    rating: 5,
+    image_url: testimonialJennifer
+  }
+];
 
 const ForAttorneys = () => {
   const advantages = [
@@ -69,32 +112,31 @@ const ForAttorneys = () => {
     }
   ];
 
-  const testimonials = [
-    {
-      name: "Michael R.",
-      review: "National Claims Association has been instrumental in helping my clients. Their fast funding allows my clients to focus on recovery while I focus on winning their case.",
-      rating: 5,
-      image: testimonialMichael
-    },
-    {
-      name: "Sarah K.",
-      review: "The team at National Claims Association understands the legal process. They work efficiently and their non-compounded rates are the best in the industry.",
-      rating: 5,
-      image: testimonialSarah
-    },
-    {
-      name: "David L.",
-      review: "I've worked with many funding companies, but National Claims Association stands out for their professionalism and client-first approach.",
-      rating: 5,
-      image: testimonialDavid
-    },
-    {
-      name: "Jennifer M.",
-      review: "Quick approvals, reasonable terms, and excellent communication. I recommend National Claims Association to all my colleagues.",
-      rating: 5,
-      image: testimonialJennifer
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(defaultTestimonials);
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      const { data, error } = await supabase
+        .from("testimonials")
+        .select("id, name, review, rating, image_url")
+        .eq("is_active", true)
+        .or("page.eq.attorneys,page.eq.both")
+        .order("display_order", { ascending: true });
+
+      if (!error && data && data.length > 0) {
+        setTestimonials(data);
+      }
+    };
+
+    fetchTestimonials();
+  }, []);
+
+  const getImageSrc = (testimonial: Testimonial, index: number) => {
+    if (testimonial.image_url) {
+      return testimonial.image_url;
     }
-  ];
+    return fallbackImages[index % fallbackImages.length];
+  };
 
   const articles = [
     {
@@ -289,10 +331,10 @@ const ForAttorneys = () => {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {testimonials.map((testimonial, index) => (
-                <div key={index} className="text-center">
+                <div key={testimonial.id} className="text-center">
                   <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden border-4 border-primary/20">
                     <img 
-                      src={testimonial.image} 
+                      src={getImageSrc(testimonial, index)} 
                       alt={testimonial.name} 
                       className="w-full h-full object-cover"
                     />
