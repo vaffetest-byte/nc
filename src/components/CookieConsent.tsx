@@ -29,16 +29,16 @@ const CookieConsent = () => {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 p-4 animate-fade-in-up" style={{ animationDelay: "0s" }}>
       <div className="container mx-auto max-w-4xl">
-        <div className="bg-secondary text-secondary-foreground rounded-xl shadow-2xl border border-secondary-foreground/10 p-6">
+        <div className="glass-card rounded-xl shadow-2xl p-6 relative">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
             <div className="flex items-start gap-3 flex-1">
               <Cookie className="w-6 h-6 text-primary flex-shrink-0 mt-0.5" />
               <div>
-                <h3 className="font-heading font-bold text-base mb-1">We Value Your Privacy</h3>
-                <p className="text-sm text-secondary-foreground/70 leading-relaxed">
+                <h3 className="font-heading font-bold text-base mb-1 text-white">We Value Your Privacy</h3>
+                <p className="text-sm text-white/70 leading-relaxed">
                   We use cookies to enhance your browsing experience and analyze site traffic. 
                   By clicking "Accept", you consent to our use of cookies. Read our{" "}
-                  <a href="/privacy-policy" className="text-primary hover:underline">Privacy Policy</a> for more information.
+                  <a href="/privacy-policy" className="text-primary hover:text-primary/80 hover:underline transition-colors">Privacy Policy</a> for more information.
                 </p>
               </div>
             </div>
@@ -47,7 +47,7 @@ const CookieConsent = () => {
                 variant="ghost"
                 size="sm"
                 onClick={declineCookies}
-                className="flex-1 md:flex-none text-secondary-foreground/80 hover:text-secondary-foreground hover:bg-white/10"
+                className="flex-1 md:flex-none text-white/70 hover:text-white hover:bg-white/10 border border-white/20"
               >
                 Decline
               </Button>
@@ -61,7 +61,7 @@ const CookieConsent = () => {
             </div>
             <button
               onClick={declineCookies}
-              className="absolute top-3 right-3 md:relative md:top-auto md:right-auto p-1 text-secondary-foreground/50 hover:text-secondary-foreground transition-colors"
+              className="absolute top-3 right-3 md:relative md:top-auto md:right-auto p-1 text-white/50 hover:text-white transition-colors"
               aria-label="Close"
             >
               <X className="w-5 h-5" />
